@@ -1,0 +1,32 @@
+{
+ "defect_detection": {
+  "n_defects": 20,
+  "per_type": {
+   "timestamp_clash": {
+    "n": 5,
+    "caught_by_intended_check": 5,
+    "caught_by_any_check": 5
+   },
+   "alias_conflict": {
+    "n": 5,
+    "caught_by_intended_check": 5,
+    "caught_by_any_check": 5
+   },
+   "missing_anchor": {
+    "n": 5,
+    "caught_by_intended_check": 5,
+    "caught_by_any_check": 5
+   },
+   "unsolvable_question": {
+    "n": 5,
+    "caught_by_intended_check": 5,
+    "caught_by_any_check": 5
+   }
+  },
+  "caught_by_intended_check": 20,
+  "caught_by_any_check": 20,
+  "clean_cases_checked": 5,
+  "false_positives": 0,
+  "note": "synthetic cases, defects planted by our own code, 5 per type; shows the checks work, not how often real generators err"
+ }
+}

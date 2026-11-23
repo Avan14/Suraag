@@ -1,0 +1,444 @@
+[
+ {
+  "id": 1,
+  "seed": 1,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q1",
+   "answer": "P4",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 13
+    },
+    {
+     "artifact": "calls",
+     "row": 4
+    }
+   ],
+   "scenario": "right"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 2,
+  "seed": 1,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "6:58 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 2
+    },
+    {
+     "artifact": "calls",
+     "row": 4
+    }
+   ],
+   "scenario": "wrong_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 3,
+  "seed": 2,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "11:55 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 15
+    },
+    {
+     "artifact": "calls",
+     "row": 4
+    }
+   ],
+   "scenario": "wrong_answer"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 4,
+  "seed": 2,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q3",
+   "answer": "PL2",
+   "citations": [
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLatitude"
+    }
+   ],
+   "scenario": "missing_artifact"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 5,
+  "seed": 3,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q1",
+   "answer": "P4",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 11
+    },
+    {
+     "artifact": "calls",
+     "row": 4
+    },
+    {
+     "artifact": "chat",
+     "line": 999
+    }
+   ],
+   "scenario": "nonexistent"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 6,
+  "seed": 3,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "9:37 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 11
+    },
+    {
+     "artifact": "calls",
+     "row": 4
+    },
+    {
+     "artifact": "chat",
+     "line": 2
+    }
+   ],
+   "scenario": "extra_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 7,
+  "seed": 4,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "7:27 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 14
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "Make"
+    }
+   ],
+   "scenario": "irrelevant_artifact"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 8,
+  "seed": 4,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q3",
+   "answer": "PL2",
+   "citations": [],
+   "scenario": "no_citation"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 9,
+  "seed": 5,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q1",
+   "answer": "P3",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 15
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    }
+   ],
+   "scenario": "partial_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 10,
+  "seed": 5,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "7:38 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 14
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    }
+   ],
+   "scenario": "right"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 11,
+  "seed": 6,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "9:39 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 11
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    }
+   ],
+   "scenario": "right"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 12,
+  "seed": 6,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q3",
+   "answer": "PL3",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 2
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLatitude"
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLongitude"
+    }
+   ],
+   "scenario": "wrong_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 13,
+  "seed": 7,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q1",
+   "answer": "P2",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 14
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    }
+   ],
+   "scenario": "wrong_answer"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 14,
+  "seed": 7,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "8:08 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 14
+    }
+   ],
+   "scenario": "missing_artifact"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 15,
+  "seed": 8,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "8:27 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 9
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    },
+    {
+     "artifact": "chat",
+     "line": 999
+    }
+   ],
+   "scenario": "nonexistent"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 16,
+  "seed": 8,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q3",
+   "answer": "PL3",
+   "citations": [
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLatitude"
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLongitude"
+    },
+    {
+     "artifact": "chat",
+     "line": 2
+    }
+   ],
+   "scenario": "extra_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 17,
+  "seed": 9,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q1",
+   "answer": "P3",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 12
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "Make"
+    }
+   ],
+   "scenario": "irrelevant_artifact"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 18,
+  "seed": 9,
+  "lang": "en",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "9:26 pm",
+   "citations": [],
+   "scenario": "no_citation"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 19,
+  "seed": 10,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q2",
+   "answer": "7:39 pm",
+   "citations": [
+    {
+     "artifact": "chat",
+     "line": 13
+    },
+    {
+     "artifact": "calls",
+     "row": 3
+    }
+   ],
+   "scenario": "partial_line"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ },
+ {
+  "id": 20,
+  "seed": 10,
+  "lang": "hinglish",
+  "claim": {
+   "question_id": "Q3",
+   "answer": "PL1",
+   "citations": [
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLatitude"
+    },
+    {
+     "artifact": "photo",
+     "exif_tag": "GPSLongitude"
+    }
+   ],
+   "scenario": "right"
+  },
+  "label_answer_correct": null,
+  "label_citation_valid": null
+ }
+]
