@@ -1,0 +1,56 @@
+:root {
+  /* Board (light cork) */
+  --board-bg: #E3D6BF;
+  --board-speckle: rgba(130, 95, 50, .2);
+  --board-glint: rgba(255, 255, 255, .4);
+
+  /* Surfaces */
+  --surface-card: #FFFFFF;
+  --surface-sunken: #F7F6F3;
+  --surface-chrome: #FFFFFF;
+  --border-1: #E2E0DA;
+  --divider-1: #EEECE7;
+
+  /* Ink */
+  --ink-1: #1B1D21;
+  --ink-2: #3B3F47;
+  --ink-3: #6B6F78;
+  --ink-4: #9A9EA6;
+  --ink-5: #B0B3BA;
+  --ink-inverse: #FFFFFF;
+
+  /* Semantic */
+  --success: #2E7D52;
+  --success-tint: #EEF6F0;
+  --danger: #C2412F;
+  --danger-tint: #FCF1EF;
+  --danger-border: #EFC2BA;
+  --pen: #2456A6;
+  --highlighter: oklch(0.88 0.12 95);
+  --sticky: oklch(0.95 0.05 95);
+  --sticky-border: oklch(0.88 0.08 95);
+
+  /* Exhibit + person hues (same L/C, hue varies) */
+  --exhibit-chat: oklch(0.62 0.12 40);
+  --exhibit-calls: oklch(0.62 0.12 200);
+  --exhibit-photo: oklch(0.62 0.12 300);
+  --exhibit-extra: oklch(0.62 0.12 140);
+  --person-1-bg: oklch(0.9 0.06 40);   --person-1-fg: oklch(0.42 0.1 40);
+  --person-2-bg: oklch(0.9 0.06 250);  --person-2-fg: oklch(0.42 0.1 250);
+  --person-3-bg: oklch(0.9 0.06 150);  --person-3-fg: oklch(0.42 0.1 150);
+
+  /* Corner push pin */
+  --pin-brass: radial-gradient(circle at 35% 30%, #FFF3D1 0 12%, #D9B46A 40%, #8C6A2C 100%);
+  --pin-shadow: 1px 2px 2px rgba(60,40,15,.45);
+  --pin-map: radial-gradient(circle at 35% 30%, #fff 0 10%, oklch(0.68 0.13 25) 38%, oklch(0.45 0.12 25) 100%); /* sticky notes, 14px */
+  --pin-map-shadow: 2px 4px 3px rgba(60,40,15,.35);
+
+  /* Aliases */
+  --text-body: var(--ink-1);
+  --text-muted: var(--ink-3);
+  --string-holds: var(--success);
+  --string-snapped: var(--danger);
+  --action-primary-bg: var(--ink-1);
+  --action-primary-fg: var(--ink-inverse);
+  --nav-active-underline: var(--danger);
+}
