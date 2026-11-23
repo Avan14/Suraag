@@ -1,0 +1,77 @@
+{
+  "case_id": "upi-ring-001",
+  "lang": "hinglish",
+  "seed": 1,
+  "tolerance_minutes": 2,
+  "people": [
+    {"id": "P1", "name": "Raju Verma", "name_deva": "राजू वर्मा", "role": "boss", "aliases": ["Raju bhai", "Rajoo"], "phone": "+91-50000-00001"},
+    {"id": "P2", "name": "Vikram Singh", "name_deva": "विक्रम सिंह", "role": "mule", "aliases": ["Vicky"], "phone": "+91-50000-00002"},
+    {"id": "P3", "name": "Rajesh Kumar", "name_deva": "राजेश कुमार", "role": "distractor", "aliases": ["Raju K"], "phone": "+91-50000-00003"},
+    {"id": "P4", "name": "Sunita Rao", "name_deva": "सुनीता राव", "role": "associate", "aliases": ["Sunita didi"], "phone": "+91-50000-00004"}
+  ],
+  "places": [
+    {"id": "PL1", "name": "Andheri East", "lat": 19.1136, "lon": 72.8697},
+    {"id": "PL2", "name": "Kurla West", "lat": 19.0726, "lon": 72.8845},
+    {"id": "PL3", "name": "Dadar", "lat": 19.0178, "lon": 72.8478}
+  ],
+  "timeline": [
+    {"id": "E1", "t": "2026-03-04T20:50:00+05:30", "kind": "transfer", "actor": "P2"},
+    {"id": "E2", "t": "2026-03-04T21:13:00+05:30", "kind": "call", "actor": "P1", "target": "P2", "depends_on": ["E1"]},
+    {"id": "E3", "t": "2026-03-04T21:14:00+05:30", "kind": "instruction", "actor": "P1", "target": "P2", "depends_on": ["E1"]},
+    {"id": "E4", "t": "2026-03-04T21:40:00+05:30", "kind": "photo", "actor": "P2", "depends_on": ["E1"]},
+    {"id": "E9", "t": "2026-03-04T21:25:00+05:30", "kind": "distractor_call", "actor": "P3", "target": "P2"}
+  ],
+  "facts": [
+    {"id": "F1", "claim": "P1 told P2 to delete the transfer record at 9:14 pm", "event": "E3",
+     "anchors": [
+       {"artifact": "chat", "line": 12, "must_contain": ["9:14 pm", "Raju bhai"]},
+       {"artifact": "calls", "row": 3, "must_contain": ["+91-50000-00001", "21:13"]}
+     ]},
+    {"id": "F3", "claim": "P2 took the payment screenshot photo in Kurla West", "event": "E4",
+     "anchors": [
+       {"artifact": "photo", "exif_tag": "GPSLatitude", "must_contain": ["19.0729"]},
+       {"artifact": "photo", "exif_tag": "GPSLongitude", "must_contain": ["72.8841"]}
+     ]},
+    {"id": "F9", "claim": "P3 called P2 at 9:25 pm (a plausible but unrelated call)", "event": "E9",
+     "anchors": [{"artifact": "calls", "row": 4, "must_contain": ["+91-50000-00003", "21:25"]}]}
+  ],
+  "questions": [
+    {"id": "Q1", "kind": "who", "text": "Who told the mule to delete the transfer record?", "answer_facts": ["F1"], "answer": "P1"},
+    {"id": "Q2", "kind": "when", "text": "When was the instruction given?", "answer_facts": ["F1"], "answer": "2026-03-04T21:14:00+05:30"},
+    {"id": "Q3", "kind": "where", "text": "Where was the mule when the payment screenshot photo was taken?", "answer_facts": ["F3"], "answer": "PL2"}
+  ],
+  "distractors": ["F9"],
+  "chat_members": ["P1", "P2", "P3", "P4"],
+  "chat_window": ["2026-03-04T20:30:00+05:30", "2026-03-04T22:30:00+05:30"],
+  "chat_length": 24,
+  "chat_anchors": [
+    {"line": 12, "message": {"t": "2026-03-04T21:14:00+05:30", "sender": "Raju bhai", "text": "Vicky, wo transfer ka record delete kar dena abhi"}}
+  ],
+  "calls": [
+    {"row": 1, "t": "2026-03-04T20:40:00+05:30", "direction": "outgoing", "number": "+91-50000-00004", "contact_name": "Sunita didi", "duration_s": 60},
+    {"row": 2, "t": "2026-03-04T21:05:00+05:30", "direction": "missed", "number": "+91-50000-00003", "contact_name": "Raju K", "duration_s": 0},
+    {"row": 3, "t": "2026-03-04T21:13:00+05:30", "direction": "incoming", "number": "+91-50000-00001", "contact_name": "Raju bhai", "duration_s": 95},
+    {"row": 4, "t": "2026-03-04T21:25:00+05:30", "direction": "incoming", "number": "+91-50000-00003", "contact_name": "Raju K", "duration_s": 40}
+  ],
+  "photo": {"t": "2026-03-04T21:40:00+05:30", "lat": 19.0729, "lon": 72.8841, "make": "Redmi", "model": "Note 12"},
+  "brief": {
+    "summary": "A UPI payment of Rs 48,000 reached the mule's account on the evening of 4 March 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "device_owner": "P2",
+    "mule": "P2",
+    "suspects": [
+      {"id": "P1", "name": "Raju Verma", "phone": "+91-50000-00001"},
+      {"id": "P3", "name": "Rajesh Kumar", "phone": "+91-50000-00003"},
+      {"id": "P4", "name": "Sunita Rao", "phone": "+91-50000-00004"}
+    ],
+    "places": [
+      {"id": "PL1", "name": "Andheri East", "lat": 19.1136, "lon": 72.8697},
+      {"id": "PL2", "name": "Kurla West", "lat": 19.0726, "lon": 72.8845},
+      {"id": "PL3", "name": "Dadar", "lat": 19.0178, "lon": 72.8478}
+    ],
+    "questions": [
+      {"id": "Q1", "kind": "who", "text": "Who told the mule to delete the transfer record?"},
+      {"id": "Q2", "kind": "when", "text": "When was the instruction given?"},
+      {"id": "Q3", "kind": "where", "text": "Where was the mule when the payment screenshot photo was taken?"}
+    ]
+  }
+}
