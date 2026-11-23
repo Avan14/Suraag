@@ -408,4 +408,6 @@ with tab_eval:
         rows = [r for r in csv.DictReader(sc.open(encoding="utf-8")) if r.get("broken") in ("y", "n")]
         if rows:
             broken = sum(r["broken"] == "y" for r in rows)
-            st.markdown(f"**Plain-chat baseline** ({L('eval.n', n=len(rows))}): {broken} of {len(rows)} hand-checked cases had at least one defect.")
+            first_pass = any("claude" in r.get("checker", "") for r in rows)
+            how = "flagged by a first-pass model check, not yet confirmed by a person (some on a strict reading)" if first_pass else "hand-checked cases had at least one defect"
+            st.markdown(f"**Plain-chat baseline** ({L('eval.n', n=len(rows))}): {broken} of {len(rows)} {how}.")

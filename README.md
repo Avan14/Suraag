@@ -51,7 +51,7 @@ python -m pytest                                                                
 |---|---|---|---|
 | Defect detection | 20 of 20 planted defects caught by the check meant for them | 20 (5 per type) | The defects are planted by our own code, so this shows the checks work, not how often real generators err. 0 of 5 clean cases flagged. |
 | Raw LLM vs hybrid + verifier | **not run yet** | | Needs LLM quota: `python -m eval.run_generator` |
-| Plain-chat baseline (hand-checked) | **scoring in progress** | 10 | `eval/plain_baseline/`; a model-made first pass exists but is not evidence. |
+| Plain-chat baseline | 8 of 10 flagged by a model first pass; **3 clear-cut** (wrong cited lines, a range instead of a time, a self-contradicting key); human confirmation pending | 10 | One chat app, one prompt, `eval/plain_baseline/`. The other 5 flags rest on a strict reading. Not yet a person's check. |
 | Grader agreement with manual grading | **not run yet** | 20 drafted | Needs human labels: `eval/grader_worksheet.md` |
 | Blind solve by a second model | **not run yet** | | `python -m eval.run_blind_solve` |
 
