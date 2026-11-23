@@ -60,14 +60,16 @@ def complete(prompt: str, *, system: str | None = None, model: str | None = None
         raise LLMUnavailable("offline mode and reply not cached")
 
     global _down_until
-    if time.time() < _down_until:
+    patient = os.environ.get("SURAAG_LLM_PATIENT") == "1"  # batch experiments: wait out an overloaded API
+    if not patient and time.time() < _down_until:
         raise LLMUnavailable("the LLM was unavailable a moment ago; using the offline fallback")
     client = _get_client()
     from google.genai import errors, types
     config = types.GenerateContentConfig(
         system_instruction=system, max_output_tokens=max_tokens,
         http_options=types.HttpOptions(timeout=20_000))
-    for attempt in range(2):
+    attempts = 5 if patient else 2
+    for attempt in range(attempts):
         try:
             text = client.models.generate_content(model=model, contents=prompt, config=config).text
             break
@@ -75,14 +77,14 @@ def complete(prompt: str, *, system: str | None = None, model: str | None = None
             if e.code == 429 and "per day" in (e.message or "").lower():
                 _down_until = time.time() + 3600  # a daily quota will not recover soon
                 raise LLMUnavailable(f"Gemini daily quota used up: {e.message}") from e
-            if not (e.code == 429 or (e.code or 0) >= 500) or attempt == 1:
-                _down_until = time.time() + 300
+            if not (e.code == 429 or (e.code or 0) >= 500) or attempt == attempts - 1:
+                _down_until = 0.0 if patient else time.time() + 300
                 raise LLMUnavailable(f"Gemini API error {e.code}: {e.message}") from e
         except Exception as e:  # network errors
-            if attempt == 1:
-                _down_until = time.time() + 300
+            if attempt == attempts - 1:
+                _down_until = 0.0 if patient else time.time() + 300
                 raise LLMUnavailable(f"Gemini call failed: {e}") from e
-        time.sleep(3)
+        time.sleep(5 * 2 ** attempt if patient else 3)
     if not text:
         raise LLMUnavailable("Gemini returned an empty reply")
 

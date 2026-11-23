@@ -13,7 +13,8 @@ INSTRUCTION = re.compile(
 FILLER_PROMPT = """Tum ek WhatsApp group chat ke liye chhote, natural Hinglish messages likh rahe ho (Roman script).
 Group members (sender ke roop mein sirf yehi naam use karo): {senders}.
 Topic: roz ki baatein, paise ka lena-dena, milna-julna. Kabhi kisi record, entry ya transaction ko delete
-ya hatane ka zikr mat karo.
+ya hatane ka zikr mat karo. Koi ank (digit), rakam, tareekh, din ya mahine ka naam, web address,
+bank/app/company ka asli naam, aur bhejna/pay/transfer jaise nirdesh bhi mat likho.
 Neeche har hisse ke liye utne hi messages do jitne bole gaye hain, time ke order mein:
 {gaps}
 Sirf ek JSON list do, koi aur text nahi: [{{"time": "9:02 pm", "sender": "NAAM", "text": "message"}}, ...]

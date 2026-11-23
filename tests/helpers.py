@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from suraag.model import IST, Case
+from suraag.lang import get_pack
 from suraag.parse import HEADER
 from suraag.timefmt import chat_ts
 
@@ -30,5 +31,6 @@ def good_chat(case: Case) -> str:
                 t = start + timedelta(minutes=4 * (n - 2))
             else:
                 t = after + timedelta(minutes=2 * (n - anchor.line - 1))
-            lines.append(f"{chat_ts(t)} - {senders[n % len(senders)]}: kal milte hain phir {n}")
+            stub = get_pack("hinglish").stub_lines
+            lines.append(f"{chat_ts(t)} - {senders[n % len(senders)]}: {stub[n % len(stub)]}")
     return "\n".join(lines) + "\n"

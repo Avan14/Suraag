@@ -83,6 +83,27 @@ def test_circuit_breaker_skips_the_api_after_a_failure(env, monkeypatch):
     assert Down.calls == after_first  # the breaker was open: no new API call
 
 
+def test_patient_mode_waits_out_an_overloaded_api_and_never_opens_the_breaker(env, monkeypatch):
+    from google.genai import errors
+
+    class Flaky:
+        calls = 0
+
+        def generate_content(self, **kw):
+            Flaky.calls += 1
+            if Flaky.calls < 4:
+                raise errors.ServerError(503, {"error": {"code": 503, "message": "high demand"}})
+            return type("R", (), {"text": "finally"})()
+
+    sleeps = []
+    monkeypatch.setenv("SURAAG_LLM_PATIENT", "1")
+    monkeypatch.setattr(llm, "_get_client", lambda: type("C", (), {"models": Flaky()})())
+    monkeypatch.setattr(llm.time, "sleep", sleeps.append)
+    assert llm.complete("patient") == "finally"
+    assert Flaky.calls == 4 and sleeps == [5, 10, 20]  # growing waits
+    assert llm._down_until == 0.0
+
+
 def test_cached_replies_still_work_while_the_breaker_is_open(env, monkeypatch):
     fake = FakeModels()
     monkeypatch.setattr(llm, "_get_client", lambda: type("C", (), {"models": fake})())

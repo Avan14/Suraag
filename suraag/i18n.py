@@ -112,6 +112,13 @@ EN: dict[str, str] = {
     "fail.time_order": "chat.txt:{line} time {t} is earlier than chat.txt:{prev} time {prev_t}",
     "fail.alias_unresolved": "chat.txt:{line} sender {sender!r} resolves to {count} people",
     "fail.trigger_in_filler": "chat.txt:{line} matches the instruction phrase but is not the instruction line",
+    "fail.filler_content": "chat.txt:{line} filler contains {reason_text}",
+    "filler.reason.digit": "a digit",
+    "filler.reason.currency": "a currency or amount word",
+    "filler.reason.date": "a month or weekday name",
+    "filler.reason.url": "a web address",
+    "filler.reason.brand": "a real brand, bank or app name",
+    "filler.reason.instruction": "an instruction verb (delete, send, pay, transfer ...)",
     "fail.fact_no_anchor": "{fact} has no anchor in any artifact",
     "fail.question_no_fact": "{question} does not map to any fact",
     "fail.cross_time": "{fact}: chat.txt:{chat_line} at {chat_t} vs calls.csv row {row} at {call_t} differs by {diff:g} min (tolerance {tol})",
@@ -229,6 +236,13 @@ HI: dict[str, str] = {
     "fail.time_order": "chat.txt:{line} का समय {t}, chat.txt:{prev} के समय {prev_t} से पहले का है",
     "fail.alias_unresolved": "chat.txt:{line} का भेजने वाला {sender!r} {count} व्यक्तियों से मेल खाता है",
     "fail.trigger_in_filler": "chat.txt:{line} निर्देश वाले वाक्यांश से मेल खाती है, पर यह निर्देश वाली पंक्ति नहीं है",
+    "fail.filler_content": "chat.txt:{line} के भराव में {reason_text} है",
+    "filler.reason.digit": "कोई अंक",
+    "filler.reason.currency": "मुद्रा या राशि का शब्द",
+    "filler.reason.date": "महीने या सप्ताह के दिन का नाम",
+    "filler.reason.url": "वेब पता",
+    "filler.reason.brand": "किसी असली ब्रांड, बैंक या ऐप का नाम",
+    "filler.reason.instruction": "निर्देश वाली क्रिया (delete, send, pay, transfer ...)",
     "fail.fact_no_anchor": "{fact} का किसी भी फ़ाइल में कोई आधार नहीं है",
     "fail.question_no_fact": "{question} किसी तथ्य से जुड़ा नहीं है",
     "fail.cross_time": "{fact}: chat.txt:{chat_line} पर {chat_t} बनाम calls.csv रो {row} पर {call_t}; अंतर {diff:g} मिनट (सहनसीमा {tol})",
@@ -280,6 +294,8 @@ def render_failure(f, lang: str = "en") -> str:
         key = ("fail.anchor_missing" if "needle" in f.params else
                "fail.anchor_missing_raw" if "wanted" in f.params else "fail.anchor_nonexistent")
     params = dict(f.params)
+    if f.code == "filler_content":
+        params["reason_text"] = t(f"filler.reason.{params['reason']}", lang)
     return t(key, lang, **params)
 
 

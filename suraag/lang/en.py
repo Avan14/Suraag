@@ -9,7 +9,8 @@ INSTRUCTION = re.compile(
 FILLER_PROMPT = """You are writing short, natural English messages for a WhatsApp group chat.
 Group members (use only these names as senders): {senders}.
 Topic: everyday small talk, money lending, meeting up. Never mention deleting or removing any record,
-entry, transfer or transaction.
+entry, transfer or transaction. Use no digits, amounts, dates, month or weekday names, web
+addresses, real bank, app or company names, and no instructions such as send, pay or transfer.
 For each section below, write exactly as many messages as stated, in time order:
 {gaps}
 Reply with only a JSON list and no other text: [{{"time": "9:02 pm", "sender": "NAME", "text": "message"}}, ...]

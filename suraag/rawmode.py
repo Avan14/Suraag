@@ -6,7 +6,8 @@ from suraag.parse import HEADER
 from suraag.timefmt import chat_ts
 
 
-def raw_chat(case: Case, errors: list[str] | None = None, nonce: int | None = None) -> str:
+def raw_chat(case: Case, errors: list[str] | None = None, nonce: int | None = None,
+             model: str | None = None) -> str:
     pack = get_pack(case.lang)
     senders = ", ".join(case.person(p).saved_as for p in case.chat_members)
     anchors = "\n".join(f"{chat_ts(a.message.t)} - {a.message.sender}: {a.message.text}" for a in case.chat_anchors)
@@ -16,6 +17,6 @@ def raw_chat(case: Case, errors: list[str] | None = None, nonce: int | None = No
                                     anchors=anchors, errors=err)
     if nonce is not None:  # makes the request distinct, so the cache doesn't return the same chat n times
         prompt += f"\nnonce: {nonce}"
-    body = [ln.strip() for ln in complete(prompt).splitlines()
+    body = [ln.strip() for ln in complete(prompt, model=model).splitlines()
             if ln.strip() and not ln.strip().startswith("```")]
     return HEADER + "\n" + "\n".join(body) + "\n"

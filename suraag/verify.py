@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import Literal
 
+from suraag.fillerrules import filler_violation
+from suraag.i18n import t
 from suraag.lang import get_pack
 from suraag.model import Anchor, Case
 from suraag.norm import norm
@@ -97,6 +99,12 @@ def check_chat_consistency(case: Case, arts: Artifacts, mode: Mode = "hybrid") -
         def is_allowed(ln) -> bool:
             return any(t in norm(ln.text) for t in anchor_texts)
 
+    if mode == "hybrid":  # rule L-09: filler adds no facts (raw mode is the baseline and is not held to it)
+        for ln in lines:
+            reason = filler_violation(ln.text) if ln.sender is not None and ln.line not in allowed_lines else None
+            if reason:
+                out.append(Failure("contradiction", "chat", "filler_content", {"line": ln.line, "reason": reason},
+                                   f"chat.txt:{ln.line} filler contains {t('filler.reason.' + reason, 'en')}"))
     for ln in lines:
         if ln.sender is not None and pack.triggers["instruction"].search(norm(ln.text)) and not is_allowed(ln):
             out.append(Failure("contradiction", "chat", "trigger_in_filler", {"line": ln.line},
