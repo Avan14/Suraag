@@ -27,8 +27,8 @@
     const word = m ? (m.label === "valid" ? args.labels.holds : m.label === "partial" ? args.labels.partial : args.labels.snapped) : "";
     const needles = m && m.label === "valid" ? (args.needles[key] || []) : [];
     return `<div class="${cls.join(" ")}" data-key="${esc(key)}" id="r-${esc(key.replace(/[^\w]/g, "_"))}">` +
-           `<span class="n">${esc(num)}</span><span class="t" title="${esc(text)}">${highlight(text, needles)}</span>` +
-           (word ? `<span class="mark">${esc(word)}</span>` : "") + `</div>`;
+           `<span class="n">${esc(num)}</span>` + (word ? `<span class="mark">${esc(word)}</span>` : "") +
+           `<span class="t" title="${esc(text)}">${highlight(text, needles)}</span></div>`;
   }
 
   function render() {
@@ -47,17 +47,16 @@
 
     document.getElementById("root").innerHTML =
       `<div class="board" id="board">
-        <section class="card" style="flex:1.45"><h3><i style="background:var(--exhibit-chat)"></i>chat.txt</h3><div class="rows">${chat}</div></section>
-        <section class="card" style="flex:1.1"><h3><i style="background:var(--exhibit-calls)"></i>calls.csv</h3><div class="rows">${calls}</div></section>
-        <section class="card" style="flex:.95"><h3><i style="background:var(--exhibit-photo)"></i>photo.jpg</h3>
+        <section class="card" style="flex:2.6"><h3><i style="background:var(--exhibit-chat)"></i>chat.txt</h3><div class="rows">${chat}</div></section>
+        <section class="card" style="flex:1.5"><h3><i style="background:var(--exhibit-calls)"></i>calls.csv</h3><div class="rows">${calls}</div></section>
+        <section class="card" style="flex:1"><h3><i style="background:var(--exhibit-photo)"></i>photo.jpg</h3>
           <div class="photo"><img alt="photo.jpg" src="${a.photo || ""}"></div><div class="rows">${exif}</div></section>
         <aside class="tray"><h4>${esc(L.tray)}</h4>${trayItems}</aside>
         <svg class="strings" id="strings"></svg>
       </div>`;
     document.querySelectorAll(".row[data-key]").forEach((el) => el.addEventListener("click", () => toggle(el.dataset.key)));
     document.querySelectorAll(".rows").forEach((el) => el.addEventListener("scroll", drawStrings));
-    frame(700);
-    requestAnimationFrame(drawStrings);
+    requestAnimationFrame(() => { frame(Math.ceil(document.getElementById("board").getBoundingClientRect().height) + 8); drawStrings(); });
   }
 
   function toggle(key) {
@@ -77,11 +76,11 @@
       const id = m.key.replace(/[^\w]/g, "_");
       const row = document.getElementById("r-" + id), tip = document.getElementById("t-" + id);
       if (!row || !tip) return;
-      const r = row.getBoundingClientRect(), t = tip.getBoundingClientRect(), holds = m.label === "valid";
+      const r = row.getBoundingClientRect(), t = tip.getBoundingClientRect(), holds = m.label === "valid", partial = m.label === "partial";
       const clipped = r.top < b.top + 40 || r.bottom > b.bottom;
       if (clipped) return;
-      const x1 = r.right - b.left - 4, y1 = r.top + r.height / 2 - b.top, x2 = t.left - b.left, y2 = t.top + t.height / 2 - b.top;
-      const dx = Math.max(40, (x2 - x1) / 2), color = holds ? "var(--success)" : "var(--danger)";
+      const x1 = row.closest(".card").getBoundingClientRect().right - b.left - 4, y1 = r.top + r.height / 2 - b.top, x2 = t.left - b.left, y2 = t.top + t.height / 2 - b.top;
+      const dx = Math.max(40, (x2 - x1) / 2), color = holds ? "var(--success)" : partial ? "var(--ink-3)" : "var(--danger)";
       html += `<path d="M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}" stroke="${color}" ${holds ? "" : 'stroke-dasharray="5 4"'}/>` +
               `<circle cx="${x1}" cy="${y1}" r="5" fill="${color}"/><circle cx="${x2}" cy="${y2}" r="5" fill="${color}"/>`;
     });

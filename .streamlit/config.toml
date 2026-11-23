@@ -10,5 +10,8 @@ font = "sans serif"
 headless = true
 runOnSave = false
 
+[client]
+toolbarMode = "minimal"
+
 [browser]
 gatherUsageStats = false

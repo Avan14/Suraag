@@ -66,9 +66,12 @@ CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Serif+Devanagari:wght@600;700&display=swap');
 :root { --ink-1:#1B1D21; --ink-2:#3B3F47; --ink-3:#6B6F78; --border-1:#E2E0DA; --success:#2E7D52; --success-tint:#EEF6F0; --danger:#C2412F; --danger-tint:#FCF1EF; }
-html, body, [class*="st-"], .stMarkdown { font-family: 'IBM Plex Sans','Noto Sans Devanagari',system-ui,sans-serif; }
-.block-container { padding-top: 0.5rem; max-width: 1500px; }
-header[data-testid="stHeader"] { height: 0; }
+.stApp, .stApp p, .stApp label, .stApp button, .stApp input, .stApp textarea, .stApp [data-baseweb] { font-family: 'IBM Plex Sans','Noto Sans Devanagari',system-ui,sans-serif; }
+/* Never override Streamlit's icon font: its icons are ligatures, and a text font turns them into the words ("arrow_down"). */
+[data-testid="stIconMaterial"], .material-symbols-rounded, [class*="material-symbols"] { font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important; }
+.block-container { padding-top: 1rem; max-width: 1500px; }
+/* The Deploy toolbar would sit on top of our top bar, and a public demo does not need it. */
+header[data-testid="stHeader"], [data-testid="stAppToolbar"], [data-testid="stToolbar"] { display: none; }
 .topbar { display:flex; align-items:center; gap:14px; height:56px; padding:0 4px; border-bottom:1px solid var(--border-1); margin-bottom:6px; background:#fff; }
 .topbar .wordmark { font-family:'Noto Serif Devanagari',Georgia,serif; font-weight:700; font-size:24px; color:var(--ink-1); }
 .topbar .brand { font-weight:700; letter-spacing:.14em; font-size:13px; color:var(--ink-2); }
@@ -95,8 +98,8 @@ table.lab th { background:#F7F6F3; font-weight:600; letter-spacing:.04em; }
 st.markdown(CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------------------- helpers
-if "lang" not in st.session_state:
-    st.session_state["lang"] = "en"
+# Read the language switch first: the top bar is drawn before the radio itself is.
+st.session_state["lang"] = "hi" if st.session_state.get("lang_choice") == "हिन्दी" else "en"
 
 
 def L(key: str, **kw) -> str:
@@ -164,9 +167,7 @@ def certificate(manifest: dict, path: Path, key: str) -> None:
 hc1, hc2 = st.columns([5, 1])
 hc1.markdown(f'<div class="topbar"><span class="wordmark">सुराग</span><span class="brand">SURAAG</span>'
              f'<span class="tagline">{L("app.tagline")}</span></div>', unsafe_allow_html=True)
-choice = hc2.radio(L("ui.language"), ["EN", "हिन्दी"], horizontal=True, index=0 if st.session_state["lang"] == "en" else 1,
-                   key="lang_choice")
-st.session_state["lang"] = "en" if choice == "EN" else "hi"
+hc2.radio(L("ui.language"), ["EN", "हिन्दी"], horizontal=True, key="lang_choice")
 st.markdown(f'<span class="synthetic">{L("ui.synthetic")}</span>', unsafe_allow_html=True)
 
 tab_lec, tab_stu, tab_eval = st.tabs([L("ui.tab_lecturer"), L("ui.tab_student"), L("ui.tab_eval")])
@@ -258,7 +259,7 @@ with tab_stu:
             c2.markdown(f"**{L('stu.places')}**")
             c2.table({"": [p.name for p in brief.places], " ": [f"{p.lat:.4f}, {p.lon:.4f}" for p in brief.places]})
 
-        board, inspector = st.columns([2.7, 1.3])
+        board, inspector = st.columns([3.4, 1.0])
         qs = brief.questions
         with inspector:
             active_i = st.radio(L("stu.question", n=""), range(len(qs)), key=f"active::{name}",
