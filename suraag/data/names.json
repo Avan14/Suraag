@@ -1,0 +1,27 @@
+{
+  "_note": "Common Indian first names and surnames, in regional pools, with Devanagari spellings. All fictional pairings. No famous people: see blocklist. Guilt is assigned at random elsewhere, never from region.",
+  "regions": {
+    "north": {
+      "first": [["Raju", "राजू"], ["Vikram", "विक्रम"], ["Sunil", "सुनील"], ["Anita", "अनीता"], ["Deepak", "दीपक"], ["Pooja", "पूजा"], ["Manoj", "मनोज"]],
+      "surname": [["Verma", "वर्मा"], ["Sharma", "शर्मा"], ["Gupta", "गुप्ता"], ["Yadav", "यादव"], ["Chauhan", "चौहान"], ["Mishra", "मिश्रा"]]
+    },
+    "west": {
+      "first": [["Sanjay", "संजय"], ["Kavita", "कविता"], ["Jignesh", "जिग्नेश"], ["Mahesh", "महेश"], ["Nilesh", "नीलेश"], ["Hetal", "हेतल"], ["Prakash", "प्रकाश"]],
+      "surname": [["Patil", "पाटील"], ["Joshi", "जोशी"], ["Desai", "देसाई"], ["Kulkarni", "कुलकर्णी"], ["Shinde", "शिंदे"], ["Mehta", "मेहता"]]
+    },
+    "south": {
+      "first": [["Ashok", "अशोक"], ["Lakshmi", "लक्ष्मी"], ["Suresh", "सुरेश"], ["Divya", "दिव्या"], ["Karthik", "कार्तिक"], ["Revathi", "रेवती"], ["Venkat", "वेंकट"]],
+      "surname": [["Nair", "नायर"], ["Iyer", "अय्यर"], ["Reddy", "रेड्डी"], ["Pillai", "पिल्लै"], ["Rao", "राव"], ["Menon", "मेनन"]]
+    },
+    "east": {
+      "first": [["Subhash", "सुभाष"], ["Rina", "रीना"], ["Debashish", "देबाशीष"], ["Mamta", "ममता"], ["Tanuja", "तनुजा"], ["Abhijit", "अभिजीत"], ["Pranab", "प्रणब"]],
+      "surname": [["Banerjee", "बनर्जी"], ["Das", "दास"], ["Ghosh", "घोष"], ["Sen", "सेन"], ["Bose", "बोस"], ["Roy", "रॉय"]]
+    }
+  },
+  "blocklist": [
+    "amit shah", "rahul gandhi", "virat kohli", "narendra modi", "sachin tendulkar", "shah rukh khan",
+    "amitabh bachchan", "ratan tata", "mukesh ambani", "arvind kejriwal", "manmohan singh",
+    "sunil gavaskar", "rahul dravid", "sourav ganguly", "mamata banerjee", "pranab mukherjee",
+    "meera rao", "arvind nair", "farhan qureshi"
+  ]
+}
