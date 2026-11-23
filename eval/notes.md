@@ -18,3 +18,13 @@ Checked against `eval/baseline_rubric.md` by a **model first pass** (`checker = 
 figure: "at least 3 of 10 hand-checked cases had a clear defect (n=10, one chat app, synthetic)", and only after a
 person confirms cases 02, 05 and 09 against the lines quoted in `scores.csv`.
 TODO (human): confirm 02, 05, 09; decide whether the borderline five count; change `checker` to your initials.
+
+## Raw-mode pilot attempt (Nov 24)
+
+`python -m eval.run_raw_pilot --n 10 --model gemini-3.5-flash-lite` (patient retry mode): **3 of 10 samples completed**;
+the other 7 failed with API overload errors (503 and 504). All 3 completed samples passed the chat checks (0 failures).
+This is not a failure rate: n is 3, one world model, chat checks only, a lite model (the stronger `gemini-3.5-flash` was
+returning "high demand" errors at the time). Result file: `eval/raw_pilot_flash-lite.json`.
+Reading: raw mode is judged on chat structure only (the calls come from our renderer), so it is likely to look better
+than the plain-chat baseline, which tested whole cases including their own answer keys. Do not pitch raw mode as
+"fails X of 10" unless `eval.run_generator` shows it.
