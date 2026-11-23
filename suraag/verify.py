@@ -46,7 +46,7 @@ def check_anchors(case: Case, arts: Artifacts, mode: Mode = "hybrid") -> list[Fa
                 needles = [norm(m) for m in a.must_contain]
                 if not any(all(n in norm(t) for n in needles) for t in _all_texts(arts, a.artifact)):
                     wanted = " and ".join(repr(m) for m in a.must_contain)
-                    out.append(Failure("anchor", a.artifact, "anchor_missing", {"fact": fact.id},
+                    out.append(Failure("anchor", a.artifact, "anchor_missing", {"fact": fact.id, "file": FILES[a.artifact], "wanted": wanted},
                                        f"{FILES[a.artifact]}: no line contains {wanted}"))
                 continue
             text = text_at(arts, a.artifact, line=a.line, row=a.row, exif_tag=a.exif_tag)
@@ -72,7 +72,7 @@ def check_chat_consistency(case: Case, arts: Artifacts, mode: Mode = "hybrid") -
         if ln.t is None:
             continue
         if prev is not None and ln.t < prev.t:
-            out.append(Failure("contradiction", "chat", "time_order", {"line": ln.line, "prev": prev.line},
+            out.append(Failure("contradiction", "chat", "time_order", {"line": ln.line, "prev": prev.line, "t": chat_time(ln.t), "prev_t": chat_time(prev.t)},
                                f"chat.txt:{ln.line} time {chat_time(ln.t)} is earlier than "
                                f"chat.txt:{prev.line} time {chat_time(prev.t)}"))
         prev = ln
@@ -134,7 +134,9 @@ def check_cross_time(case: Case, arts: Artifacts) -> list[Failure]:
         diff = abs((chat_t - call_t).total_seconds()) / 60
         if diff > case.tolerance_minutes:
             out.append(Failure(
-                "contradiction", "chat", "cross_time", {"fact": f.id, "diff": diff},
+                "contradiction", "chat", "cross_time",
+                {"fact": f.id, "chat_line": ca.line, "row": ra.row, "chat_t": chat_time(chat_t),
+                 "call_t": f"{call_t:%H:%M}", "diff": diff, "tol": case.tolerance_minutes},
                 f"{f.id}: chat.txt:{ca.line} at {chat_time(chat_t)} vs calls.csv row {ra.row} at "
                 f"{call_t:%H:%M} differs by {diff:g} min (tolerance {case.tolerance_minutes})"))
     return out
@@ -151,7 +153,7 @@ def check_solvability(case: Case, arts: Artifacts) -> list[Failure]:
     from suraag.solver import solve
     solved = solve(arts, case.brief, case.lang)
     artifact = {"who": "calls", "when": "chat", "where": "photo"}
-    return [Failure("solvability", artifact[q.kind], "solver_mismatch", {"question": q.id, "got": solved.get(q.id)},
+    return [Failure("solvability", artifact[q.kind], "solver_mismatch", {"question": q.id, "got": solved.get(q.id), "key": q.answer},
                     f"{q.id}: solver answered {solved.get(q.id)}, key is {q.answer}")
             for q in case.questions if solved.get(q.id) != q.answer]
 
@@ -178,7 +180,7 @@ def check_distractor(case: Case, arts: Artifacts) -> list[Failure]:
             out.append(Failure("distractor", "model", "distractor_implausible", {"fact": fid},
                                f"{fid} is not plausible: far from the key event and no similar alias"))
         if who and solved.get(who.id) == actor.id and actor.id != who.answer:
-            out.append(Failure("distractor", "calls", "solver_picked_distractor", {"fact": fid},
+            out.append(Failure("distractor", "calls", "solver_picked_distractor", {"fact": fid, "actor": actor.id, "question": who.id},
                                f"the solver picked the distractor {actor.id} for {who.id}"))
     return out
 

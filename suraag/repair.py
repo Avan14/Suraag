@@ -63,7 +63,8 @@ def _make_chat(case: Case, errors: list[str], mode: str,
         return None, Failure("filler_count", "chat", "filler_short", {"needed": e.needed, "got": e.got},
                              f"chat.txt: filler has {e.got} messages, {e.needed} needed")
     except LLMUnavailable as e:
-        return None, Failure("filler_count", "chat", "llm_unavailable", {}, f"chat.txt: the LLM is unavailable ({e})")
+        return None, Failure("filler_count", "chat", "llm_unavailable", {"reason": str(e)},
+                             f"chat.txt: the LLM is unavailable ({e})")
 
 
 def run(case: Case, *, filler_fn: Callable[[Case, list[str]], list[ChatMessage]], meta: GenMeta, out_dir,
