@@ -31,6 +31,7 @@ def prompt_hash(template: str) -> str:
 
 
 _client = None
+_down_until = 0.0  # circuit breaker: after a failure, skip the API until this time (seconds since epoch)
 
 
 def _get_client():
@@ -58,24 +59,30 @@ def complete(prompt: str, *, system: str | None = None, model: str | None = None
     if os.environ.get("SURAAG_OFFLINE") == "1":
         raise LLMUnavailable("offline mode and reply not cached")
 
+    global _down_until
+    if time.time() < _down_until:
+        raise LLMUnavailable("the LLM was unavailable a moment ago; using the offline fallback")
     client = _get_client()
     from google.genai import errors, types
     config = types.GenerateContentConfig(
         system_instruction=system, max_output_tokens=max_tokens,
-        http_options=types.HttpOptions(timeout=30_000))
-    for attempt in range(3):
+        http_options=types.HttpOptions(timeout=20_000))
+    for attempt in range(2):
         try:
             text = client.models.generate_content(model=model, contents=prompt, config=config).text
             break
         except errors.APIError as e:  # 429 (per-minute limit) and 5xx are worth retrying
             if e.code == 429 and "per day" in (e.message or "").lower():
+                _down_until = time.time() + 3600  # a daily quota will not recover soon
                 raise LLMUnavailable(f"Gemini daily quota used up: {e.message}") from e
-            if not (e.code == 429 or (e.code or 0) >= 500) or attempt == 2:
+            if not (e.code == 429 or (e.code or 0) >= 500) or attempt == 1:
+                _down_until = time.time() + 300
                 raise LLMUnavailable(f"Gemini API error {e.code}: {e.message}") from e
         except Exception as e:  # network errors
-            if attempt == 2:
+            if attempt == 1:
+                _down_until = time.time() + 300
                 raise LLMUnavailable(f"Gemini call failed: {e}") from e
-        time.sleep(4 * 2 ** attempt)
+        time.sleep(3)
     if not text:
         raise LLMUnavailable("Gemini returned an empty reply")
 

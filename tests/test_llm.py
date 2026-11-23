@@ -23,6 +23,7 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("SURAAG_MODEL_FILLER", "fake-model")
     monkeypatch.delenv("SURAAG_OFFLINE", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setattr(llm, "_down_until", 0.0)
     return tmp_path
 
 
@@ -59,6 +60,35 @@ def test_daily_quota_fails_fast_without_retrying(env, monkeypatch):
     with pytest.raises(llm.LLMUnavailable, match="daily quota"):
         llm.complete("hi")
     assert Quota.calls == 1
+
+
+def test_circuit_breaker_skips_the_api_after_a_failure(env, monkeypatch):
+    from google.genai import errors
+
+    class Down:
+        calls = 0
+
+        def generate_content(self, **kw):
+            Down.calls += 1
+            raise errors.ServerError(503, {"error": {"code": 503, "message": "overloaded"}})
+
+    monkeypatch.setattr(llm, "_get_client", lambda: type("C", (), {"models": Down()})())
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    with pytest.raises(llm.LLMUnavailable):
+        llm.complete("first")
+    after_first = Down.calls
+    assert after_first == 2  # one retry, then give up
+    with pytest.raises(llm.LLMUnavailable, match="moment ago"):
+        llm.complete("second")
+    assert Down.calls == after_first  # the breaker was open: no new API call
+
+
+def test_cached_replies_still_work_while_the_breaker_is_open(env, monkeypatch):
+    fake = FakeModels()
+    monkeypatch.setattr(llm, "_get_client", lambda: type("C", (), {"models": fake})())
+    assert llm.complete("warm") == "hello"
+    monkeypatch.setattr(llm, "_down_until", llm.time.time() + 999)
+    assert llm.complete("warm") == "hello"
 
 
 def test_empty_response_raises(env, monkeypatch):

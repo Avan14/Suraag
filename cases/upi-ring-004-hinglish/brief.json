@@ -1,0 +1,64 @@
+{
+  "summary": "13 March 2026 ki shaam ko mule ke account mein Rs 48,000 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P2",
+  "mule": "P2",
+  "suspects": [
+    {
+      "id": "P1",
+      "name": "Sunil Verma",
+      "phone": "+91-54533-22631"
+    },
+    {
+      "id": "P3",
+      "name": "Subhash Banerjee",
+      "phone": "+91-53512-03360"
+    },
+    {
+      "id": "P4",
+      "name": "Nilesh Desai",
+      "phone": "+91-54264-35618"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    },
+    {
+      "id": "PL3",
+      "name": "Thane West",
+      "lat": 19.2183,
+      "lon": 72.9781
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?"
+    }
+  ]
+}

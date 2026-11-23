@@ -1,0 +1,6 @@
+﻿# SYNTHETIC CASE - fictional, for teaching only. Not real data.
+row,datetime,direction,number,contact_name,duration_s
+1,2026-04-16 20:54:00,outgoing,+91-59744-94217,Manoj ji,146
+2,2026-04-16 21:14:00,incoming,+91-54414-61964,Rina M.,58
+3,2026-04-16 21:28:00,missed,+91-54414-61964,Rina M.,0
+4,2026-04-16 21:36:00,incoming,+91-56994-51768,Rina ji,151

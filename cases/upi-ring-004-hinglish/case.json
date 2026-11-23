@@ -1,0 +1,349 @@
+{
+  "case_id": "upi-ring-004",
+  "lang": "hinglish",
+  "seed": 4,
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Sunil Verma",
+      "name_deva": "सुनील वर्मा",
+      "role": "distractor",
+      "aliases": [
+        "Nilesh V.",
+        "Sunil V"
+      ],
+      "phone": "+91-54533-22631"
+    },
+    {
+      "id": "P2",
+      "name": "Mahesh Joshi",
+      "name_deva": "महेश जोशी",
+      "role": "mule",
+      "aliases": [
+        "Mahesh bhai",
+        "Mahesh J"
+      ],
+      "phone": "+91-51739-34304"
+    },
+    {
+      "id": "P3",
+      "name": "Subhash Banerjee",
+      "name_deva": "सुभाष बनर्जी",
+      "role": "associate",
+      "aliases": [
+        "Subhash bhai",
+        "Subhash B"
+      ],
+      "phone": "+91-53512-03360"
+    },
+    {
+      "id": "P4",
+      "name": "Nilesh Desai",
+      "name_deva": "नीलेश देसाई",
+      "role": "boss",
+      "aliases": [
+        "Nilesh bhai",
+        "Nilesh D"
+      ],
+      "phone": "+91-54264-35618"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    },
+    {
+      "id": "PL3",
+      "name": "Thane West",
+      "lat": 19.2183,
+      "lon": 72.9781
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-03-13T18:47:00+05:30",
+      "kind": "transfer",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-03-13T19:25:00+05:30",
+      "kind": "call",
+      "actor": "P4",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-03-13T19:27:00+05:30",
+      "kind": "instruction",
+      "actor": "P4",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-03-13T19:44:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-03-13T19:47:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P1",
+      "target": "P2",
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P4 told P2 to delete the transfer record at 7:27 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 14,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:27 pm",
+            "Nilesh bhai"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-54264-35618",
+            "19:25"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P2 took the payment screenshot photo near Andheri East",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.1139"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8698"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P1 called P2 at 7:47 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-54533-22631",
+            "19:47"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P4"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-03-13T19:27:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL2"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-03-13T18:30:00+05:30",
+    "2026-03-13T20:30:00+05:30"
+  ],
+  "chat_length": 24,
+  "chat_anchors": [
+    {
+      "line": 14,
+      "message": {
+        "t": "2026-03-13T19:27:00+05:30",
+        "sender": "Nilesh bhai",
+        "text": "Mahesh bhai, wo transfer ka record delete kar dena abhi"
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-03-13T18:38:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-53512-03360",
+      "contact_name": "Subhash bhai",
+      "duration_s": 82
+    },
+    {
+      "row": 2,
+      "t": "2026-03-13T19:15:00+05:30",
+      "direction": "missed",
+      "number": "+91-54533-22631",
+      "contact_name": "Nilesh V.",
+      "duration_s": 0
+    },
+    {
+      "row": 3,
+      "t": "2026-03-13T19:25:00+05:30",
+      "direction": "incoming",
+      "number": "+91-54264-35618",
+      "contact_name": "Nilesh bhai",
+      "duration_s": 103
+    },
+    {
+      "row": 4,
+      "t": "2026-03-13T19:47:00+05:30",
+      "direction": "incoming",
+      "number": "+91-54533-22631",
+      "contact_name": "Nilesh V.",
+      "duration_s": 80
+    }
+  ],
+  "photo": {
+    "t": "2026-03-13T19:44:00+05:30",
+    "lat": 19.1139,
+    "lon": 72.8698,
+    "make": "Redmi",
+    "model": "Note 12"
+  },
+  "brief": {
+    "summary": "13 March 2026 ki shaam ko mule ke account mein Rs 48,000 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P2",
+    "mule": "P2",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Sunil Verma",
+        "phone": "+91-54533-22631"
+      },
+      {
+        "id": "P3",
+        "name": "Subhash Banerjee",
+        "phone": "+91-53512-03360"
+      },
+      {
+        "id": "P4",
+        "name": "Nilesh Desai",
+        "phone": "+91-54264-35618"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Dadar",
+        "lat": 19.0178,
+        "lon": 72.8478
+      },
+      {
+        "id": "PL2",
+        "name": "Andheri East",
+        "lat": 19.1136,
+        "lon": 72.8697
+      },
+      {
+        "id": "PL3",
+        "name": "Thane West",
+        "lat": 19.2183,
+        "lon": 72.9781
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Mule ko transfer record delete karne ko kisne kaha?"
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "Ye instruction kab diya gaya?"
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Payment screenshot wali photo li gayi tab mule kahan tha?"
+      }
+    ]
+  }
+}

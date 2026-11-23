@@ -1,0 +1,6 @@
+﻿# SYNTHETIC CASE - fictional, for teaching only. Not real data.
+row,datetime,direction,number,contact_name,duration_s
+1,2026-03-24 19:35:00,outgoing,+91-58225-35158,Suresh bhai,82
+2,2026-03-24 20:15:00,incoming,+91-58915-58307,Subhash I.,42
+3,2026-03-24 20:21:00,missed,+91-58915-58307,Subhash I.,0
+4,2026-03-24 20:29:00,incoming,+91-58340-48766,Subhash bhai,123

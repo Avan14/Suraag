@@ -1,0 +1,17 @@
+{
+  "case_id": "upi-ring-001",
+  "files": {
+    "chat.txt": "4a08748a4458d36aef114e6d5b30d1cd3ef39697551ac0112ac372a0ce22fe3c",
+    "calls.csv": "15df154f18c101f0b542b3092a4eb2d71def70c37c9d31d0c75c364c89738b25",
+    "photo.jpg": "3f7eddd9039e880facad3ee88dc0d43bdbb0e6c5bf1b1c272093de6fa66c8fe5"
+  },
+  "seed": 1,
+  "model": "stub",
+  "prompt_hashes": {
+    "filler": "11305d86fb36",
+    "raw": "db47b05b5d43"
+  },
+  "mode": "hybrid",
+  "lang": "en",
+  "sealed_at": "2026-11-23T18:36:43+05:30"
+}

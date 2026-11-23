@@ -1,0 +1,349 @@
+{
+  "case_id": "upi-ring-003",
+  "lang": "en",
+  "seed": 3,
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Vikram Mishra",
+      "name_deva": "विक्रम मिश्रा",
+      "role": "distractor",
+      "aliases": [
+        "Rina M.",
+        "Vikram M"
+      ],
+      "phone": "+91-54414-61964"
+    },
+    {
+      "id": "P2",
+      "name": "Manoj Chauhan",
+      "name_deva": "मनोज चौहान",
+      "role": "associate",
+      "aliases": [
+        "Manoj ji",
+        "Manoj C"
+      ],
+      "phone": "+91-59744-94217"
+    },
+    {
+      "id": "P3",
+      "name": "Hetal Patil",
+      "name_deva": "हेतल पाटील",
+      "role": "mule",
+      "aliases": [
+        "Hetal ji",
+        "Hetal P"
+      ],
+      "phone": "+91-56350-93602"
+    },
+    {
+      "id": "P4",
+      "name": "Rina Bose",
+      "name_deva": "रीना बोस",
+      "role": "boss",
+      "aliases": [
+        "Rina ji",
+        "Rina B"
+      ],
+      "phone": "+91-56994-51768"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Shivajinagar",
+      "lat": 18.5308,
+      "lon": 73.8475
+    },
+    {
+      "id": "PL2",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL3",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-16T21:06:00+05:30",
+      "kind": "transfer",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-16T21:36:00+05:30",
+      "kind": "call",
+      "actor": "P4",
+      "target": "P3",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-16T21:37:00+05:30",
+      "kind": "instruction",
+      "actor": "P4",
+      "target": "P3",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-16T21:53:00+05:30",
+      "kind": "photo",
+      "actor": "P3",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-16T21:14:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P1",
+      "target": "P3",
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P4 told P3 to delete the transfer record at 9:37 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 11,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:37 pm",
+            "Rina ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-56994-51768",
+            "21:36"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P3 took the payment screenshot photo near Kharadi",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5511"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.9472"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P1 called P3 at 9:14 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-54414-61964",
+            "21:14"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P4"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-04-16T21:37:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL3"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-16T20:45:00+05:30",
+    "2026-04-16T22:45:00+05:30"
+  ],
+  "chat_length": 23,
+  "chat_anchors": [
+    {
+      "line": 11,
+      "message": {
+        "t": "2026-04-16T21:37:00+05:30",
+        "sender": "Rina ji",
+        "text": "Hetal ji, delete the transfer record right now"
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-16T20:54:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-59744-94217",
+      "contact_name": "Manoj ji",
+      "duration_s": 146
+    },
+    {
+      "row": 2,
+      "t": "2026-04-16T21:14:00+05:30",
+      "direction": "incoming",
+      "number": "+91-54414-61964",
+      "contact_name": "Rina M.",
+      "duration_s": 58
+    },
+    {
+      "row": 3,
+      "t": "2026-04-16T21:28:00+05:30",
+      "direction": "missed",
+      "number": "+91-54414-61964",
+      "contact_name": "Rina M.",
+      "duration_s": 0
+    },
+    {
+      "row": 4,
+      "t": "2026-04-16T21:36:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56994-51768",
+      "contact_name": "Rina ji",
+      "duration_s": 151
+    }
+  ],
+  "photo": {
+    "t": "2026-04-16T21:53:00+05:30",
+    "lat": 18.5511,
+    "lon": 73.9472,
+    "make": "Vivo",
+    "model": "Y22"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 32,500 reached the mule's account on the evening of 16 April 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P3",
+    "mule": "P3",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Vikram Mishra",
+        "phone": "+91-54414-61964"
+      },
+      {
+        "id": "P2",
+        "name": "Manoj Chauhan",
+        "phone": "+91-59744-94217"
+      },
+      {
+        "id": "P4",
+        "name": "Rina Bose",
+        "phone": "+91-56994-51768"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Shivajinagar",
+        "lat": 18.5308,
+        "lon": 73.8475
+      },
+      {
+        "id": "PL2",
+        "name": "Baner",
+        "lat": 18.559,
+        "lon": 73.7868
+      },
+      {
+        "id": "PL3",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?"
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?"
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?"
+      }
+    ]
+  }
+}

@@ -1,0 +1,349 @@
+{
+  "case_id": "upi-ring-005",
+  "lang": "hinglish",
+  "seed": 5,
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Revathi Reddy",
+      "name_deva": "रेवती रेड्डी",
+      "role": "distractor",
+      "aliases": [
+        "Pooja R.",
+        "Revathi R"
+      ],
+      "phone": "+91-58908-13365"
+    },
+    {
+      "id": "P2",
+      "name": "Pranab Sen",
+      "name_deva": "प्रणब सेन",
+      "role": "mule",
+      "aliases": [
+        "Pranab bhai",
+        "Pranab S"
+      ],
+      "phone": "+91-59403-32680"
+    },
+    {
+      "id": "P3",
+      "name": "Pooja Verma",
+      "name_deva": "पूजा वर्मा",
+      "role": "boss",
+      "aliases": [
+        "Pooja didi",
+        "Pooja V"
+      ],
+      "phone": "+91-50214-95837"
+    },
+    {
+      "id": "P4",
+      "name": "Raju Gupta",
+      "name_deva": "राजू गुप्ता",
+      "role": "associate",
+      "aliases": [
+        "Raju bhai",
+        "Raju G"
+      ],
+      "phone": "+91-53550-53497"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Borivali West",
+      "lat": 19.2307,
+      "lon": 72.8567
+    },
+    {
+      "id": "PL2",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    },
+    {
+      "id": "PL3",
+      "name": "Vashi",
+      "lat": 19.0771,
+      "lon": 72.9986
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-03-18T19:16:00+05:30",
+      "kind": "transfer",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-03-18T19:37:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-03-18T19:38:00+05:30",
+      "kind": "instruction",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-03-18T20:12:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-03-18T19:50:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P1",
+      "target": "P2",
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P3 told P2 to delete the transfer record at 7:38 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 14,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:38 pm",
+            "Pooja didi"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-50214-95837",
+            "19:37"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P2 took the payment screenshot photo near Borivali West",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.2306"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8565"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P1 called P2 at 7:50 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58908-13365",
+            "19:50"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P3"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-03-18T19:38:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-03-18T18:45:00+05:30",
+    "2026-03-18T20:45:00+05:30"
+  ],
+  "chat_length": 30,
+  "chat_anchors": [
+    {
+      "line": 14,
+      "message": {
+        "t": "2026-03-18T19:38:00+05:30",
+        "sender": "Pooja didi",
+        "text": "Pranab bhai, wo transfer ka record delete kar dena abhi"
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-03-18T18:50:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-53550-53497",
+      "contact_name": "Raju bhai",
+      "duration_s": 171
+    },
+    {
+      "row": 2,
+      "t": "2026-03-18T19:29:00+05:30",
+      "direction": "missed",
+      "number": "+91-58908-13365",
+      "contact_name": "Pooja R.",
+      "duration_s": 0
+    },
+    {
+      "row": 3,
+      "t": "2026-03-18T19:37:00+05:30",
+      "direction": "incoming",
+      "number": "+91-50214-95837",
+      "contact_name": "Pooja didi",
+      "duration_s": 41
+    },
+    {
+      "row": 4,
+      "t": "2026-03-18T19:50:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58908-13365",
+      "contact_name": "Pooja R.",
+      "duration_s": 46
+    }
+  ],
+  "photo": {
+    "t": "2026-03-18T20:12:00+05:30",
+    "lat": 19.2306,
+    "lon": 72.8565,
+    "make": "Vivo",
+    "model": "Y22"
+  },
+  "brief": {
+    "summary": "18 March 2026 ki shaam ko mule ke account mein Rs 72,000 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P2",
+    "mule": "P2",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Revathi Reddy",
+        "phone": "+91-58908-13365"
+      },
+      {
+        "id": "P3",
+        "name": "Pooja Verma",
+        "phone": "+91-50214-95837"
+      },
+      {
+        "id": "P4",
+        "name": "Raju Gupta",
+        "phone": "+91-53550-53497"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Borivali West",
+        "lat": 19.2307,
+        "lon": 72.8567
+      },
+      {
+        "id": "PL2",
+        "name": "Kurla West",
+        "lat": 19.0726,
+        "lon": 72.8845
+      },
+      {
+        "id": "PL3",
+        "name": "Vashi",
+        "lat": 19.0771,
+        "lon": 72.9986
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Mule ko transfer record delete karne ko kisne kaha?"
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "Ye instruction kab diya gaya?"
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Payment screenshot wali photo li gayi tab mule kahan tha?"
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "summary": "A UPI payment of Rs 32,500 reached the mule's account on the evening of 16 April 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P3",
+  "mule": "P3",
+  "suspects": [
+    {
+      "id": "P1",
+      "name": "Vikram Mishra",
+      "phone": "+91-54414-61964"
+    },
+    {
+      "id": "P2",
+      "name": "Manoj Chauhan",
+      "phone": "+91-59744-94217"
+    },
+    {
+      "id": "P4",
+      "name": "Rina Bose",
+      "phone": "+91-56994-51768"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Shivajinagar",
+      "lat": 18.5308,
+      "lon": 73.8475
+    },
+    {
+      "id": "PL2",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL3",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?"
+    }
+  ]
+}
