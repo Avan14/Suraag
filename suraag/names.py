@@ -16,6 +16,7 @@ class DrawnName:
     surname: str
     first_deva: str
     surname_deva: str
+    gender: str  # "m" or "f": only used to pick a natural form of address
 
     @property
     def full(self) -> str:
@@ -32,7 +33,7 @@ def load_names() -> dict:
     nfc = lambda s: unicodedata.normalize("NFC", s)  # noqa: E731
     for region in data["regions"].values():
         for key in ("first", "surname"):
-            region[key] = [[nfc(en), nfc(deva)] for en, deva in region[key]]
+            region[key] = [[nfc(x[0]), nfc(x[1]), *x[2:]] for x in region[key]]
     data["blocklist"] = {nfc(b).casefold() for b in data["blocklist"]}
     return data
 
@@ -46,8 +47,8 @@ def draw_people(rng: random.Random, n: int = 4) -> list[DrawnName]:
         picks = []
         for _ in range(n):
             r = data["regions"][rng.choice(regions)]
-            (f, fd), (s, sd) = rng.choice(r["first"]), rng.choice(r["surname"])
-            picks.append(DrawnName(f, s, fd, sd))
+            (f, fd, g), (s, sd) = rng.choice(r["first"]), rng.choice(r["surname"])
+            picks.append(DrawnName(f, s, fd, sd, g))
         if (len({p.first for p in picks}) == n
                 and len({p.surname[0] for p in picks}) == n
                 and len({(p.first[0], p.surname[0]) for p in picks}) == n

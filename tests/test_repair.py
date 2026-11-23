@@ -53,7 +53,8 @@ def test_unrepairable_filler_is_discarded_logged_and_writes_no_files(tmp_path):
     lines = (tmp_path / "failures.jsonl").read_text("utf-8").splitlines()
     assert len(lines) == 1
     entry = json.loads(lines[0])
-    assert "filler_count" in entry["codes"] and entry["tries"] == 4 and entry["case_id"] == "upi-ring-001"
+    assert entry["checks"] == ["filler_count"] and entry["codes"] == ["filler_short"]
+    assert entry["tries"] == 4 and entry["case_id"] == "upi-ring-001"
     assert not (tmp_path / "out").exists()
 
 

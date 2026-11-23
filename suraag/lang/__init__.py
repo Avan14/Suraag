@@ -8,7 +8,7 @@ from dataclasses import dataclass
 class LangPack:
     lang: str
     triggers: dict[str, re.Pattern]       # applied to norm(text)
-    alias_patterns: list[str]             # "{first} bhai": the name as saved in a phone
+    alias_patterns: dict[str, str]        # by gender ("m"/"f"): the name as saved in a phone, e.g. "{first} bhai"
     places: list[tuple[str, float, float]]
     stub_lines: list[str]                 # offline filler; never matches a trigger
     instruction_templates: list[str]      # format with {owner}; always matches triggers["instruction"]

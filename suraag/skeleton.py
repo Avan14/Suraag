@@ -40,7 +40,7 @@ def build_case(seed: int, lang: Lang) -> Case:
             # trailing period stops "Raju B." from being a prefix of "Raju bhai".
             aliases = [f"{boss_first} {n.surname[0]}.", own]
         else:
-            aliases = [pack.alias_patterns[0].format(first=n.first), own]
+            aliases = [pack.alias_patterns[n.gender].format(first=n.first), own]
         people.append(Person(id=f"P{i}", name=n.full, name_deva=n.full_deva, role=role,
                              aliases=aliases, phone=phones[i - 1]))
     by_role = {p.role: p for p in people}

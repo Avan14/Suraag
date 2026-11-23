@@ -1,27 +1,286 @@
 {
-  "_note": "Common Indian first names and surnames, in regional pools, with Devanagari spellings. All fictional pairings. No famous people: see blocklist. Guilt is assigned at random elsewhere, never from region.",
+  "_note": "Common Indian first names and surnames, in regional pools, with Devanagari spellings. All fictional pairings. No famous people: see blocklist. Guilt is assigned at random elsewhere, never from region. First names carry a gender (m/f) only to choose natural forms of address (bhai/didi).",
   "regions": {
     "north": {
-      "first": [["Raju", "राजू"], ["Vikram", "विक्रम"], ["Sunil", "सुनील"], ["Anita", "अनीता"], ["Deepak", "दीपक"], ["Pooja", "पूजा"], ["Manoj", "मनोज"]],
-      "surname": [["Verma", "वर्मा"], ["Sharma", "शर्मा"], ["Gupta", "गुप्ता"], ["Yadav", "यादव"], ["Chauhan", "चौहान"], ["Mishra", "मिश्रा"]]
+      "first": [
+        [
+          "Raju",
+          "राजू",
+          "m"
+        ],
+        [
+          "Vikram",
+          "विक्रम",
+          "m"
+        ],
+        [
+          "Sunil",
+          "सुनील",
+          "m"
+        ],
+        [
+          "Anita",
+          "अनीता",
+          "f"
+        ],
+        [
+          "Deepak",
+          "दीपक",
+          "m"
+        ],
+        [
+          "Pooja",
+          "पूजा",
+          "f"
+        ],
+        [
+          "Manoj",
+          "मनोज",
+          "m"
+        ]
+      ],
+      "surname": [
+        [
+          "Verma",
+          "वर्मा"
+        ],
+        [
+          "Sharma",
+          "शर्मा"
+        ],
+        [
+          "Gupta",
+          "गुप्ता"
+        ],
+        [
+          "Yadav",
+          "यादव"
+        ],
+        [
+          "Chauhan",
+          "चौहान"
+        ],
+        [
+          "Mishra",
+          "मिश्रा"
+        ]
+      ]
     },
     "west": {
-      "first": [["Sanjay", "संजय"], ["Kavita", "कविता"], ["Jignesh", "जिग्नेश"], ["Mahesh", "महेश"], ["Nilesh", "नीलेश"], ["Hetal", "हेतल"], ["Prakash", "प्रकाश"]],
-      "surname": [["Patil", "पाटील"], ["Joshi", "जोशी"], ["Desai", "देसाई"], ["Kulkarni", "कुलकर्णी"], ["Shinde", "शिंदे"], ["Mehta", "मेहता"]]
+      "first": [
+        [
+          "Sanjay",
+          "संजय",
+          "m"
+        ],
+        [
+          "Kavita",
+          "कविता",
+          "f"
+        ],
+        [
+          "Jignesh",
+          "जिग्नेश",
+          "m"
+        ],
+        [
+          "Mahesh",
+          "महेश",
+          "m"
+        ],
+        [
+          "Nilesh",
+          "नीलेश",
+          "m"
+        ],
+        [
+          "Hetal",
+          "हेतल",
+          "f"
+        ],
+        [
+          "Prakash",
+          "प्रकाश",
+          "m"
+        ]
+      ],
+      "surname": [
+        [
+          "Patil",
+          "पाटील"
+        ],
+        [
+          "Joshi",
+          "जोशी"
+        ],
+        [
+          "Desai",
+          "देसाई"
+        ],
+        [
+          "Kulkarni",
+          "कुलकर्णी"
+        ],
+        [
+          "Shinde",
+          "शिंदे"
+        ],
+        [
+          "Mehta",
+          "मेहता"
+        ]
+      ]
     },
     "south": {
-      "first": [["Ashok", "अशोक"], ["Lakshmi", "लक्ष्मी"], ["Suresh", "सुरेश"], ["Divya", "दिव्या"], ["Karthik", "कार्तिक"], ["Revathi", "रेवती"], ["Venkat", "वेंकट"]],
-      "surname": [["Nair", "नायर"], ["Iyer", "अय्यर"], ["Reddy", "रेड्डी"], ["Pillai", "पिल्लै"], ["Rao", "राव"], ["Menon", "मेनन"]]
+      "first": [
+        [
+          "Ashok",
+          "अशोक",
+          "m"
+        ],
+        [
+          "Lakshmi",
+          "लक्ष्मी",
+          "f"
+        ],
+        [
+          "Suresh",
+          "सुरेश",
+          "m"
+        ],
+        [
+          "Divya",
+          "दिव्या",
+          "f"
+        ],
+        [
+          "Karthik",
+          "कार्तिक",
+          "m"
+        ],
+        [
+          "Revathi",
+          "रेवती",
+          "f"
+        ],
+        [
+          "Venkat",
+          "वेंकट",
+          "m"
+        ]
+      ],
+      "surname": [
+        [
+          "Nair",
+          "नायर"
+        ],
+        [
+          "Iyer",
+          "अय्यर"
+        ],
+        [
+          "Reddy",
+          "रेड्डी"
+        ],
+        [
+          "Pillai",
+          "पिल्लै"
+        ],
+        [
+          "Rao",
+          "राव"
+        ],
+        [
+          "Menon",
+          "मेनन"
+        ]
+      ]
     },
     "east": {
-      "first": [["Subhash", "सुभाष"], ["Rina", "रीना"], ["Debashish", "देबाशीष"], ["Mamta", "ममता"], ["Tanuja", "तनुजा"], ["Abhijit", "अभिजीत"], ["Pranab", "प्रणब"]],
-      "surname": [["Banerjee", "बनर्जी"], ["Das", "दास"], ["Ghosh", "घोष"], ["Sen", "सेन"], ["Bose", "बोस"], ["Roy", "रॉय"]]
+      "first": [
+        [
+          "Subhash",
+          "सुभाष",
+          "m"
+        ],
+        [
+          "Rina",
+          "रीना",
+          "f"
+        ],
+        [
+          "Debashish",
+          "देबाशीष",
+          "m"
+        ],
+        [
+          "Mamta",
+          "ममता",
+          "f"
+        ],
+        [
+          "Tanuja",
+          "तनुजा",
+          "f"
+        ],
+        [
+          "Abhijit",
+          "अभिजीत",
+          "m"
+        ],
+        [
+          "Pranab",
+          "प्रणब",
+          "m"
+        ]
+      ],
+      "surname": [
+        [
+          "Banerjee",
+          "बनर्जी"
+        ],
+        [
+          "Das",
+          "दास"
+        ],
+        [
+          "Ghosh",
+          "घोष"
+        ],
+        [
+          "Sen",
+          "सेन"
+        ],
+        [
+          "Bose",
+          "बोस"
+        ],
+        [
+          "Roy",
+          "रॉय"
+        ]
+      ]
     }
   },
   "blocklist": [
-    "amit shah", "rahul gandhi", "virat kohli", "narendra modi", "sachin tendulkar", "shah rukh khan",
-    "amitabh bachchan", "ratan tata", "mukesh ambani", "arvind kejriwal", "manmohan singh",
-    "sunil gavaskar", "rahul dravid", "sourav ganguly", "mamata banerjee", "pranab mukherjee",
-    "meera rao", "arvind nair", "farhan qureshi"
+    "amit shah",
+    "rahul gandhi",
+    "virat kohli",
+    "narendra modi",
+    "sachin tendulkar",
+    "shah rukh khan",
+    "amitabh bachchan",
+    "ratan tata",
+    "mukesh ambani",
+    "arvind kejriwal",
+    "manmohan singh",
+    "sunil gavaskar",
+    "rahul dravid",
+    "sourav ganguly",
+    "mamata banerjee",
+    "pranab mukherjee",
+    "meera rao",
+    "arvind nair",
+    "farhan qureshi"
   ]
 }

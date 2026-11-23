@@ -15,7 +15,7 @@ LANGS = ("en", "hinglish")
 def test_names_are_nfc_and_draws_are_reproducible():
     import unicodedata
     for region in load_names()["regions"].values():
-        for _, deva in region["first"] + region["surname"]:
+        for _, deva, *_rest in region["first"] + region["surname"]:
             assert deva == unicodedata.normalize("NFC", deva)
     assert draw_people(random.Random(5)) == draw_people(random.Random(5))
 
@@ -80,8 +80,21 @@ def test_invariants_over_many_seeds(lang):
 def test_guilt_is_not_tied_to_region():
     """Over many seeds the boss's first name comes from every region, not one."""
     data = load_names()["regions"]
-    region_of = {en: r for r, v in data.items() for en, _ in v["first"]}
+    region_of = {en: r for r, v in data.items() for en, *_ in v["first"]}
     def boss_first(seed):
         return next(p for p in build_case(seed, "en").people if p.role == "boss").name.split()[0]
 
     assert len({region_of[boss_first(s)] for s in range(1, 60)}) == 4
+
+
+def test_hinglish_forms_of_address_follow_gender():
+    gender = {en: g for r in load_names()["regions"].values() for en, _, g in r["first"]}
+    seen = set()
+    for seed in range(1, 60):
+        for p in build_case(seed, "hinglish").people:
+            if p.role == "distractor":
+                continue  # the decoy is saved under the boss's name token, not its own
+            first = p.name.split()[0]
+            assert p.saved_as == f"{first} {'didi' if gender[first] == 'f' else 'bhai'}", (seed, p.saved_as)
+            seen.add(gender[first])
+    assert seen == {"m", "f"}

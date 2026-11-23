@@ -33,7 +33,7 @@ Fill the other lines with ordinary conversation. Do not add a header or explanat
 PACK = LangPack(
     lang="hinglish",
     triggers={"instruction": INSTRUCTION},
-    alias_patterns=["{first} bhai", "{first}ji", "{first} boss"],
+    alias_patterns={"m": "{first} bhai", "f": "{first} didi"},
     places=[("Andheri East", 19.1136, 72.8697), ("Kurla West", 19.0726, 72.8845),
             ("Dadar", 19.0178, 72.8478), ("Bandra West", 19.0596, 72.8295),
             ("Thane West", 19.2183, 72.9781), ("Vashi", 19.0771, 72.9986),

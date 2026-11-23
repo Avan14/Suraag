@@ -114,6 +114,7 @@ def run(case: Case, *, filler_fn: Callable[[Case, list[str]], list[ChatMessage]]
         log_path.parent.mkdir(parents=True, exist_ok=True)
         with log_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps({"case_id": case.case_id, "mode": mode, "lang": case.lang,
+                                "checks": sorted({x.check for x in failures}),
                                 "codes": sorted({x.code for x in failures}), "tries": len(attempts)}) + "\n")
         return RepairResult(False, attempts)
     arts = Artifacts(chat, calls, photo)

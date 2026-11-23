@@ -31,7 +31,7 @@ PACK = LangPack(
     triggers={"instruction": INSTRUCTION},
     # Pattern 0 must never be a prefix of the decoy's alias ("{first} {initial}"), or a wrong-sender
     # line would still satisfy the boss's anchor.
-    alias_patterns=["{first} ji", "Mr {first}", "{first} Sir"],
+    alias_patterns={"m": "{first} ji", "f": "{first} ji"},
     places=[("Kothrud", 18.5074, 73.8077), ("Hadapsar", 18.5089, 73.9260),
             ("Viman Nagar", 18.5679, 73.9143), ("Shivajinagar", 18.5308, 73.8475),
             ("Baner", 18.5590, 73.7868), ("Kharadi", 18.5511, 73.9473)],
