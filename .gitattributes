@@ -1,0 +1,4 @@
+# Case files are evidence: store them byte for byte so their SHA-256 in manifest.json stays true.
+cases/** -text
+out/** -text
+*.jpg binary
