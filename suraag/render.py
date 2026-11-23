@@ -69,8 +69,9 @@ def render_chat(case: Case, filler: list[ChatMessage]) -> str:
 
 def render_calls(case: Case) -> str:
     buf = io.StringIO()
-    buf.write(f"# {HEADER}\n")
-    w = csv.writer(buf, lineterminator="\n")
+    # CRLF line ends and quoted text fields (rule F-06) so Excel and strict parsers agree.
+    buf.write(f"# {HEADER}\r\n")
+    w = csv.writer(buf, lineterminator="\r\n", quoting=csv.QUOTE_NONNUMERIC)
     w.writerow(["row", "datetime", "direction", "number", "contact_name", "duration_s"])
     for r in sorted(case.calls, key=lambda r: r.row):
         w.writerow([r.row, csv_ts(r.t), r.direction, r.number, r.contact_name, r.duration_s])
@@ -94,9 +95,12 @@ def render_photo(case: Case) -> bytes:
     ImageDraw.Draw(image).text((24, 24), "SYNTHETIC", fill=(255, 255, 255))
     exif = piexif.dump({
         "0th": {piexif.ImageIFD.ImageDescription: HEADER.encode("ascii"),
-                piexif.ImageIFD.Make: p.make.encode("ascii"), piexif.ImageIFD.Model: p.model.encode("ascii")},
+                piexif.ImageIFD.Make: p.make.encode("ascii"), piexif.ImageIFD.Model: p.model.encode("ascii"),
+                piexif.ImageIFD.DateTime: exif_ts(p.t).encode("ascii")},  # ModifyDate equals capture time: a clean original
         "Exif": {piexif.ExifIFD.DateTimeOriginal: exif_ts(p.t).encode("ascii"),
-                 piexif.ExifIFD.OffsetTimeOriginal: b"+05:30"},
+                 piexif.ExifIFD.DateTimeDigitized: exif_ts(p.t).encode("ascii"),  # CreateDate
+                 piexif.ExifIFD.OffsetTime: b"+05:30", piexif.ExifIFD.OffsetTimeOriginal: b"+05:30",
+                 piexif.ExifIFD.OffsetTimeDigitized: b"+05:30"},
         "GPS": {piexif.GPSIFD.GPSLatitudeRef: b"N" if p.lat >= 0 else b"S",
                 piexif.GPSIFD.GPSLatitude: _dms(p.lat),
                 piexif.GPSIFD.GPSLongitudeRef: b"E" if p.lon >= 0 else b"W",

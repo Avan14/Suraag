@@ -12,6 +12,9 @@ from suraag.timefmt import csv_ts, parse_chat_ts, parse_csv_ts
 
 HEADER = "SYNTHETIC CASE - fictional, for teaching only. Not real data."
 CHAT_FILE, CALLS_FILE, PHOTO_FILE = "chat.txt", "calls.csv", "photo.jpg"
+# Rule H-08: what a hash does and does not show. One wording everywhere a hash is displayed.
+HASH_NOTE = ("A matching hash shows this file has not changed since the hash was computed; it does not show who "
+             "made the file or that its content is genuine.")
 _BOM = b"\xef\xbb\xbf"
 
 
@@ -116,8 +119,12 @@ def load_exif(data: bytes) -> dict[str, str]:
     out: dict[str, str] = {}
     for name, ifd, tag in (("ImageDescription", "0th", piexif.ImageIFD.ImageDescription),
                            ("Make", "0th", piexif.ImageIFD.Make), ("Model", "0th", piexif.ImageIFD.Model),
+                           ("ModifyDate", "0th", piexif.ImageIFD.DateTime),
                            ("DateTimeOriginal", "Exif", piexif.ExifIFD.DateTimeOriginal),
-                           ("OffsetTimeOriginal", "Exif", piexif.ExifIFD.OffsetTimeOriginal)):
+                           ("CreateDate", "Exif", piexif.ExifIFD.DateTimeDigitized),
+                           ("OffsetTime", "Exif", piexif.ExifIFD.OffsetTime),
+                           ("OffsetTimeOriginal", "Exif", piexif.ExifIFD.OffsetTimeOriginal),
+                           ("OffsetTimeDigitized", "Exif", piexif.ExifIFD.OffsetTimeDigitized)):
         if tag in exif[ifd]:
             out[name] = txt(exif[ifd][tag])
     gps = exif["GPS"]

@@ -17,7 +17,7 @@ Strings the claim needs: chat: '6:58 pm' + 'Prakash ji'; calls: '+91-57297-34908
 
 Cited lines:
 - chat 13: `16/04/26, 6:58 pm - Prakash ji: Mahesh ji, delete the transfer record right now`
-- calls 4: `2026-04-16 18:57:00,incoming,+91-57297-34908,Prakash ji,47`
+- calls 4: `2026-04-16T18:57:00+05:30,incoming,+91-57297-34908,Prakash ji,47`
 
 ## Answer 2: case upi-ring-001 (en), Q2 (when)
 
@@ -28,7 +28,7 @@ Strings the claim needs: chat: '6:58 pm' + 'Prakash ji'; calls: '+91-57297-34908
 
 Cited lines:
 - chat 2: `16/04/26, 6:04 pm - Ashok ji: Heading home now.`
-- calls 4: `2026-04-16 18:57:00,incoming,+91-57297-34908,Prakash ji,47`
+- calls 4: `2026-04-16T18:57:00+05:30,incoming,+91-57297-34908,Prakash ji,47`
 
 ## Answer 3: case upi-ring-002 (hinglish), Q2 (when)
 
@@ -39,7 +39,7 @@ Strings the claim needs: chat: '8:30 pm' + 'Subhash bhai'; calls: '+91-58340-487
 
 Cited lines:
 - chat 15: `24/03/26, 8:30 pm - Subhash bhai: Deepak bhai, ye entry abhi delete kar do, kisi ko mat batana`
-- calls 4: `2026-03-24 20:29:00,incoming,+91-58340-48766,Subhash bhai,123`
+- calls 4: `2026-03-24T20:29:00+05:30,incoming,+91-58340-48766,Subhash bhai,123`
 
 ## Answer 4: case upi-ring-002 (hinglish), Q3 (where)
 
@@ -60,7 +60,7 @@ Strings the claim needs: chat: '9:37 pm' + 'Rina ji'; calls: '+91-56994-51768' +
 
 Cited lines:
 - chat 11: `16/04/26, 9:37 pm - Rina ji: Hetal ji, delete the transfer record right now`
-- calls 4: `2026-04-16 21:36:00,incoming,+91-56994-51768,Rina ji,151`
+- calls 4: `2026-04-16T21:36:00+05:30,incoming,+91-56994-51768,Rina ji,151`
 - chat 999: `None`
 
 ## Answer 6: case upi-ring-003 (en), Q2 (when)
@@ -72,7 +72,7 @@ Strings the claim needs: chat: '9:37 pm' + 'Rina ji'; calls: '+91-56994-51768' +
 
 Cited lines:
 - chat 11: `16/04/26, 9:37 pm - Rina ji: Hetal ji, delete the transfer record right now`
-- calls 4: `2026-04-16 21:36:00,incoming,+91-56994-51768,Rina ji,151`
+- calls 4: `2026-04-16T21:36:00+05:30,incoming,+91-56994-51768,Rina ji,151`
 - chat 2: `16/04/26, 8:50 pm - Manoj ji: Heading home now.`
 
 ## Answer 7: case upi-ring-004 (hinglish), Q2 (when)
@@ -84,7 +84,7 @@ Strings the claim needs: chat: '7:27 pm' + 'Nilesh bhai'; calls: '+91-54264-3561
 
 Cited lines:
 - chat 14: `13/03/26, 7:27 pm - Nilesh bhai: Mahesh bhai, wo transfer ka record delete kar dena abhi`
-- calls 3: `2026-03-13 19:25:00,incoming,+91-54264-35618,Nilesh bhai,103`
+- calls 3: `2026-03-13T19:25:00+05:30,incoming,+91-54264-35618,Nilesh bhai,103`
 - photo Make: `Redmi`
 
 ## Answer 8: case upi-ring-004 (hinglish), Q3 (where)
@@ -106,7 +106,7 @@ Strings the claim needs: chat: '7:38 pm' + 'Pooja ji'; calls: '+91-50214-95837' 
 
 Cited lines:
 - chat 15: `18/03/26, 7:41 pm - Pooja ji: Stuck in traffic right now.`
-- calls 3: `2026-03-18 19:37:00,incoming,+91-50214-95837,Pooja ji,41`
+- calls 3: `2026-03-18T19:37:00+05:30,incoming,+91-50214-95837,Pooja ji,41`
 
 ## Answer 10: case upi-ring-005 (en), Q2 (when)
 
@@ -117,7 +117,7 @@ Strings the claim needs: chat: '7:38 pm' + 'Pooja ji'; calls: '+91-50214-95837' 
 
 Cited lines:
 - chat 14: `18/03/26, 7:38 pm - Pooja ji: Pranab ji, delete the transfer record right now`
-- calls 3: `2026-03-18 19:37:00,incoming,+91-50214-95837,Pooja ji,41`
+- calls 3: `2026-03-18T19:37:00+05:30,incoming,+91-50214-95837,Pooja ji,41`
 
 ## Answer 11: case upi-ring-006 (hinglish), Q2 (when)
 
@@ -128,7 +128,7 @@ Strings the claim needs: chat: '9:39 pm' + 'Subhash bhai'; calls: '+91-58835-893
 
 Cited lines:
 - chat 11: `14/04/26, 9:39 pm - Subhash bhai: Prakash bhai, ye entry abhi delete kar do, kisi ko mat batana`
-- calls 3: `2026-04-14 21:38:00,incoming,+91-58835-89397,Subhash bhai,104`
+- calls 3: `2026-04-14T21:38:00+05:30,incoming,+91-58835-89397,Subhash bhai,104`
 
 ## Answer 12: case upi-ring-006 (hinglish), Q3 (where)
 
@@ -151,7 +151,7 @@ Strings the claim needs: chat: '8:08 pm' + 'Sunil ji'; calls: '+91-59593-59399' 
 
 Cited lines:
 - chat 14: `24/03/26, 8:08 pm - Sunil ji: Divya ji, delete the transfer record right now`
-- calls 3: `2026-03-24 20:07:00,incoming,+91-59593-59399,Sunil ji,154`
+- calls 3: `2026-03-24T20:07:00+05:30,incoming,+91-59593-59399,Sunil ji,154`
 
 ## Answer 14: case upi-ring-007 (en), Q2 (when)
 
@@ -172,7 +172,7 @@ Strings the claim needs: chat: '8:27 pm' + 'Vikram bhai'; calls: '+91-57424-5118
 
 Cited lines:
 - chat 9: `06/03/26, 8:27 pm - Vikram bhai: Manoj bhai, ye entry abhi delete kar do, kisi ko mat batana`
-- calls 3: `2026-03-06 20:25:00,incoming,+91-57424-51180,Vikram bhai,106`
+- calls 3: `2026-03-06T20:25:00+05:30,incoming,+91-57424-51180,Vikram bhai,106`
 - chat 999: `None`
 
 ## Answer 16: case upi-ring-008 (hinglish), Q3 (where)
@@ -196,7 +196,7 @@ Strings the claim needs: chat: '9:26 pm' + 'Pooja ji'; calls: '+91-56285-97792' 
 
 Cited lines:
 - chat 12: `14/03/26, 9:26 pm - Pooja ji: Kavita ji, delete the transfer record right now`
-- calls 3: `2026-03-14 21:25:00,incoming,+91-56285-97792,Pooja ji,51`
+- calls 3: `2026-03-14T21:25:00+05:30,incoming,+91-56285-97792,Pooja ji,51`
 - photo Make: `Realme`
 
 ## Answer 18: case upi-ring-009 (en), Q2 (when)
@@ -218,7 +218,7 @@ Strings the claim needs: chat: '7:39 pm' + 'Venkat bhai'; calls: '+91-50725-7640
 
 Cited lines:
 - chat 13: `24/03/26, 7:41 pm - Anita didi: Phone ki battery low hai.`
-- calls 3: `2026-03-24 19:37:00,incoming,+91-50725-76406,Venkat bhai,168`
+- calls 3: `2026-03-24T19:37:00+05:30,incoming,+91-50725-76406,Venkat bhai,168`
 
 ## Answer 20: case upi-ring-010 (hinglish), Q3 (where)
 

@@ -20,7 +20,8 @@ def chat_ts(t: datetime) -> str:
 
 
 def csv_ts(t: datetime) -> str:
-    return f"{_ist(t):%Y-%m-%d %H:%M:%S}"
+    """ISO 8601 local time with an explicit offset (rule F-07): the offset removes the time-zone trap."""
+    return f"{_ist(t):%Y-%m-%dT%H:%M:%S}+05:30"
 
 
 def csv_hm(t: datetime) -> str:
@@ -45,7 +46,9 @@ def parse_chat_ts(s: str) -> datetime:
 
 
 def parse_csv_ts(s: str) -> datetime:
-    return datetime.strptime(s.strip(), "%Y-%m-%d %H:%M:%S").replace(tzinfo=IST)
+    """Reads the ISO form; an older bare "YYYY-MM-DD HH:MM:SS" is read as IST."""
+    t = datetime.fromisoformat(s.strip())
+    return t if t.tzinfo else t.replace(tzinfo=IST)
 
 
 def parse_exif_ts(s: str) -> datetime:

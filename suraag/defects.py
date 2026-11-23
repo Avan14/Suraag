@@ -21,15 +21,16 @@ EXPECTED: dict[str, str] = {"timestamp_clash": "cross_time", "alias_conflict": "
 
 
 def _edit_calls(text: str, fn: Callable[[list[str]], list[str]]) -> str:
+    sep = "\r\n" if "\r\n" in text else "\n"
     out = []
-    for line in text.split("\n"):
-        if not line or line.startswith("#") or line.startswith("row,"):
+    for line in text.split(sep):
+        if not line or line.startswith("#") or line.startswith('"row"') or line.startswith("row,"):
             out.append(line)
             continue
         buf = io.StringIO()
-        csv.writer(buf, lineterminator="").writerow(fn(next(csv.reader([line]))))
+        csv.writer(buf, lineterminator="", quoting=csv.QUOTE_ALL).writerow(fn(next(csv.reader([line]))))
         out.append(buf.getvalue())
-    return "\n".join(out)
+    return sep.join(out)
 
 
 def _rewrite_chat_line(chat: str, line: int, *, sender: str | None = None, ts: str | None = None) -> str:

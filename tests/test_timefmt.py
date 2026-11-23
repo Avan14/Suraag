@@ -17,7 +17,7 @@ def test_chat_time(hh, mm, expected):
 def test_formats_match_the_documented_examples():
     t = datetime(2026, 3, 4, 21, 14, tzinfo=IST)
     assert chat_ts(t) == "04/03/26, 9:14 pm"
-    assert csv_ts(t) == "2026-03-04 21:14:00"
+    assert csv_ts(t) == "2026-03-04T21:14:00+05:30"
     assert csv_hm(t) == "21:14"
     assert exif_ts(t) == "2026:03:04 21:14:00"
 

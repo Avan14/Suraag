@@ -71,3 +71,17 @@ def test_on_attempt_is_called_once_per_attempt(tmp_path):
     seen = []
     res = go(tmp_path, defect="timestamp_clash", on_attempt=seen.append)
     assert [a.n for a in seen] == [1, 2] == [a.n for a in res.attempts]
+
+
+def test_manifest_carries_the_synthetic_flag_the_hash_note_and_the_date_order(tmp_path):
+    from suraag.parse import HASH_NOTE
+    m = json.loads((tmp_path / "out" / "manifest.json").read_text("utf-8")) if go(tmp_path).ok else {}
+    assert m["synthetic"] is True and m["label"].startswith("SYNTHETIC CASE")
+    assert m["hash_note"] == HASH_NOTE and m["chat_date_order"] == "DMY"
+    assert "does not show who made the file" in m["hash_note"]
+
+
+def test_the_ui_hash_note_is_the_same_sentence_as_the_manifests():
+    from suraag.i18n import t
+    from suraag.parse import HASH_NOTE
+    assert t("lec.hash_note", "en") == HASH_NOTE

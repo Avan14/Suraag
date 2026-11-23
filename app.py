@@ -23,7 +23,7 @@ from suraag.grade import Citation, Claim, grade_all
 from suraag.hints import PERSONAS, SPEECH, TIERS, hint
 from suraag.i18n import render_expl, render_failure, t
 from suraag.model import Brief, Case
-from suraag.parse import Artifacts, load_calls, load_chat, load_exif
+from suraag.parse import Artifacts, load_calls, load_chat, load_exif, text_at
 from suraag.pipeline import generate_case
 from suraag.verify import verify
 
@@ -331,8 +331,7 @@ with tab_stu:
                                 needles[key] += [s for s in a.must_contain if s not in needles[key]]
 
         chat_rows = [{"n": ln.line, "text": ln.raw} for ln in load_chat(arts.chat)]
-        call_rows = [{"row": r.row, "text": f"{r.t:%Y-%m-%d %H:%M:%S},{r.direction},{r.number},{r.contact_name},{r.duration_s}"}
-                     for r in load_calls(arts.calls)]
+        call_rows = [{"row": r.row, "text": text_at(arts, "calls", row=r.row)} for r in load_calls(arts.calls)]
         exif_rows = [{"tag": k, "value": v} for k, v in load_exif(arts.photo).items()]
         with board:
             val = canvas(chat=chat_rows, calls=call_rows, exif=exif_rows, key=f"canvas::{name}", default=None,

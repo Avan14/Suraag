@@ -33,3 +33,11 @@ def test_text_at_reads_exif_tags_and_missing_tag_is_none():
 
 def test_load_exif_on_garbage_is_empty():
     assert load_exif(b"not a jpeg") == {}
+
+
+def test_clean_photo_has_the_full_date_and_offset_tag_set():
+    """Rule F-08: CreateDate and ModifyDate equal the capture time; every OffsetTime tag is +05:30; no Software tag."""
+    exif = load_exif(render_photo(CASE))
+    assert exif["CreateDate"] == exif["ModifyDate"] == exif["DateTimeOriginal"] == "2026:03:04 21:40:00"
+    assert exif["OffsetTime"] == exif["OffsetTimeOriginal"] == exif["OffsetTimeDigitized"] == "+05:30"
+    assert "Software" not in exif

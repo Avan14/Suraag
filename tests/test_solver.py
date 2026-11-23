@@ -25,7 +25,7 @@ def test_contact_name_matching_survives_case_spaces_and_zero_width():
 
 
 def test_blank_contact_name_makes_who_unsolvable():
-    calls = render_calls(CASE).replace(",Raju bhai,", ",,")
+    calls = render_calls(CASE).replace(',"Raju bhai",', ',"",')
     out = solve(make(calls=calls), BRIEF, "hinglish")
     assert out["Q1"] == UNSOLVABLE and out["Q2"] == "2026-03-04T21:14:00+05:30"
 

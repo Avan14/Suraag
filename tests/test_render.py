@@ -50,7 +50,9 @@ def test_extra_filler_is_dropped_and_newlines_flattened():
 
 def test_calls_roundtrip_and_header():
     csv_text = render_calls(CASE)
-    assert csv_text.startswith("# " + HEADER + "\nrow,datetime,direction,number,contact_name,duration_s\n")
+    assert csv_text.startswith("# " + HEADER + '\r\n"row","datetime","direction","number","contact_name","duration_s"\r\n')
+    assert "\n" not in csv_text.replace("\r\n", "")  # CRLF throughout
+    assert '1,"2026-03-04T20:40:00+05:30","outgoing","+91-50000-00004","Sunita didi",60\r\n' in csv_text  # numbers bare, text quoted
     rows = load_calls(csv_text)
     assert [r.row for r in rows] == [1, 2, 3, 4] and rows[2].number == "+91-50000-00001"
 

@@ -54,7 +54,7 @@ def test_cross_time_works_across_midnight():
 
     case = case_with(mutate)
     arts = arts_from(case)
-    assert "11:59 pm" in arts.chat and "2026-03-05 00:01:00" in arts.calls
+    assert "11:59 pm" in arts.chat and "2026-03-05T00:01:00+05:30" in arts.calls
     assert check_cross_time(case, arts) == []  # 2 minutes apart, not 1,438
 
 
@@ -65,7 +65,7 @@ def test_causality_fails_when_a_cause_comes_after_its_effect():
 
 def test_solvability_fails_when_the_solver_cannot_reproduce_the_key():
     arts = arts_from(CASE)
-    arts.calls = arts.calls.replace(",Raju bhai,", ",,")
+    arts.calls = arts.calls.replace(',"Raju bhai",', ',"",')
     fails = check_solvability(CASE, arts)
     assert codes(fails) == ["solver_mismatch"] and "Q1: solver answered UNSOLVABLE, key is P1" == fails[0].message
 
@@ -82,7 +82,7 @@ def test_distractor_checks():
     assert "distractor_implausible" in codes(check_distractor(bad, arts_from(bad)))
 
     arts = arts_from(CASE)
-    arts.calls = arts.calls.replace("+91-50000-00001,Raju bhai", "+91-50000-00003,Raju bhai")
+    arts.calls = arts.calls.replace('"+91-50000-00001","Raju bhai"', '"+91-50000-00003","Raju bhai"')
     assert "solver_picked_distractor" in codes(check_distractor(CASE, arts))
 
 

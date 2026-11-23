@@ -6,10 +6,11 @@ Usage: python -m eval.run_raw_pilot --n 10 --out eval/raw_pilot.json
 """
 import argparse
 import json
+import os
 from collections import Counter
 from pathlib import Path
 
-from suraag.llm import LLMUnavailable
+from suraag.llm import LLMUnavailable, _load_dotenv
 from suraag.parse import Artifacts
 from suraag.rawmode import raw_chat
 from suraag.render import render_calls
@@ -21,12 +22,15 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--out", type=Path, default=Path("eval/raw_pilot.json"))
+    ap.add_argument("--model", default=None, help="Gemini model id (default: SURAAG_MODEL_FILLER)")
     args = ap.parse_args()
+    _load_dotenv()
+    model = args.model or os.environ.get("SURAAG_MODEL_FILLER")
     case = load_case()
     samples, by_code, unavailable = [], Counter(), 0
     for i in range(1, args.n + 1):
         try:
-            chat = raw_chat(case, nonce=i)
+            chat = raw_chat(case, nonce=i, model=model)
         except LLMUnavailable as e:
             unavailable += 1
             print(f"sample {i}: LLM unavailable ({e})")
@@ -39,7 +43,7 @@ def main() -> None:
         print(f"sample {i}: {'FAILED ' + ','.join(sorted({f.code for f in fails})) if fails else 'ok'}")
     completed = len(samples)
     failed = sum(1 for s in samples if s["codes"])
-    result = {"n_requested": args.n, "completed": completed, "unavailable": unavailable, "failed": failed,
+    result = {"model": model, "n_requested": args.n, "completed": completed, "unavailable": unavailable, "failed": failed,
               "by_code": dict(by_code), "samples": samples,
               "note": "one world model, raw mode, chat checks only, synthetic data"}
     args.out.write_text(json.dumps(result, indent=1), "utf-8")

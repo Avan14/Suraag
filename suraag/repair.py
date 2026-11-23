@@ -14,7 +14,7 @@ from typing import Callable, Literal
 from suraag.defects import DefectKind, inject
 from suraag.llm import LLMUnavailable
 from suraag.model import Case, ChatMessage
-from suraag.parse import Artifacts
+from suraag.parse import HASH_NOTE, HEADER, Artifacts
 from suraag.rawmode import raw_chat
 from suraag.render import FillerShortError, render_calls, render_chat, render_photo, write_artifacts
 from suraag.verify import Failure, verify
@@ -50,6 +50,7 @@ def seal(case: Case, arts: Artifacts, meta: GenMeta, out_dir) -> dict:
     write_artifacts(arts, out)
     manifest = {"case_id": case.case_id, "files": arts.sha256(), "seed": meta.seed, "model": meta.model,
                 "prompt_hashes": meta.prompt_hashes, "mode": meta.mode, "lang": meta.lang,
+                "synthetic": True, "label": HEADER, "hash_note": HASH_NOTE, "chat_date_order": "DMY",
                 "sealed_at": datetime.now().astimezone().isoformat(timespec="seconds")}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2), "utf-8")
     return manifest
