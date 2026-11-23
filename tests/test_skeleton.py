@@ -60,6 +60,11 @@ def test_invariants_over_many_seeds(lang):
         # the instruction sits mid-chat, the places are far apart
         assert 3 <= c.chat_anchors[0].line <= c.chat_length - 2 and 20 <= c.chat_length <= 30
         assert all(haversine_m(a.lat, a.lon, b.lat, b.lon) > 1500 for a in c.places for b in c.places if a.id != b.id)
+        # no saved name is contained in anyone else's alias, so an anchor really identifies its sender
+        for p in c.people:
+            for q in c.people:
+                if p.id != q.id:
+                    assert all(norm(p.saved_as) not in norm(a) for a in q.aliases), (seed, p.saved_as, q.aliases)
         # the distractor shares a name token with the boss alias, without equalling any alias
         boss = next(p for p in c.people if p.role == "boss")
         distractor = next(p for p in c.people if p.role == "distractor")

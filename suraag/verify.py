@@ -102,3 +102,88 @@ def check_chat_consistency(case: Case, arts: Artifacts, mode: Mode = "hybrid") -
             out.append(Failure("contradiction", "chat", "trigger_in_filler", {"line": ln.line},
                                f"chat.txt:{ln.line} matches the instruction phrase but is not the instruction line"))
     return out
+
+
+def check_traceability(case: Case) -> list[Failure]:
+    out = []
+    for f in case.facts:
+        if not f.anchors:
+            out.append(Failure("traceability", "model", "fact_no_anchor", {"fact": f.id},
+                               f"{f.id} has no anchor in any artifact"))
+    for q in case.questions:
+        if not q.answer_facts:
+            out.append(Failure("traceability", "model", "question_no_fact", {"question": q.id},
+                               f"{q.id} does not map to any fact"))
+    return out
+
+
+def check_cross_time(case: Case, arts: Artifacts) -> list[Failure]:
+    """The chat time and call-log time of the same fact must agree within the tolerance.
+    Compared as real datetimes read back from the artifacts, so a window that spans midnight works."""
+    out = []
+    chat_lines = load_chat(arts.chat)
+    calls = {r.row: r for r in load_calls(arts.calls)}
+    for f in case.facts:
+        ca = next((a for a in f.anchors if a.artifact == "chat"), None)
+        ra = next((a for a in f.anchors if a.artifact == "calls"), None)
+        if not (ca and ra and 1 <= ca.line <= len(chat_lines) and ra.row in calls):
+            continue  # a missing location is the anchor check's finding
+        chat_t, call_t = chat_lines[ca.line - 1].t, calls[ra.row].t
+        if chat_t is None:
+            continue
+        diff = abs((chat_t - call_t).total_seconds()) / 60
+        if diff > case.tolerance_minutes:
+            out.append(Failure(
+                "contradiction", "chat", "cross_time", {"fact": f.id, "diff": diff},
+                f"{f.id}: chat.txt:{ca.line} at {chat_time(chat_t)} vs calls.csv row {ra.row} at "
+                f"{call_t:%H:%M} differs by {diff:g} min (tolerance {case.tolerance_minutes})"))
+    return out
+
+
+def check_causality(case: Case) -> list[Failure]:
+    by_id = {e.id: e for e in case.timeline}
+    return [Failure("contradiction", "model", "cause_after_effect", {"event": e.id, "cause": d},
+                    f"{e.id} happens before its cause {d}")
+            for e in case.timeline for d in e.depends_on if by_id[d].t > e.t]
+
+
+def check_solvability(case: Case, arts: Artifacts) -> list[Failure]:
+    from suraag.solver import solve
+    solved = solve(arts, case.brief, case.lang)
+    artifact = {"who": "calls", "when": "chat", "where": "photo"}
+    return [Failure("solvability", artifact[q.kind], "solver_mismatch", {"question": q.id, "got": solved.get(q.id)},
+                    f"{q.id}: solver answered {solved.get(q.id)}, key is {q.answer}")
+            for q in case.questions if solved.get(q.id) != q.answer]
+
+
+def _tokens(person) -> set[str]:
+    return {t for a in person.aliases for t in norm(a).split() if len(t) >= 3}
+
+
+def check_distractor(case: Case, arts: Artifacts) -> list[Failure]:
+    if not case.distractors:
+        return [Failure("distractor", "model", "no_distractor", {}, "the case has no distractor fact")]
+    from suraag.solver import solve
+    out = []
+    key = next((e for e in case.timeline if e.kind == "instruction"), None)
+    who = next((q for q in case.questions if q.kind == "who"), None)
+    answer_person = case.person(who.answer) if who else None
+    solved = solve(arts, case.brief, case.lang)
+    for fid in case.distractors:
+        event = next(e for e in case.timeline if e.id == case.fact(fid).event)
+        actor = case.person(event.actor)
+        near = key is not None and abs((event.t - key.t).total_seconds()) <= 30 * 60
+        similar = answer_person is not None and bool(_tokens(actor) & _tokens(answer_person))
+        if not (near or similar):
+            out.append(Failure("distractor", "model", "distractor_implausible", {"fact": fid},
+                               f"{fid} is not plausible: far from the key event and no similar alias"))
+        if who and solved.get(who.id) == actor.id and actor.id != who.answer:
+            out.append(Failure("distractor", "calls", "solver_picked_distractor", {"fact": fid},
+                               f"the solver picked the distractor {actor.id} for {who.id}"))
+    return out
+
+
+def verify(case: Case, arts: Artifacts, mode: Mode = "hybrid") -> list[Failure]:
+    return (check_anchors(case, arts, mode) + check_traceability(case) + check_chat_consistency(case, arts, mode)
+            + check_cross_time(case, arts) + check_causality(case) + check_solvability(case, arts)
+            + check_distractor(case, arts))

@@ -35,8 +35,10 @@ def build_case(seed: int, lang: Lang) -> Case:
     people = []
     for i, (n, role) in enumerate(zip(names, roles), start=1):
         own = f"{n.first} {n.surname[0]}"
-        if role == "distractor":  # shares the boss's name token, but never equals any alias
-            aliases = [f"{boss_first} {n.surname[0]}", own]
+        if role == "distractor":
+            # Shares the boss's name token, but is never equal to or a prefix of any alias: the
+            # trailing period stops "Raju B." from being a prefix of "Raju bhai".
+            aliases = [f"{boss_first} {n.surname[0]}.", own]
         else:
             aliases = [pack.alias_patterns[0].format(first=n.first), own]
         people.append(Person(id=f"P{i}", name=n.full, name_deva=n.full_deva, role=role,
