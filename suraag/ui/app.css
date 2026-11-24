@@ -1,0 +1,123 @@
+/* Streamlit shell styles for Suraag. Every value comes from the Case Canvas kit tokens in suraag/ui/tokens/.
+   Motion follows the kit: 120-200ms ease-out on background and border only. The kit says "Press: no scale",
+   so buttons deliberately have no :active transform. */
+:root { --action-primary-hover: #33363C; --focus-ring: 0 0 0 3px rgba(36, 86, 166, .18); }
+
+/* ---- page ---------------------------------------------------------------------------------------- */
+.stApp { background: var(--surface-sunken); color: var(--ink-1); }
+.stApp, .stApp p, .stApp li, .stApp label, .stApp input, .stApp textarea, .stApp button, .stApp [data-baseweb] { font-family: var(--font-ui); }
+.stApp p, .stApp li { font-size: 13.5px; line-height: 1.45; }
+/* Streamlit's icons are ligatures in an icon font; a text font would turn them into words ("arrow_down"). */
+[data-testid="stIconMaterial"], .material-symbols-rounded, [class*="material-symbols"] { font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important; }
+header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stAppToolbar"], [data-testid="stDecoration"],
+[data-testid="stHeaderActionElements"] { display: none !important; }
+.block-container, [data-testid="stMainBlockContainer"] { padding: 0 24px 56px !important; max-width: 1440px; }
+/* No grey-out while a rerun is in flight: it made every click look slow. */
+[data-stale="true"], .stale-element { opacity: 1 !important; transition: none !important; }
+
+.stApp h1, .stApp h2, .stApp h3 { font: var(--text-title); color: var(--ink-1); letter-spacing: 0; padding: 0; margin: 4px 0 10px; }
+.label { font: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--ink-3); margin: 0 0 6px; }
+.dim { color: var(--ink-3); }
+code, .mono { font-family: var(--font-evidence); }
+
+/* ---- top bar (kit: one 56px white row, flat, no shadow) ------------------------------------------- */
+.st-key-topbar { background: var(--surface-chrome); border-bottom: 1px solid var(--border-1); min-height: var(--topbar);
+  padding: 8px 24px; margin: 0 -24px 24px !important; width: calc(100% + 48px) !important; max-width: none !important;
+  gap: 10px 18px !important; align-items: center; }
+.st-key-topbar [data-testid="stElementContainer"], .st-key-topbar .stElementContainer { width: auto !important; flex: none; }
+/* everything from the SYNTHETIC tag onwards sits at the right end */
+.st-key-topbar > .stElementContainer:has(.tag-synth) { margin-left: auto; }
+.brand { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.brand .wm { font-family: var(--font-wordmark); font-size: 21px; font-weight: 700; color: var(--ink-1); line-height: 1; }
+.brand .name { font: 500 11px/1 var(--font-ui); letter-spacing: .22em; color: var(--ink-3); }
+.pill { font: 400 12px/1.4 var(--font-evidence); color: var(--ink-3); background: var(--surface-sunken); border: 1px solid var(--border-1);
+  padding: 3px 10px; border-radius: var(--radius-pill); white-space: nowrap; }
+.tag-synth { font: 500 11px/1.4 var(--font-evidence); letter-spacing: .14em; color: var(--danger); border: 1px solid var(--danger-border);
+  background: var(--danger-tint); padding: 2px 8px; border-radius: 3px; white-space: nowrap; cursor: help; }
+
+/* nav: text items, the active one gets a 2px danger underline */
+.st-key-view [data-testid="stButtonGroup"] { gap: 2px; }
+.st-key-view button { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none;
+  padding: 6px 12px !important; min-height: 36px; color: var(--ink-3) !important;
+  transition: color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
+.st-key-view button p { font: 500 13.5px/1 var(--font-ui) !important; white-space: nowrap; }
+.st-key-view button:hover { color: var(--ink-1) !important; }
+.st-key-view button[aria-checked="true"], .st-key-view button[aria-pressed="true"] {
+  color: var(--ink-1) !important; box-shadow: inset 0 -2px 0 var(--nav-active-underline) !important; }
+
+/* language: a bordered segmented control, the active option filled with ink */
+.st-key-lang_choice [data-testid="stButtonGroup"] { gap: 0; border: 1px solid var(--border-1); border-radius: var(--radius-control); overflow: hidden; }
+.st-key-lang_choice button { border: 0 !important; border-radius: 0 !important; min-height: 28px; padding: 3px 10px !important;
+  background: var(--surface-card) !important; color: var(--ink-3) !important; transition: background-color var(--dur-fast) var(--ease-out); }
+.st-key-lang_choice button p { font: 500 12.5px/1 var(--font-ui) !important; }
+.st-key-lang_choice button[aria-checked="true"], .st-key-lang_choice button[aria-pressed="true"] {
+  background: var(--action-primary-bg) !important; color: var(--action-primary-fg) !important; }
+
+/* ---- controls ------------------------------------------------------------------------------------- */
+[data-testid="stWidgetLabel"] p, [data-testid="stWidgetLabel"] label { font: var(--text-label) !important; text-transform: uppercase;
+  letter-spacing: var(--tracking-label); color: var(--ink-3) !important; }
+[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p, [data-testid="stRadio"] [role="radiogroup"] p {
+  font: var(--text-body) !important; text-transform: none; letter-spacing: 0; color: var(--ink-1) !important; }
+[data-baseweb="input"], [data-baseweb="select"] > div, [data-baseweb="textarea"], [data-testid="stNumberInputContainer"] {
+  border-radius: var(--radius-control) !important; border-color: var(--border-1) !important; background: var(--surface-card) !important;
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
+[data-baseweb="input"]:focus-within, [data-baseweb="select"] > div:focus-within, [data-testid="stNumberInputContainer"]:focus-within {
+  border-color: var(--ink-1) !important; box-shadow: var(--focus-ring); }
+[data-baseweb="input"] input, [data-baseweb="select"] div { font-size: 13.5px; }
+
+.stButton > button, .stDownloadButton > button { min-height: 40px; padding: 0 18px; border-radius: var(--radius-control);
+  background: var(--surface-card); color: var(--ink-1); border: 1px solid var(--border-1); box-shadow: none;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.stButton > button p, .stDownloadButton > button p { font: 500 13.5px/1.3 var(--font-ui); margin: 0 !important; padding: 0; }
+.stButton > button [data-testid="stMarkdownContainer"], .stDownloadButton > button [data-testid="stMarkdownContainer"] { display: flex; align-items: center; }
+.stButton > button:hover, .stDownloadButton > button:hover { border-color: var(--ink-5); color: var(--ink-1); background: var(--surface-card); }
+.stButton > button[kind="primary"] { background: var(--action-primary-bg); color: var(--action-primary-fg); border-color: var(--action-primary-bg); }
+.stButton > button[kind="primary"] p { font-weight: 600; }
+.stButton > button[kind="primary"]:hover { background: var(--action-primary-hover); border-color: var(--action-primary-hover); color: var(--action-primary-fg); }
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible, [data-testid="stButtonGroup"] button:focus-visible {
+  outline: 2px solid var(--pen); outline-offset: 2px; }
+
+[data-testid="stExpander"] details { border: 1px solid var(--border-1); border-radius: var(--radius-card); background: var(--surface-card); }
+[data-testid="stExpander"] summary p { font: 600 13.5px/1.3 var(--font-ui); }
+hr, [data-testid="stDivider"] { border-color: var(--divider-1) !important; }
+
+/* ---- panels and messages ------------------------------------------------------------------------- */
+.panel { background: var(--surface-card); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 16px 18px; }
+.note { font: var(--text-body); padding: 8px 12px; margin: 6px 0; border-radius: var(--radius-sm); border-left: 3px solid var(--ink-3);
+  background: var(--surface-card); color: var(--ink-1); }
+.note.ok { background: var(--success-tint); border-left-color: var(--success); }
+.note.bad { background: var(--danger-tint); border-left-color: var(--danger); }
+.msg { font: var(--text-evidence); background: var(--danger-tint); border-left: 3px solid var(--danger); padding: 6px 10px; margin: 4px 0; border-radius: var(--radius-sm); }
+.msg.pass { background: var(--success-tint); border-left-color: var(--success); }
+.attempt { font: 600 13px/1.3 var(--font-ui); margin: 12px 0 4px; }
+.ok { color: var(--success); font-weight: 600; } .bad { color: var(--danger); font-weight: 600; }
+
+table.lab { border-collapse: collapse; width: 100%; font: var(--text-meta); font-size: 13px; background: var(--surface-card); border-radius: var(--radius-card); overflow: hidden; }
+table.lab th, table.lab td { border: 1px solid var(--border-1); padding: 7px 10px; text-align: left; vertical-align: top; }
+table.lab th { background: var(--surface-sunken); font-weight: 600; color: var(--ink-2); }
+table.lab td.num { font-family: var(--font-evidence); }
+
+.cert { background: var(--surface-card); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 16px 18px; box-shadow: var(--shadow-note); margin: 12px 0; }
+.cert code { font: 400 12px/1.5 var(--font-evidence); word-break: break-all; color: var(--ink-2); }
+.cert .file { margin-top: 8px; }
+
+.hint { position: relative; background: var(--sticky); border: 1px solid var(--sticky-border); border-radius: var(--radius-sm);
+  padding: 16px 12px 10px; margin: 14px 0 8px; box-shadow: var(--shadow-note); font: 500 13px/1.4 var(--font-ui); }
+.hint::before { content: ""; position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--pin-map); box-shadow: var(--pin-map-shadow); }
+
+.score { font: var(--text-score); color: var(--ink-1); }
+.pt { font-size: 13px; } .expl { font-size: 13px; color: var(--ink-2); margin: 2px 0; }
+
+/* ---- student bench: board + 340px inspector, stacked below 1100px (kit layout) -------------------- */
+.st-key-bench > [data-testid="stHorizontalBlock"] { gap: 20px; }
+.st-key-inspector { background: var(--surface-chrome); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 14px 16px; }
+@media (max-width: 1100px) {
+  .st-key-bench > [data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
+  .st-key-bench > [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] { flex: 1 1 100% !important; width: 100% !important; min-width: 100%; }
+}
+@media (max-width: 720px) {
+  .block-container, [data-testid="stMainBlockContainer"] { padding: 0 16px 48px !important; }
+  .st-key-topbar { padding: 8px 16px; margin: 0 -16px 16px; width: calc(100% + 32px) !important; }
+}
+@media (prefers-reduced-motion: reduce) { .stApp * { transition-duration: 0ms !important; } }

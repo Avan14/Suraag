@@ -3,10 +3,14 @@
 Three views. Lecturer: generate a case, plant a defect and watch the verifier catch and repair it, then
 read the certificate. Student: read the files, click lines to cite them, answer, and see the deterministic
 grader explain each point. Evaluation: the numbers, with sample sizes. All data is synthetic.
+
+Only the active view runs on each interaction, and the student bench is a fragment, so citing a line reruns
+the bench alone. Styles come from the Case Canvas kit tokens in suraag/ui/.
 """
 import base64
 import csv
 import datetime as dt
+import html
 import io
 import json
 import os
@@ -17,7 +21,7 @@ from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
-from suraag import filler as filler_module
+from suraag import filler as filler_module  # noqa: F401  (kept: the filler records its source for the UI)
 from suraag.defects import EXPECTED
 from suraag.grade import Citation, Claim, grade_all
 from suraag.hints import PERSONAS, SPEECH, TIERS, hint
@@ -29,8 +33,10 @@ from suraag.verify import verify
 
 ROOT = Path(__file__).parent
 CASES = ROOT / "cases"
+UI = ROOT / "suraag" / "ui"
 DAILY_CAP = 20
 CHECKS = ["anchor", "traceability", "contradiction", "solvability", "distractor"]
+VIEWS = ["lecturer", "student", "eval"]
 
 canvas = components.declare_component("suraag_canvas", path=str(ROOT / "suraag" / "components" / "canvas"))
 speak = components.declare_component("suraag_speak", path=str(ROOT / "suraag" / "components" / "speak"))
@@ -62,48 +68,41 @@ def _take_generation() -> bool:
 
 
 # ---------------------------------------------------------------------------------------- style
-CSS = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Serif+Devanagari:wght@600;700&display=swap');
-:root { --ink-1:#1B1D21; --ink-2:#3B3F47; --ink-3:#6B6F78; --border-1:#E2E0DA; --success:#2E7D52; --success-tint:#EEF6F0; --danger:#C2412F; --danger-tint:#FCF1EF; }
-.stApp, .stApp p, .stApp label, .stApp button, .stApp input, .stApp textarea, .stApp [data-baseweb] { font-family: 'IBM Plex Sans','Noto Sans Devanagari',system-ui,sans-serif; }
-/* Never override Streamlit's icon font: its icons are ligatures, and a text font turns them into the words ("arrow_down"). */
-[data-testid="stIconMaterial"], .material-symbols-rounded, [class*="material-symbols"] { font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important; }
-.block-container { padding-top: 1rem; max-width: 1500px; }
-/* The Deploy toolbar would sit on top of our top bar, and a public demo does not need it. */
-header[data-testid="stHeader"], [data-testid="stAppToolbar"], [data-testid="stToolbar"] { display: none; }
-.topbar { display:flex; align-items:center; gap:14px; height:56px; padding:0 4px; border-bottom:1px solid var(--border-1); margin-bottom:6px; background:#fff; }
-.topbar .wordmark { font-family:'Noto Serif Devanagari',Georgia,serif; font-weight:700; font-size:24px; color:var(--ink-1); }
-.topbar .brand { font-weight:700; letter-spacing:.14em; font-size:13px; color:var(--ink-2); }
-.topbar .tagline { color:var(--ink-3); font-size:13px; }
-.synthetic { display:inline-block; border:1px solid var(--danger); color:var(--danger); border-radius:4px; padding:2px 8px; font:600 11px/1.4 'IBM Plex Sans',sans-serif; letter-spacing:.06em; margin:2px 0 8px; }
-.stTabs [data-baseweb="tab-list"] { gap:4px; border-bottom:1px solid var(--border-1); }
-.stTabs [aria-selected="true"] { border-bottom:2px solid var(--danger) !important; color:var(--ink-1) !important; }
-.stTabs [data-baseweb="tab-highlight"] { background-color:var(--danger) !important; }
-.stButton > button, .stDownloadButton > button { border-radius:6px; border:1px solid var(--border-1); transition:background-color .12s ease-out, border-color .12s ease-out; }
-.stButton > button[kind="primary"] { background:#1B1D21; color:#fff; border-color:#1B1D21; }
-.stButton > button[kind="primary"]:hover { background:#33363C; }
-table.lab { border-collapse:collapse; width:100%; font-size:13px; background:#fff; }
-table.lab th, table.lab td { border:1px solid var(--border-1); padding:6px 10px; text-align:left; vertical-align:top; }
-table.lab th { background:#F7F6F3; font-weight:600; letter-spacing:.04em; }
-.ok { color:var(--success); font-weight:600; } .bad { color:var(--danger); font-weight:600; } .dim { color:var(--ink-3); }
-.msg { font-family:'IBM Plex Mono',monospace; font-size:12.5px; background:var(--danger-tint); border-left:3px solid var(--danger); padding:6px 10px; margin:4px 0; border-radius:4px; }
-.msg.pass { background:var(--success-tint); border-left-color:var(--success); }
-.cert { background:#fff; border:1px solid var(--border-1); border-radius:8px; padding:14px 16px; box-shadow:0 1px 2px rgba(60,40,15,.08), 0 3px 6px -2px rgba(60,40,15,.08); }
-.cert code { font-family:'IBM Plex Mono',monospace; font-size:12px; word-break:break-all; }
-.score { font-size:44px; font-weight:600; line-height:1; }
-.pt { font-size:13px; } .expl { font-size:13px; color:var(--ink-2); margin:2px 0; }
-</style>
-"""
-st.markdown(CSS, unsafe_allow_html=True)
+def _css() -> str:  # four small files; read each run so CSS edits show up without a restart
+    # The token files are the kit's, verbatim. One <style> with the font @import first: a style-only st.html body
+    # takes no space in the layout (a <link> beside it would add an empty row above the top bar).
+    tokens = "\n".join((UI / "tokens" / f).read_text("utf-8") for f in ("colors.css", "spacing.css", "typography.css"))
+    tokens = "\n".join(ln for ln in tokens.splitlines() if not ln.startswith("@import"))
+    fonts = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700"
+             "&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Serif+Devanagari:wght@600;700&display=swap")
+    return f'<style>@import url("{fonts}");\n{tokens}\n{(UI / "app.css").read_text("utf-8")}</style>'
+
+
+st.html(_css())
 
 # ---------------------------------------------------------------------------------------- helpers
-# Read the language switch first: the top bar is drawn before the radio itself is.
-st.session_state["lang"] = "hi" if st.session_state.get("lang_choice") == "हिन्दी" else "en"
+# Widget values are already current when the script starts, so read the language before the header draws.
+st.session_state["lang"] = st.session_state.get("lang_choice") or "en"
 
 
 def L(key: str, **kw) -> str:
     return t(key, st.session_state["lang"], **kw)
+
+
+def esc(s) -> str:
+    return html.escape(str(s))
+
+
+def note(text: str, kind: str = "") -> None:
+    """Kit feedback block: tint + 3px bar + words (never colour alone). kind: '', 'ok' or 'bad'."""
+    glyph = {"ok": "✓ ", "bad": "✕ "}.get(kind, "")
+    st.markdown(f'<div class="note {kind}">{glyph}{esc(text)}</div>', unsafe_allow_html=True)
+
+
+def html_table(header: list[str], rows: list[list]) -> str:
+    head = ("<tr>" + "".join(f"<th>{esc(h)}</th>" for h in header) + "</tr>") if header else ""
+    body = "".join("<tr>" + "".join(f"<td>{esc(c)}</td>" for c in r) + "</tr>" for r in rows)
+    return f'<table class="lab">{head}{body}</table>'
 
 
 def available_cases() -> dict[str, Path]:
@@ -116,7 +115,25 @@ def available_cases() -> dict[str, Path]:
 def load_dir(path: str):
     p = Path(path)
     case = Case.model_validate_json((p / "case.json").read_text("utf-8"))
-    return case, Artifacts.from_dir(p), json.loads((p / "manifest.json").read_text("utf-8"))
+    arts = Artifacts.from_dir(p)
+    photo = "data:image/jpeg;base64," + base64.b64encode(arts.photo).decode()
+    return case, arts, json.loads((p / "manifest.json").read_text("utf-8")), photo
+
+
+@st.cache_data(show_spinner=False)
+def verify_dir(path: str) -> list:
+    case, arts, _, _ = load_dir(path)
+    return verify(case, arts)
+
+
+@st.cache_data(show_spinner=False)
+def make_zip(path: str, student: bool) -> bytes:
+    buf, p = io.BytesIO(), Path(path)
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        for name in (("chat.txt", "calls.csv", "photo.jpg", "manifest.json", "brief.md") if student else ("case.json",)):
+            if (p / name).exists():
+                z.write(p / name, name)
+    return buf.getvalue()
 
 
 def lab_table(attempts, sealed: bool) -> str:
@@ -128,53 +145,54 @@ def lab_table(attempts, sealed: bool) -> str:
             f'<td class="{"bad" if any(f.check == c for f in a.failures) else "ok"}">'
             f'{"✕ " + L("lec.fail") if any(f.check == c for f in a.failures) else "✓ " + L("lec.pass")}</td>' for a in attempts)
         rows.append(f"<tr><th>{L('check.' + c)}</th>{cells}</tr>")
-    last = attempts[-1]
-    cells = "".join(f'<td class="dim">–</td>' for _ in attempts[:-1])
+    cells = "".join('<td class="dim">–</td>' for _ in attempts[:-1])
     cells += f'<td class="{"ok" if sealed else "dim"}">{"✓ " + L("lec.pass") if sealed else "–"}</td>'
     rows.append(f"<tr><th>{L('check.integrity')}</th>{cells}</tr>")
     return f'<table class="lab"><tr><th></th>{cols}</tr>{"".join(rows)}</table>'
 
 
 def attempt_html(a) -> str:
-    head = f"<b>{L('lec.attempt', n=a.n, action=a.action)}</b>"
+    head = f'<div class="attempt">{esc(L("lec.attempt", n=a.n, action=a.action))}</div>'
     if not a.failures:
         return f'{head}<div class="msg pass">✓ {L("lec.pass")}</div>'
-    return head + "".join(f'<div class="msg">✕ {render_failure(f, st.session_state["lang"])}</div>' for f in a.failures)
-
-
-def make_zip(path: Path, student: bool) -> bytes:
-    buf = io.BytesIO()
-    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
-        for name in (("chat.txt", "calls.csv", "photo.jpg", "manifest.json", "brief.md") if student else ("case.json",)):
-            if (path / name).exists():
-                z.write(path / name, name)
-    return buf.getvalue()
+    return head + "".join(f'<div class="msg">✕ {esc(render_failure(f, st.session_state["lang"]))}</div>' for f in a.failures)
 
 
 def certificate(manifest: dict, path: Path, key: str) -> None:
-    files = "".join(f"<div><b>{n}</b><br><code>{h}</code></div>" for n, h in manifest["files"].items())
-    stub = f'<div class="msg">{L("lec.stub_notice")}</div>' if manifest.get("model") == "stub" else ""
+    files = "".join(f'<div class="file"><b>{esc(n)}</b><br><code>{esc(h)}</code></div>' for n, h in manifest["files"].items())
+    stub = f'<div class="msg">{esc(L("lec.stub_notice"))}</div>' if manifest.get("model") == "stub" else ""
     st.markdown(
-        f'<div class="cert"><b>{L("lec.certificate")}</b>: {manifest["case_id"]} ({manifest["lang"]}, {manifest["mode"]}), '
-        f'seed {manifest["seed"]}, model <code>{manifest["model"]}</code><br><br><b>{L("lec.hashes")}</b>{files}'
-        f'<p class="dim" style="margin-top:10px">{L("lec.hash_note")}</p>{stub}</div>', unsafe_allow_html=True)
+        f'<div class="cert"><b>{esc(L("lec.certificate"))}</b>: <span class="mono">{esc(manifest["case_id"])}</span> '
+        f'({esc(manifest["lang"])}, {esc(manifest["mode"])}), seed {manifest["seed"]}, model <code>{esc(manifest["model"])}</code>'
+        f'<div class="label" style="margin-top:12px">{esc(L("lec.hashes"))}</div>{files}'
+        f'<p class="dim" style="margin-top:10px">{esc(L("lec.hash_note"))}</p>{stub}</div>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    c1.download_button(L("lec.zip_student"), make_zip(path, True), f"{path.name}-student.zip", key=f"zs-{key}")
-    c2.download_button(L("lec.zip_key"), make_zip(path, False), f"{path.name}-key.zip", key=f"zk-{key}")
+    c1.download_button(L("lec.zip_student"), make_zip(str(path), True), f"{path.name}-student.zip", key=f"zs-{key}")
+    c2.download_button(L("lec.zip_key"), make_zip(str(path), False), f"{path.name}-key.zip", key=f"zk-{key}")
 
 
 # ---------------------------------------------------------------------------------------- header
-hc1, hc2 = st.columns([5, 1])
-hc1.markdown(f'<div class="topbar"><span class="wordmark">सुराग</span><span class="brand">SURAAG</span>'
-             f'<span class="tagline">{L("app.tagline")}</span></div>', unsafe_allow_html=True)
-hc2.radio(L("ui.language"), ["EN", "हिन्दी"], horizontal=True, key="lang_choice")
-st.markdown(f'<span class="synthetic">{L("ui.synthetic")}</span>', unsafe_allow_html=True)
+cases_now = available_cases()
+view = st.session_state.get("view") or "lecturer"
+pill_case = {"lecturer": st.session_state.get("lec_pick"), "student": st.session_state.get("stu_pick")}.get(view)
+if view != "eval" and not pill_case and cases_now:
+    pill_case = next(iter(cases_now))
 
-tab_lec, tab_stu, tab_eval = st.tabs([L("ui.tab_lecturer"), L("ui.tab_student"), L("ui.tab_eval")])
+with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
+    st.html('<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="name">SURAAG</span></div>', width="content")
+    if pill_case:
+        st.html(f'<span class="pill">{esc(pill_case)}</span>', width="content")
+    st.segmented_control(L("ui.view"), VIEWS, key="view", default="lecturer", required=True, label_visibility="collapsed",
+                         format_func=lambda v: L({"lecturer": "ui.tab_lecturer", "student": "ui.tab_student", "eval": "ui.tab_eval"}[v]))
+    st.html(f'<span class="tag-synth" title="{esc(L("ui.synthetic"))}" aria-label="{esc(L("ui.synthetic"))}">'
+            f'{esc(L("ui.synthetic_tag"))}</span>', width="content")
+    st.segmented_control(L("ui.language"), ["hi", "en"], key="lang_choice", default="en", required=True,
+                         label_visibility="collapsed", format_func=lambda x: "हिं" if x == "hi" else "EN")
+
 
 # ---------------------------------------------------------------------------------------- lecturer
-with tab_lec:
-    left, right = st.columns([1, 1.6])
+def lecturer_view() -> None:
+    left, right = st.columns([1, 1.6], gap="large")
     with left:
         st.subheader(L("lec.generate"))
         seed = st.number_input(L("lec.seed"), 1, 9999, 7, key="gen_seed")
@@ -186,125 +204,131 @@ with tab_lec:
             target = "calls" if defect == "unsolvable_question" else st.selectbox(L("lec.defect_target"), ["chat", "calls"], key="gen_target")
         go = st.button(L("lec.run"), type="primary", key="gen_go")
     with right:
-        log_box = st.container()
         if go:
             if not _take_generation():
-                st.warning(L("lec.cap", cap=DAILY_CAP))
+                note(L("lec.cap", cap=DAILY_CAP), "bad")
             else:
                 out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"upi-ring-{int(seed):03d}-{case_lang}"
                 attempts = []
-                with log_box:
-                    st.subheader(L("lec.log"))
-                    holders = []
-
+                st.subheader(L("lec.log"))
+                with st.status(L("lec.generating"), expanded=True) as status:
                     def on_attempt(a):
                         attempts.append(a)
-                        h = st.empty()
-                        h.markdown(attempt_html(a), unsafe_allow_html=True)
-                        holders.append(h)
+                        st.markdown(attempt_html(a), unsafe_allow_html=True)
 
                     res = generate_case(int(seed), case_lang, "hybrid", out, defect=defect, defect_target=target or "chat",
                                         on_attempt=on_attempt, log_path=ROOT / "logs" / "failures.jsonl")
-                st.session_state["last_run"] = {"attempts": attempts, "ok": res.ok, "path": str(out), "seed": int(seed),
-                                                "manifest": res.manifest}
+                    status.update(label=L("lec.log"), state="complete" if res.ok else "error")
+                st.session_state["last_run"] = {"attempts": attempts, "ok": res.ok, "path": str(out), "manifest": res.manifest}
                 if res.ok:
                     st.session_state.setdefault("live_cases", {})[out.name] = out
-                    load_dir.clear()
+                st.rerun()  # redraw once so the header pill and the case list include the new case
         run = st.session_state.get("last_run")
-        if run and not go:
-            with log_box:
-                st.subheader(L("lec.log"))
-                for a in run["attempts"]:
-                    st.markdown(attempt_html(a), unsafe_allow_html=True)
         if run:
+            st.subheader(L("lec.log"))
+            st.markdown("".join(attempt_html(a) for a in run["attempts"]), unsafe_allow_html=True)
             st.subheader(L("lec.lab_sheet"))
             st.markdown(lab_table(run["attempts"], run["ok"]), unsafe_allow_html=True)
             if run["ok"]:
                 n = len(run["attempts"])
-                st.success(L("lec.repaired", n=n) if n > 1 else L("lec.pass"))
+                note(L("lec.repaired", n=n) if n > 1 else L("lec.pass"), "ok")
                 certificate(run["manifest"], Path(run["path"]), "run")
             else:
-                st.error(L("lec.discarded", n=len(run["attempts"])))
+                note(L("lec.discarded", n=len(run["attempts"])), "bad")
     st.divider()
     st.subheader(L("ui.case"))
-    cases = available_cases()
-    if cases:
-        pick = st.selectbox(L("ui.case"), list(cases), key="lec_pick", label_visibility="collapsed")
-        case, arts, manifest = load_dir(str(cases[pick]))
-        fails = verify(case, arts)
-        st.markdown(lab_table([type("A", (), {"n": 1, "failures": fails})()], not fails), unsafe_allow_html=True)
-        certificate(manifest, cases[pick], "pick")
-    else:
-        st.info(L("ui.no_cases"))
+    if not cases_now:
+        note(L("ui.no_cases"))
+        return
+    pick = st.selectbox(L("ui.case"), list(cases_now), key="lec_pick", label_visibility="collapsed")
+    fails = verify_dir(str(cases_now[pick]))
+    st.markdown(lab_table([type("A", (), {"n": 1, "failures": fails})()], not fails), unsafe_allow_html=True)
+    certificate(load_dir(str(cases_now[pick]))[2], cases_now[pick], "pick")
+
 
 # ---------------------------------------------------------------------------------------- student
-with tab_stu:
-    cases = available_cases()
-    if not cases:
-        st.info(L("ui.no_cases"))
-    else:
-        name = st.selectbox(L("ui.case"), list(cases), key="stu_pick")
-        case, arts, manifest = load_dir(str(cases[name]))
-        brief: Brief = case.brief
-        ck, gk = f"cites::{name}", f"graded::{name}"
-        st.session_state.setdefault(ck, {})
-        graded = st.session_state.get(gk)
+@st.fragment
+def student_bench(name: str, path: str) -> None:
+    case, arts, _, photo = load_dir(path)
+    brief: Brief = case.brief
+    qs = brief.questions
+    ck, gk, canvas_key = f"cites::{name}", f"graded::{name}", f"canvas::{name}"
+    st.session_state.setdefault(ck, {})
+    # The board reports clicks as its widget value; take it before drawing so the board and the counts agree
+    # without a second rerun.
+    val = st.session_state.get(canvas_key)
+    if val and "cites" in val and not st.session_state.get(gk):
+        st.session_state[ck] = val["cites"]
+    graded = st.session_state.get(gk)
+    active_i = st.session_state.get(f"active::{name}") or 0
 
-        with st.expander(L("ui.case") + f": {case.case_id}", expanded=True):
-            st.write(brief.summary)
-            st.caption(f"{L('stu.lab')}: " + ", ".join(brief.lab_cast))
-            c1, c2 = st.columns(2)
-            c1.markdown(f"**{L('stu.suspects')}**")
-            c1.table({"": [s.name for s in brief.suspects], " ": [s.phone for s in brief.suspects]})
-            c2.markdown(f"**{L('stu.places')}**")
-            c2.table({"": [p.name for p in brief.places], " ": [f"{p.lat:.4f}, {p.lon:.4f}" for p in brief.places]})
+    marks, needles = [], {}
+    if graded:
+        for r in graded:
+            q = next(x for x in case.questions if x.id == r.question_id)
+            for m in r.marks:
+                key = {"chat": f"chat:{m.citation.line}", "calls": f"calls:{m.citation.row}",
+                       "photo": f"photo:{m.citation.exif_tag}"}[m.citation.artifact]
+                marks.append({"qid": q.id, "key": key, "label": m.label})
+                for fid in q.answer_facts:
+                    for a in case.fact(fid).anchors:
+                        if a.artifact == m.citation.artifact:
+                            needles.setdefault(key, [])
+                            needles[key] += [s for s in a.must_contain if s not in needles[key]]
 
-        board, inspector = st.columns([3.4, 1.0])
-        qs = brief.questions
-        with inspector:
-            active_i = st.radio(L("stu.question", n=""), range(len(qs)), key=f"active::{name}",
-                                format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}")
-            answers, rationales = {}, {}
-            for i, q in enumerate(qs):
-                st.markdown(f"**{L('stu.question', n=i + 1)}**")
-                if q.kind == "who":
-                    ids = [s.id for s in brief.suspects]
-                    answers[q.id] = st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None,
-                                                 format_func=lambda x: next(s.name for s in brief.suspects if s.id == x))
-                elif q.kind == "where":
-                    ids = [p.id for p in brief.places]
-                    answers[q.id] = st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None,
-                                                 format_func=lambda x: next(p.name for p in brief.places if p.id == x))
-                else:
-                    answers[q.id] = st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
-                rationales[q.id] = st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
-                st.caption(L("stu.cited", n=len(st.session_state[ck].get(q.id, []))))
+    with st.container(key="bench"):
+        board, inspector_col = st.columns([3.3, 1.0])
+    with board:
+        canvas(chat=[{"n": ln.line, "text": ln.raw} for ln in load_chat(arts.chat)],
+               calls=[{"row": r.row, "text": text_at(arts, "calls", row=r.row)} for r in load_calls(arts.calls)],
+               exif=[{"tag": k, "value": v} for k, v in load_exif(arts.photo).items()],
+               key=canvas_key, default=None, photo=photo,
+               active={"id": qs[active_i].id, "label": L("stu.question", n=active_i + 1)},
+               cites=st.session_state[ck], marks=marks, needles=needles, locked=bool(graded),
+               labels={"holds": L("stu.holds"), "snapped": L("stu.snapped"), "partial": L("stu.partial"),
+                       "tray": L("stu.cited", n="").strip(), "empty": L("stu.cite")})
 
-            st.markdown(f"**{L('hint.title')}**")
-            persona = st.selectbox(L("hint.persona"), PERSONAS, key="persona", format_func=lambda p: L(f"persona.{p}"))
-            hk = f"hints::{name}::{qs[active_i].id}"
-            st.session_state.setdefault(hk, 0)
-            if st.button(L("hint.next"), key=f"hint-btn::{name}"):
-                st.session_state[hk] = min(st.session_state[hk] + 1, TIERS)
-            shown = st.session_state[hk]
-            for tier in range(1, shown + 1):
-                st.info(hint(case, qs[active_i].id, tier, st.session_state["lang"], persona))
-            if shown:
-                if shown >= TIERS:
-                    st.caption(L("hint.none_left"))
-                speak(text=hint(case, qs[active_i].id, shown, st.session_state["lang"], persona),
-                      lang=st.session_state["lang"], rate=SPEECH[persona]["rate"], pitch=SPEECH[persona]["pitch"],
-                      labels={"read": L("speak.read"), "mute": L("speak.mute"), "no_voice": L("speak.no_voice")},
-                      key=f"speak::{name}", default=None)
+    with inspector_col, st.container(key="inspector"):
+        # A fixed, hidden label: Streamlit resets a widget whose label changes, which would drop the choice on a language switch.
+        st.markdown(f'<div class="label">{esc(L("stu.question", n=""))}</div>', unsafe_allow_html=True)
+        st.radio("question", range(len(qs)), key=f"active::{name}", label_visibility="collapsed",
+                 format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}")
+        answers, rationales = {}, {}
+        for i, q in enumerate(qs):
+            st.markdown(f'<div class="label" style="margin-top:14px">{esc(L("stu.question", n=i + 1))}</div>', unsafe_allow_html=True)
+            if q.kind == "who":
+                ids = [s.id for s in brief.suspects]
+                answers[q.id] = st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None,
+                                             format_func=lambda x: next(s.name for s in brief.suspects if s.id == x))
+            elif q.kind == "where":
+                ids = [p.id for p in brief.places]
+                answers[q.id] = st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None,
+                                             format_func=lambda x: next(p.name for p in brief.places if p.id == x))
+            else:
+                answers[q.id] = st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
+            rationales[q.id] = st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
+            st.caption(L("stu.cited", n=len(st.session_state[ck].get(q.id, []))))
 
-            s1, s2 = st.columns(2)
-            submit = s1.button(L("stu.submit"), type="primary", key=f"submit::{name}")
-            if graded and s2.button("↑", key=f"reset::{name}", help="reset"):
-                st.session_state.pop(gk, None)
-                st.rerun()
+        st.markdown(f'<div class="label" style="margin-top:18px">{esc(L("hint.title"))}</div>', unsafe_allow_html=True)
+        persona = st.selectbox(L("hint.persona"), PERSONAS, key="persona", format_func=lambda p: L(f"persona.{p}"))
+        hk = f"hints::{name}::{qs[active_i].id}"
+        st.session_state.setdefault(hk, 0)
+        if st.button(L("hint.next"), key=f"hint-btn::{name}"):
+            st.session_state[hk] = min(st.session_state[hk] + 1, TIERS)
+        shown = st.session_state[hk]
+        for tier in range(1, shown + 1):
+            st.markdown(f'<div class="hint">{esc(hint(case, qs[active_i].id, tier, st.session_state["lang"], persona))}</div>',
+                        unsafe_allow_html=True)
+        if shown:
+            if shown >= TIERS:
+                st.caption(L("hint.none_left"))
+            speak(text=hint(case, qs[active_i].id, shown, st.session_state["lang"], persona),
+                  lang=st.session_state["lang"], rate=SPEECH[persona]["rate"], pitch=SPEECH[persona]["pitch"],
+                  labels={"read": L("speak.read"), "mute": L("speak.mute"), "no_voice": L("speak.no_voice")},
+                  key=f"speak::{name}", default=None)
 
-        # grading ---------------------------------------------------------------------------
-        if submit:
+        s1, s2 = st.columns(2)
+        if s1.button(L("stu.submit"), type="primary", key=f"submit::{name}"):
             claims = []
             for q in qs:
                 cs = []
@@ -314,99 +338,96 @@ with tab_stu:
                               Citation("calls", row=int(loc)) if kind == "calls" else Citation("photo", exif_tag=loc))
                 claims.append(Claim(q.id, answers.get(q.id) or "", tuple(cs), rationales.get(q.id, "")))
             st.session_state[gk] = grade_all(case, arts, claims)
-            st.rerun()
+            st.rerun(scope="fragment")
+        if graded and s2.button("↑", key=f"reset::{name}", help="reset"):
+            st.session_state.pop(gk, None)
+            st.rerun(scope="fragment")
 
-        marks, needles = [], {}
-        if graded:
-            for r in graded:
-                q = next(x for x in case.questions if x.id == r.question_id)
-                for m in r.marks:
-                    key = {"chat": f"chat:{m.citation.line}", "calls": f"calls:{m.citation.row}",
-                           "photo": f"photo:{m.citation.exif_tag}"}[m.citation.artifact]
-                    marks.append({"qid": q.id, "key": key, "label": m.label})
-                    for fid in q.answer_facts:
-                        for a in case.fact(fid).anchors:
-                            if a.artifact == m.citation.artifact:
-                                needles.setdefault(key, [])
-                                needles[key] += [s for s in a.must_contain if s not in needles[key]]
-
-        chat_rows = [{"n": ln.line, "text": ln.raw} for ln in load_chat(arts.chat)]
-        call_rows = [{"row": r.row, "text": text_at(arts, "calls", row=r.row)} for r in load_calls(arts.calls)]
-        exif_rows = [{"tag": k, "value": v} for k, v in load_exif(arts.photo).items()]
+    if graded:
+        total, possible = sum(r.points for r in graded), 2 * len(graded)
         with board:
-            val = canvas(chat=chat_rows, calls=call_rows, exif=exif_rows, key=f"canvas::{name}", default=None,
-                         photo="data:image/jpeg;base64," + base64.b64encode(arts.photo).decode(),
-                         active={"id": qs[active_i].id, "label": L("stu.question", n=active_i + 1)},
-                         cites=st.session_state[ck], marks=marks, needles=needles, locked=bool(graded),
-                         labels={"holds": L("stu.holds"), "snapped": L("stu.snapped"), "partial": L("stu.partial"),
-                                 "tray": L("stu.cited", n="").strip(), "empty": L("stu.cite")})
-            if val and "cites" in val and val["cites"] != st.session_state[ck]:
-                st.session_state[ck] = val["cites"]
-                st.rerun()
+            st.markdown(f'<div class="score">{total}<span class="dim" style="font-size:18px"> / {possible}</span></div>'
+                        f'<div class="dim">{esc(L("stu.score"))}: {esc(L("stu.points", n=total, m=possible))}</div>', unsafe_allow_html=True)
+            for r in graded:
+                q = next(x for x in qs if x.id == r.question_id)
+                st.markdown(f"**{q.text}**")
+                a_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.answer_correct else f'<span class="bad">✕ {L("stu.lost")}</span>'
+                e_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.citation_valid else f'<span class="bad">✕ {L("stu.lost")}</span>'
+                st.markdown(f'<div class="pt">{L("stu.answer_point")}: {a_ok} &nbsp;|&nbsp; {L("stu.evidence_point")}: {e_ok}</div>',
+                            unsafe_allow_html=True)
+                for e in r.explanations:
+                    st.markdown(f'<div class="expl">{esc(render_expl(e, st.session_state["lang"]))}</div>', unsafe_allow_html=True)
+                if r.rationale_flag:
+                    st.caption({"could_not_verify": L("stu.flagged"), "overclaim": L("stu.flag_overclaim"),
+                                "ok": L("stu.flag_ok")}[r.rationale_flag])
 
-        if graded:
-            total, possible = sum(r.points for r in graded), 2 * len(graded)
-            with board:
-                st.markdown(f'<div class="score">{total}<span class="dim" style="font-size:18px"> / {possible}</span></div>'
-                            f'<div class="dim">{L("stu.score")}: {L("stu.points", n=total, m=possible)}</div>', unsafe_allow_html=True)
-                for r in graded:
-                    q = next(x for x in qs if x.id == r.question_id)
-                    st.markdown(f"**{q.text}**")
-                    a_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.answer_correct else f'<span class="bad">✕ {L("stu.lost")}</span>'
-                    e_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.citation_valid else f'<span class="bad">✕ {L("stu.lost")}</span>'
-                    st.markdown(f'<div class="pt">{L("stu.answer_point")}: {a_ok} &nbsp;|&nbsp; {L("stu.evidence_point")}: {e_ok}</div>',
-                                unsafe_allow_html=True)
-                    for e in r.explanations:
-                        st.markdown(f'<div class="expl">{render_expl(e, st.session_state["lang"])}</div>', unsafe_allow_html=True)
-                    if r.rationale_flag:
-                        st.caption({"could_not_verify": L("stu.flagged"), "overclaim": L("stu.flag_overclaim"),
-                                    "ok": L("stu.flag_ok")}[r.rationale_flag])
+
+def student_view() -> None:
+    if not cases_now:
+        note(L("ui.no_cases"))
+        return
+    name = st.selectbox(L("ui.case"), list(cases_now), key="stu_pick")
+    case = load_dir(str(cases_now[name]))[0]
+    brief = case.brief
+    with st.expander(L("ui.case") + f": {case.case_id}", expanded=True):
+        st.write(brief.summary)
+        st.caption(f"{L('stu.lab')}: " + ", ".join(brief.lab_cast))
+        c1, c2 = st.columns(2)
+        c1.markdown(f'<div class="label">{esc(L("stu.suspects"))}</div>' +
+                    html_table([], [[s.name, s.phone] for s in brief.suspects]), unsafe_allow_html=True)
+        c2.markdown(f'<div class="label">{esc(L("stu.places"))}</div>' +
+                    html_table([], [[p.name, f"{p.lat:.4f}, {p.lon:.4f}"] for p in brief.places]),
+                    unsafe_allow_html=True)
+    student_bench(name, str(cases_now[name]))
+
 
 # ---------------------------------------------------------------------------------------- evaluation
-with tab_eval:
+def eval_view() -> None:
     st.subheader(L("eval.title"))
     st.caption(L("eval.note"))
     res_path = ROOT / "eval" / "results.json"
     results = json.loads(res_path.read_text("utf-8")) if res_path.exists() else {}
     if not results:
-        st.info(L("eval.empty"))
+        note(L("eval.empty"))
+
+    def block(title: str, header, rows, caption: str = "") -> None:
+        st.markdown(f'<div class="label" style="margin-top:22px">{esc(title)}</div>' + html_table(header, rows), unsafe_allow_html=True)
+        if caption:
+            st.caption(caption)
+
     dd = results.get("defect_detection")
     if dd:
-        st.markdown(f"**Defect detection** ({L('eval.n', n=dd['n_defects'])})")
-        st.table({"defect": list(dd["per_type"]),
-                  "n": [v["n"] for v in dd["per_type"].values()],
-                  "caught by the intended check": [v["caught_by_intended_check"] for v in dd["per_type"].values()],
-                  "caught by any check": [v["caught_by_any_check"] for v in dd["per_type"].values()]})
-        st.caption(f"False positives on clean cases: {dd['false_positives']} of {dd['clean_cases_checked']} ({L('eval.n', n=dd['clean_cases_checked'])}). {dd['note']}")
+        block(f"Defect detection ({L('eval.n', n=dd['n_defects'])})",
+              ["defect", "n", "caught by the intended check", "caught by any check"],
+              [[k, v["n"], v["caught_by_intended_check"], v["caught_by_any_check"]] for k, v in dd["per_type"].items()],
+              f"False positives on clean cases: {dd['false_positives']} of {dd['clean_cases_checked']} "
+              f"({L('eval.n', n=dd['clean_cases_checked'])}). {dd['note']}")
     gq = results.get("generator_quality")
     if gq:
-        st.markdown("**Generator quality: raw LLM vs hybrid + verifier**")
-        rows = []
-        for lang in [k for k in gq if k != "note"]:
-            for mode, r in gq[lang].items():
-                rows.append({"language": lang, "mode": mode, "n completed": r["completed"],
-                             "first-try pass": r["first_try_pass"], "pass after repair": r["pass_after_repair"],
-                             "excluded (LLM unavailable)": r["llm_unavailable_excluded"]})
-        st.table(rows)
-        st.caption(gq["note"])
-    bs = results.get("blind_solve")
-    if bs:
-        st.markdown(f"**Blind solve by {bs['model']}** ({L('eval.n', n=bs['completed'])}, unscored)")
-        st.table({"question kind": list(bs["agreement_with_key"]),
-                  "agrees with key": [f"{v['agree']} of {v['of']}" for v in bs["agreement_with_key"].values()]})
+        block("Generator quality: raw LLM vs hybrid + verifier",
+              ["language", "mode", "n completed", "first-try pass", "pass after repair", "excluded (LLM unavailable)"],
+              [[lang, mode, r["completed"], r["first_try_pass"], r["pass_after_repair"], r["llm_unavailable_excluded"]]
+               for lang in [k for k in gq if k != "note"] for mode, r in gq[lang].items()], gq["note"])
+    for key, label in (("blind_solve", "stub filler"), ("blind_solve_real", "real LLM filler")):
+        bs = results.get(key)
+        if bs:
+            block(f"Blind solve by {bs['model']}, {label} ({L('eval.n', n=bs['completed'])}, unscored)",
+                  ["question kind", "agrees with key"],
+                  [[k, f"{v['agree']} of {v['of']}"] for k, v in bs["agreement_with_key"].items()])
     ga = results.get("grader_agreement")
     if ga:
-        st.markdown(f"**Grader agreement with manual grading** ({L('eval.n', n=ga['n_labelled'])})")
-        st.table({"check": list(ga["agreement"]), "agree": [f"{v} of {ga['n_labelled']}" for v in ga["agreement"].values()]})
-    pilot = ROOT / "eval" / "raw_pilot.json"
-    if pilot.exists():
-        rp = json.loads(pilot.read_text("utf-8"))
-        st.markdown(f"**Raw LLM pilot** ({L('eval.n', n=rp['completed'])}): {rp['failed']} of {rp['completed']} chats failed a check. {rp['note']}.")
+        block(f"Grader agreement with manual grading ({L('eval.n', n=ga['n_labelled'])})",
+              ["check", "agree"], [[k, f"{v} of {ga['n_labelled']}"] for k, v in ga["agreement"].items()])
     sc = ROOT / "eval" / "plain_baseline" / "scores.csv"
     if sc.exists():
         rows = [r for r in csv.DictReader(sc.open(encoding="utf-8")) if r.get("broken") in ("y", "n")]
         if rows:
             broken = sum(r["broken"] == "y" for r in rows)
             first_pass = any("claude" in r.get("checker", "") for r in rows)
-            how = "flagged by a first-pass model check, not yet confirmed by a person (some on a strict reading)" if first_pass else "hand-checked cases had at least one defect"
-            st.markdown(f"**Plain-chat baseline** ({L('eval.n', n=len(rows))}): {broken} of {len(rows)} {how}.")
+            how = ("flagged by a first-pass model check, not yet confirmed by a person (some on a strict reading)"
+                   if first_pass else "hand-checked cases had at least one defect")
+            st.markdown(f'<div class="label" style="margin-top:22px">Plain-chat baseline ({esc(L("eval.n", n=len(rows)))})</div>'
+                        f'<div class="note">{broken} of {len(rows)} {esc(how)}.</div>', unsafe_allow_html=True)
+
+
+{"lecturer": lecturer_view, "student": student_view, "eval": eval_view}[view]()
