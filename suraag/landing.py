@@ -28,13 +28,13 @@ S = {
         },
         "pick": "Pick a line to see how the grader reads it.",
         "watch_label": "Watch the verifier",
-        "watch_text": "Plant a clash: shift one chat time so it disagrees with the call log by 7 minutes. The checks catch it, "
-                      "the chat is rewritten, and only then is the case sealed.",
-        "watch_btn": "Plant a defect and run",
+        "watch_text": "A recorded run of this case with a planted clash: the instruction line moved 6 minutes, so it no longer "
+                      "agrees with the call. The checks catch it, the chat is rewritten, and only then is the case sealed.",
+        "watch_btn": "Replay a recorded run",
         "watch_again": "Run again",
         "log": [
             ("", "[A1] initial"),
-            ("bad", "✕ F1: chat.txt:14 at 8:14 pm vs calls.csv row 3 at 20:07 differs by 7 min (tolerance 2)"),
+            ("bad", "✕ F1: chat.txt:13 at 7:04 pm vs calls.csv row 4 at 18:57 differs by 7 min (tolerance 2)"),
             ("", "[A2] regenerate chat (LLM)"),
             ("ok", "✓ every check passes"),
             ("ok", "→ manifest.json sealed"),
@@ -70,13 +70,13 @@ S = {
         },
         "pick": "कोई पंक्ति चुनिए और देखिए कि ग्रेडर उसे कैसे पढ़ता है।",
         "watch_label": "जाँचकर्ता को काम करते देखिए",
-        "watch_text": "एक टकराव डालिए: चैट का एक समय कॉल लॉग से 7 मिनट अलग कर दीजिए। जाँचें उसे पकड़ती हैं, चैट फिर से लिखी "
-                      "जाती है, और तभी केस सील होता है।",
-        "watch_btn": "दोष डालिए और चलाइए",
+        "watch_text": "इसी केस का एक दर्ज रन, जिसमें टकराव डाला गया: निर्देश वाली पंक्ति 6 मिनट खिसकाई गई, इसलिए वह कॉल से मेल नहीं "
+                      "खाती। जाँचें उसे पकड़ती हैं, चैट फिर से लिखी जाती है, और तभी केस सील होता है।",
+        "watch_btn": "दर्ज किया गया रन दोबारा देखिए",
         "watch_again": "फिर से चलाइए",
         "log": [
             ("", "[A1] पहला प्रयास"),
-            ("bad", "✕ F1: chat.txt:14 पर 8:14 pm बनाम calls.csv रो 3 पर 20:07; अंतर 7 मिनट (सहनसीमा 2)"),
+            ("bad", "✕ F1: chat.txt:13 पर 7:04 pm बनाम calls.csv रो 4 पर 18:57; अंतर 7 मिनट (सहनसीमा 2)"),
             ("", "[A2] चैट फिर से लिखी (LLM)"),
             ("ok", "✓ हर जाँच पास"),
             ("ok", "→ manifest.json सील हुआ"),

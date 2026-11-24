@@ -6,7 +6,7 @@
   const send = (value) => window.parent.postMessage({ isStreamlitMessage: true, type: "streamlit:setComponentValue", value, dataType: "json" }, "*");
   const frame = (h) => window.parent.postMessage({ isStreamlitMessage: true, type: "streamlit:setFrameHeight", height: h }, "*");
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  let args = null, cites = {};
+  let args = null, cites = {}, sizer = null;
 
   function highlight(text, needles) {
     let out = esc(text);
@@ -58,7 +58,13 @@
       </div>`;
     document.querySelectorAll(".row[data-key]").forEach((el) => el.addEventListener("click", () => toggle(el.dataset.key)));
     document.querySelectorAll(".rows").forEach((el) => el.addEventListener("scroll", drawStrings));
-    requestAnimationFrame(() => { frame(Math.ceil(document.getElementById("board").getBoundingClientRect().height) + 8); drawStrings(); });
+    /* The board sizes to its content and lines wrap, so its height changes after web fonts load, on resize and on
+       rotation: report it whenever it changes, not once. */
+    const board = document.getElementById("board");
+    if (!sizer) sizer = new ResizeObserver(() => { const b = document.getElementById("board"); if (b) frame(Math.ceil(b.getBoundingClientRect().height) + 8); drawStrings(); });
+    sizer.disconnect();
+    sizer.observe(board);
+    requestAnimationFrame(drawStrings);
   }
 
   function toggle(key) {

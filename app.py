@@ -89,7 +89,7 @@ def _set(key: str, value: str) -> None:
 
 
 def L(key: str, **kw) -> str:
-    return t(key, st.session_state["lang"], **kw)
+    return t(key, st.session_state.get("lang", "en"), **kw)  # .get: format_func can run outside a script run
 
 
 def esc(s) -> str:
@@ -201,8 +201,9 @@ def certificate(manifest: dict | None, path: Path, key: str, sealed: bool, fresh
         head = (f'<div class="cert-head"><div class="panel-title" role="heading" aria-level="2">{esc(L("lec.certificate"))}</div>'
                 f'{stamp("ok" if sealed else "bad", L("lec.verified") if sealed else L("lec.discarded_stamp"), big=True)}</div>')
         wrap = "fresh" if fresh else ""
-        if not sealed or not manifest:
-            st.markdown(f'<div class="{wrap}">{head}<p class="fine">{esc(L("lec.not_shipped"))}</p></div>', unsafe_allow_html=True)
+        if not sealed or not manifest:  # a discarded run has no manifest; a pre-generated case that fails keeps one
+            why = L("lec.not_shipped") if key == "run" else L("lec.pick_failed")
+            st.markdown(f'<div class="{wrap}">{head}<p class="fine">{esc(why)}</p></div>', unsafe_allow_html=True)
             return
         kv = list(manifest["files"].items())
         kv += [(L("lec.k_case"), manifest["case_id"]), (L("lec.k_seed"), f'{manifest["seed"]:03d} / {manifest["mode"]}'),
@@ -220,6 +221,15 @@ def certificate(manifest: dict | None, path: Path, key: str, sealed: bool, fresh
 # ---------------------------------------------------------------------------------------- header
 cases_now = available_cases()
 view, lang = st.session_state["view"], st.session_state["lang"]
+
+# Only the active view runs, and Streamlit forgets the value of any widget that was not drawn in a run. Re-own the
+# keys of the views that are not drawn, so a student's typed answers and the lecturer's choices survive a view switch.
+# (Only keys whose widgets pass no explicit default; their defaults are set here instead.)
+st.session_state.setdefault("gen_seed", 7)
+st.session_state.setdefault("gen_plant", True)
+_hidden = (("gen_", "lec_pick") if view != "lecturer" else ()) + (("a::", "r::", "stu_pick", "persona") if view != "student" else ())
+for _k in [k for k in st.session_state if isinstance(k, str) and k.startswith(_hidden)]:
+    st.session_state[_k] = st.session_state[_k]
 
 # Plain buttons, not st.segmented_control: its active option draws side borders that CSS cannot remove.
 with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
@@ -250,8 +260,8 @@ def lecturer_view() -> None:
         with st.container(key="genlang", horizontal=True, gap=None):
             for code, label in (("en", "English"), ("hinglish", "Hinglish")):
                 st.button(label, key=f"genlang_{code}", type="tertiary", on_click=_set, args=("gen_lang", code))
-        seed = st.number_input(L("lec.seed"), 1, 9999, 7, key="gen_seed")
-        plant = st.toggle(L("lec.plant"), value=True, key="gen_plant", help=L("lec.defects_help"))
+        seed = st.number_input(L("lec.seed"), 1, 9999, key="gen_seed")
+        plant = st.toggle(L("lec.plant"), key="gen_plant", help=L("lec.defects_help"))
         defect = target = None
         if plant:
             defect = st.selectbox(L("lec.defect"), list(EXPECTED), key="gen_defect")
@@ -270,7 +280,7 @@ def lecturer_view() -> None:
                 note(L("lec.cap", cap=DAILY_CAP), "bad")
             else:
                 case_lang = st.session_state["gen_lang"]
-                out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"upi-ring-{int(seed):03d}-{case_lang}"
+                out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"upi-ring-{int(seed):03d}-{case_lang}-live"
                 attempts = []
                 with st.status(L("lec.generating"), expanded=True) as status:
                     def on_attempt(a):
@@ -296,7 +306,8 @@ def lecturer_view() -> None:
             path = cases_now[st.session_state.get("lec_pick") or next(iter(cases_now))]
             fails = verify_dir(str(path))
             attempts = [SimpleNamespace(n=1, failures=fails, action="initial")]
-            sealed, manifest, key = not fails, load_dir(str(path))[2], "pick"
+            _, arts, manifest, _ = load_dir(str(path))
+            sealed, key = not fails and arts.sha256() == manifest["files"], "pick"
         else:
             note(L("ui.no_cases"))
             return
@@ -306,6 +317,22 @@ def lecturer_view() -> None:
 
 
 # ---------------------------------------------------------------------------------------- student
+def _grade(name: str, path: str) -> None:
+    """Submit callback: build the claims from session state and grade them before the bench redraws."""
+    case, arts, _, _ = load_dir(path)
+    cites = st.session_state.get(f"cites::{name}", {})
+    claims = []
+    for q in case.brief.questions:
+        cs = []
+        for k in cites.get(q.id, []):
+            kind, _, loc = k.partition(":")
+            cs.append(Citation("chat", line=int(loc)) if kind == "chat" else
+                      Citation("calls", row=int(loc)) if kind == "calls" else Citation("photo", exif_tag=loc))
+        answer = st.session_state.get(f"a::{name}::{q.id}") or ""
+        claims.append(Claim(q.id, str(answer), tuple(cs), st.session_state.get(f"r::{name}::{q.id}") or ""))
+    st.session_state[f"graded::{name}"] = grade_all(case, arts, claims)
+
+
 @st.fragment
 def student_bench(name: str, path: str) -> None:
     case, arts, _, photo = load_dir(path)
@@ -358,20 +385,19 @@ def student_bench(name: str, path: str) -> None:
         st.radio("question", range(len(qs)), key=f"active::{name}", label_visibility="collapsed",
                  format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}",
                  on_change=lambda: _set(f"q::{name}", st.session_state[f"active::{name}"]))
-        answers, rationales = {}, {}
         for i, q in enumerate(qs):
             st.markdown(f'<div class="label" style="margin-top:14px">{esc(L("stu.question", n=i + 1))}</div>', unsafe_allow_html=True)
             if q.kind == "who":
                 ids = [s.id for s in brief.suspects]
-                answers[q.id] = st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
+                st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
                                              format_func=lambda x: next(s.name for s in brief.suspects if s.id == x))
             elif q.kind == "where":
                 ids = [p.id for p in brief.places]
-                answers[q.id] = st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
+                st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
                                              format_func=lambda x: next(p.name for p in brief.places if p.id == x))
             else:
-                answers[q.id] = st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
-            rationales[q.id] = st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
+                st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
+            st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
             st.caption(L("stu.cited", n=len(st.session_state[ck].get(q.id, []))))
 
         st.markdown(f'<div class="label" style="margin-top:18px">{esc(L("hint.title"))}</div>', unsafe_allow_html=True)
@@ -393,20 +419,9 @@ def student_bench(name: str, path: str) -> None:
                   key=f"speak::{name}", default=None)
 
         s1, s2 = st.columns(2)
-        if s1.button(L("stu.submit"), type="primary", key=f"submit::{name}"):
-            claims = []
-            for q in qs:
-                cs = []
-                for k in st.session_state[ck].get(q.id, []):
-                    kind, _, loc = k.partition(":")
-                    cs.append(Citation("chat", line=int(loc)) if kind == "chat" else
-                              Citation("calls", row=int(loc)) if kind == "calls" else Citation("photo", exif_tag=loc))
-                claims.append(Claim(q.id, answers.get(q.id) or "", tuple(cs), rationales.get(q.id, "")))
-            st.session_state[gk] = grade_all(case, arts, claims)
-            st.rerun(scope="fragment")
-        if graded and s2.button("↑", key=f"reset::{name}", help="reset"):
-            st.session_state.pop(gk, None)
-            st.rerun(scope="fragment")
+        s1.button(L("stu.submit"), type="primary", key=f"submit::{name}", on_click=_grade, args=(name, path))
+        if graded:
+            s2.button(L("stu.reset"), key=f"reset::{name}", on_click=lambda: st.session_state.pop(gk, None))
 
     if graded:
         total, possible = sum(r.points for r in graded), 2 * len(graded)

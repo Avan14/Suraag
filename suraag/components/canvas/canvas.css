@@ -48,7 +48,7 @@ mark { background: var(--highlighter); color: inherit; padding: 0 1px; border-ra
 .photo-body { display: flex; align-items: flex-start; min-width: 0; }
 .photo { flex: none; width: 200px; padding: 12px; } .photo img { width: 100%; border-radius: 2px; border: 2px solid var(--ink-1); display: block; }
 .photo-body .rows { border-left: 1px dashed var(--rule); }
-.tray { width: 170px; flex: none; position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+.tray { width: 170px; flex: none; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
 .tray h4 { margin: 0 0 4px; font: 600 15px/1.3 var(--font-ui); color: var(--ink-1); }
 /* citation tags: paper slips with an ink border, set slightly askew like notes on a desk */
 .sticky { position: relative; background: var(--card); border: 2px solid var(--ink-1); border-radius: var(--radius-card); padding: 8px 10px;
@@ -62,4 +62,4 @@ svg.strings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-e
 svg.strings path { fill: none; stroke-width: 2; }
 svg.strings circle { stroke: var(--card); stroke-width: 3; }
 /* The breakpoint is the board's own width (it lives in an iframe), not the page's. */
-@media (max-width: 720px) { svg.strings { display: none; } .board { flex-direction: column; padding: 12px; } .stack { width: 100%; } .tray { width: 100%; position: static; } .photo-body { flex-direction: column; } .photo { width: 100%; } .photo-body .rows { border-left: 0; width: 100%; } }
+@media (max-width: 720px) { svg.strings { display: none; } .board { flex-direction: column; padding: 12px; } .stack { width: 100%; } .tray { width: 100%; } .photo-body { flex-direction: column; } .photo { width: 100%; } .photo-body .rows { border-left: 0; width: 100%; } }
