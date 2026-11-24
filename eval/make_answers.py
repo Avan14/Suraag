@@ -3,7 +3,7 @@
 Writes eval/answers.json (labels left null) and eval/grader_worksheet.md (what each cited line says).
 The labels must be a human's: read each cited line, then say whether the answer is correct and whether
 the citations support it, using the rule in the worksheet. Cases are rebuilt from seed + language with
-offline stub filler, so the lines a labeller reads are exactly the lines the grader sees.
+real-filler replies from the committed cache (run with SURAAG_OFFLINE=1), so the lines a labeller reads are the lines in cases/.
 
 Usage: python -m eval.make_answers
 """
@@ -19,7 +19,15 @@ SCENARIOS = ["right", "wrong_line", "wrong_answer", "missing_artifact", "nonexis
 
 
 def arts_for(case) -> Artifacts:
-    return Artifacts(render_chat(case, stub_filler(case)), render_calls(case), render_photo(case))
+    """The shipped files: real LLM filler replayed from the committed cache through the repair loop."""
+    import tempfile
+    from suraag.filler import llm_filler
+    from suraag.pipeline import generate_case
+    with tempfile.TemporaryDirectory() as tmp:
+        res = generate_case(case.seed, case.lang, "hybrid", Path(tmp) / "c", filler_fn=llm_filler,
+                            log_path=Path(tmp) / "f.jsonl")
+    assert res.ok, f"seed {case.seed}: not replayable from the cache"
+    return res.arts
 
 
 def cit(a):

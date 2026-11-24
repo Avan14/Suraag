@@ -27,7 +27,7 @@ Student answer: `6:58 pm`
 Strings the claim needs: chat: '6:58 pm' + 'Prakash ji'; calls: '+91-57297-34908' + '18:57'
 
 Cited lines:
-- chat 2: `16/04/26, 6:04 pm - Ashok ji: Heading home now.`
+- chat 2: `16/04/26, 6:04 pm - Ashok ji: Good evening everyone, how was work today?`
 - calls 4: `2026-04-16T18:57:00+05:30,incoming,+91-57297-34908,Prakash ji,47`
 
 ## Answer 3: case upi-ring-002 (hinglish), Q2 (when)
@@ -73,7 +73,7 @@ Strings the claim needs: chat: '9:37 pm' + 'Rina ji'; calls: '+91-56994-51768' +
 Cited lines:
 - chat 11: `16/04/26, 9:37 pm - Rina ji: Hetal ji, delete the transfer record right now`
 - calls 4: `2026-04-16T21:36:00+05:30,incoming,+91-56994-51768,Rina ji,151`
-- chat 2: `16/04/26, 8:50 pm - Manoj ji: Heading home now.`
+- chat 2: `16/04/26, 8:48 pm - Rina M.: Good evening everyone, did you all have dinner?`
 
 ## Answer 7: case upi-ring-004 (hinglish), Q2 (when)
 
@@ -105,7 +105,7 @@ Student answer: `P3`
 Strings the claim needs: chat: '7:38 pm' + 'Pooja ji'; calls: '+91-50214-95837' + '19:37'
 
 Cited lines:
-- chat 15: `18/03/26, 7:41 pm - Pooja ji: Stuck in traffic right now.`
+- chat 15: `18/03/26, 7:40 pm - Pooja ji: I just reached the tea stall.`
 - calls 3: `2026-03-18T19:37:00+05:30,incoming,+91-50214-95837,Pooja ji,41`
 
 ## Answer 10: case upi-ring-005 (en), Q2 (when)
@@ -138,7 +138,7 @@ Student answer: `PL3`
 Strings the claim needs: photo: '19.0723'; photo: '72.8841'
 
 Cited lines:
-- chat 2: `14/04/26, 8:36 pm - Mamta didi: Thoda wait karo, aa raha hoon.`
+- chat 2: `14/04/26, 8:32 pm - Mamta didi: Subhash bhai woh wala hisaab dekh liya kya?`
 - photo GPSLatitude: `19.0723`
 - photo GPSLongitude: `72.8841`
 
@@ -185,7 +185,7 @@ Strings the claim needs: photo: '19.0593'; photo: '72.8291'
 Cited lines:
 - photo GPSLatitude: `19.0593`
 - photo GPSLongitude: `72.8291`
-- chat 2: `06/03/26, 7:24 pm - Vikram bhai: Mujhe bhi bata dena jab free ho.`
+- chat 2: `06/03/26, 7:18 pm - Subhash bhai: Vikram bhai chai peene chalein shaam ko?`
 
 ## Answer 17: case upi-ring-009 (en), Q1 (who)
 
@@ -217,7 +217,7 @@ Student answer: `7:39 pm`
 Strings the claim needs: chat: '7:39 pm' + 'Venkat bhai'; calls: '+91-50725-76406' + '19:37'
 
 Cited lines:
-- chat 13: `24/03/26, 7:41 pm - Anita didi: Phone ki battery low hai.`
+- chat 13: `24/03/26, 7:40 pm - Venkat R.: Sab log pahunch gaye kya?`
 - calls 3: `2026-03-24T19:37:00+05:30,incoming,+91-50725-76406,Venkat bhai,168`
 
 ## Answer 20: case upi-ring-010 (hinglish), Q3 (where)
