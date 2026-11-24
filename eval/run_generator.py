@@ -54,7 +54,10 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=30)
     ap.add_argument("--langs", nargs="+", default=["en", "hinglish"])
     args = ap.parse_args()
-    out = {"note": "synthetic cases; one case family; LLM-unavailable cases excluded from the rates"}
+    from eval.results import RESULTS
+    import json
+    old = json.loads(RESULTS.read_text("utf-8")).get("generator_quality", {}) if RESULTS.exists() else {}
+    out = {**old, "note": "synthetic cases; one case family; LLM-unavailable cases excluded from the rates"}  # keep other languages
     for lang in args.langs:
         out[lang] = {m: run_mode(m, lang, args.n) for m in ("hybrid", "raw")}
         for m, r in out[lang].items():
