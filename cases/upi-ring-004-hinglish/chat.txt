@@ -1,24 +1,24 @@
 SYNTHETIC CASE - fictional, for teaching only. Not real data.
-13/03/26, 6:34 pm - Mahesh bhai: Aaj kaafi kaam tha yaar.
-13/03/26, 6:38 pm - Nilesh V.: Theek hai, ok.
-13/03/26, 6:43 pm - Nilesh bhai: Thoda wait karo, aa raha hoon.
-13/03/26, 6:47 pm - Mahesh bhai: Chai peene chalein kya?
-13/03/26, 6:51 pm - Nilesh V.: Kal milte hain phir, theek hai?
-13/03/26, 6:56 pm - Nilesh bhai: Kya scene hai aaj?
-13/03/26, 7:00 pm - Subhash bhai: Sab sahi chal raha hai na?
-13/03/26, 7:05 pm - Nilesh V.: Bhai khana kha liya?
-13/03/26, 7:09 pm - Subhash bhai: Aaj kaafi kaam tha yaar.
-13/03/26, 7:13 pm - Mahesh bhai: Phone ki battery low hai.
-13/03/26, 7:18 pm - Nilesh V.: Aaj kaafi kaam tha yaar.
-13/03/26, 7:22 pm - Mahesh bhai: Subah baat karte hain.
+13/03/26, 6:30 pm - Nilesh V.: Haan bhai shaam ko milna hai kya
+13/03/26, 6:35 pm - Mahesh bhai: Main toh abhi dukaan par hi hoon
+13/03/26, 6:38 pm - Subhash bhai: Wo purana hisaab baaki tha uska kya hua
+13/03/26, 6:42 pm - Nilesh bhai: Kaun sa hisaab baaki hai bhai
+13/03/26, 6:47 pm - Subhash bhai: Jo chai aur naashte ka hua tha
+13/03/26, 6:51 pm - Nilesh V.: Haan wo toh pehle dekha tha humne
+13/03/26, 6:56 pm - Mahesh bhai: Haan sab likha hua hai mere paas
+13/03/26, 7:03 pm - Nilesh bhai: Thik hai milkar baat kar lete hain
+13/03/26, 7:10 pm - Subhash bhai: Kahan aana hai batao
+13/03/26, 7:15 pm - Nilesh V.: Wahi chai ki tapri par milte hain
+13/03/26, 7:20 pm - Mahesh bhai: Thoda late ho jaunga main
+13/03/26, 7:25 pm - Nilesh bhai: Koi baat nahi hum intezaar kar rahe hain
 13/03/26, 7:27 pm - Nilesh bhai: Mahesh bhai, wo transfer ka record delete kar dena abhi
-13/03/26, 7:32 pm - Nilesh V.: Phone ki battery low hai.
-13/03/26, 7:38 pm - Subhash bhai: Sab sahi chal raha hai na?
-13/03/26, 7:44 pm - Subhash bhai: Bhai khana kha liya?
-13/03/26, 7:49 pm - Mahesh bhai: Aaj kaafi kaam tha yaar.
-13/03/26, 7:55 pm - Subhash bhai: Paise baad mein dekhte hain.
-13/03/26, 8:01 pm - Subhash bhai: Chai peene chalein kya?
-13/03/26, 8:07 pm - Subhash bhai: Paise baad mein dekhte hain.
-13/03/26, 8:12 pm - Nilesh bhai: Kya scene hai aaj?
-13/03/26, 8:18 pm - Mahesh bhai: Abhi traffic mein fansa hoon.
-13/03/26, 8:24 pm - Mahesh bhai: Thoda wait karo, aa raha hoon.
+13/03/26, 7:29 pm - Subhash bhai: Main nikal gaya hoon ghar se
+13/03/26, 7:35 pm - Nilesh V.: Main bhi pahunch raha hoon wahan
+13/03/26, 7:41 pm - Nilesh bhai: Chai aane do fir dekhte hain hisaab
+13/03/26, 7:48 pm - Mahesh bhai: Main bas abhi dukaan band karke nikla
+13/03/26, 7:54 pm - Subhash bhai: Poora hisaab barabar hai na sabka
+13/03/26, 8:02 pm - Nilesh V.: Haan bhai sab barabar hai koi tension nahi
+13/03/26, 8:09 pm - Nilesh bhai: Khane ka kya plan hai fir
+13/03/26, 8:16 pm - Mahesh bhai: Hotel chalte hain paas waale
+13/03/26, 8:22 pm - Subhash bhai: Sahi hai wahan baith kar aaraam se baat karenge
+13/03/26, 8:28 pm - Nilesh V.: Chalo fir jaldi aao sab

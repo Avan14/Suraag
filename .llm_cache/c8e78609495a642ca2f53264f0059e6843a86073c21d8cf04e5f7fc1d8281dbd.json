@@ -1,0 +1,6 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "system": null,
+ "prompt": "Reply with the single word OK",
+ "text": "OK"
+}

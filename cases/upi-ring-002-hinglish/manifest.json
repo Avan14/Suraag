@@ -1,12 +1,12 @@
 {
   "case_id": "upi-ring-002",
   "files": {
-    "chat.txt": "1547a23eb8a325c8e2236d9de9e522d798a8f3ce31511cfa8e054855084bc7c3",
+    "chat.txt": "212d26150d3597bb3647fd5fd7a524f384146a0be0baac38b67d3897cf899b96",
     "calls.csv": "03282fb538f27fff98f2ae0f5f24317dc4f8d0e51461d41e8da14d566f2684f4",
     "photo.jpg": "66722c657b19f1d5ea6c888b8ab473b4d665fd7b38d3b8714d06483d035e1e57"
   },
   "seed": 2,
-  "model": "stub",
+  "model": "gemini-3.5-flash",
   "prompt_hashes": {
     "filler": "56a5efd33e2f",
     "raw": "ad0aa1fd7acd"
@@ -17,5 +17,5 @@
   "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
   "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
   "chat_date_order": "DMY",
-  "sealed_at": "2026-11-24T00:19:05+05:30"
+  "sealed_at": "2026-11-24T09:43:26+05:30"
 }

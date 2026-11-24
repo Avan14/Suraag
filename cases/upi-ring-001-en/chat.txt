@@ -1,27 +1,27 @@
 SYNTHETIC CASE - fictional, for teaching only. Not real data.
-16/04/26, 6:04 pm - Ashok ji: Heading home now.
-16/04/26, 6:09 pm - Prakash V.: Today was really busy.
-16/04/26, 6:14 pm - Prakash V.: Wait a bit, almost there.
-16/04/26, 6:19 pm - Prakash ji: Wait a bit, almost there.
-16/04/26, 6:24 pm - Prakash ji: Everything going well?
-16/04/26, 6:29 pm - Ashok ji: Want to grab some tea?
-16/04/26, 6:33 pm - Prakash ji: See you tomorrow then, okay?
-16/04/26, 6:38 pm - Prakash ji: Yes, I will check.
-16/04/26, 6:43 pm - Prakash V.: Fine, okay.
-16/04/26, 6:48 pm - Prakash ji: Today was really busy.
-16/04/26, 6:53 pm - Ashok ji: Heading home now.
+16/04/26, 6:04 pm - Ashok ji: Good evening everyone, how was work today?
+16/04/26, 6:08 pm - Mahesh ji: Quite busy over here. Just finished up.
+16/04/26, 6:12 pm - Prakash V.: Evening! I was thinking we should catch up soon.
+16/04/26, 6:17 pm - Prakash ji: Yes, it has been a while since we all sat together.
+16/04/26, 6:23 pm - Ashok ji: Sounds good. We can meet near the tea stall.
+16/04/26, 6:29 pm - Mahesh ji: That works. Also, Prakash ji, did you get a chance to look into that personal loan matter we discussed?
+16/04/26, 6:35 pm - Prakash ji: Ah yes, everything is sorted from my side regarding that cash assistance.
+16/04/26, 6:40 pm - Prakash V.: Glad to hear that. You really helped out when it was needed.
+16/04/26, 6:44 pm - Ashok ji: True, friends always stand by each other in tough times.
+16/04/26, 6:50 pm - Mahesh ji: Absolutely. Shall we gather in an hour?
+16/04/26, 6:55 pm - Prakash ji: Sure, I will be ready shortly.
 16/04/26, 6:58 pm - Prakash ji: Mahesh ji, delete the transfer record right now
-16/04/26, 7:02 pm - Prakash V.: Let us talk in the morning.
-16/04/26, 7:06 pm - Mahesh ji: See you tomorrow then, okay?
-16/04/26, 7:10 pm - Prakash V.: See you tomorrow then, okay?
-16/04/26, 7:14 pm - Prakash V.: Let us talk in the morning.
-16/04/26, 7:18 pm - Prakash ji: We can sort the money later.
-16/04/26, 7:22 pm - Ashok ji: Yes, I will check.
-16/04/26, 7:26 pm - Prakash V.: What is the plan today?
-16/04/26, 7:31 pm - Ashok ji: Everything going well?
-16/04/26, 7:35 pm - Prakash ji: Wait a bit, almost there.
-16/04/26, 7:39 pm - Ashok ji: Let me know when you are free.
-16/04/26, 7:43 pm - Ashok ji: We can sort the money later.
-16/04/26, 7:47 pm - Ashok ji: Everything going well?
-16/04/26, 7:51 pm - Prakash ji: Today was really busy.
-16/04/26, 7:55 pm - Prakash V.: Yes, I will check.
+16/04/26, 6:59 pm - Prakash V.: Great, I am leaving my house now.
+16/04/26, 7:05 pm - Ashok ji: Bring the papers if there are any notes to check.
+16/04/26, 7:10 pm - Mahesh ji: No need for heavy paperwork, we trust each other.
+16/04/26, 7:15 pm - Prakash ji: I brought some snacks for everyone.
+16/04/26, 7:21 pm - Prakash V.: Excellent! The weather is very pleasant tonight.
+16/04/26, 7:26 pm - Ashok ji: Are you guys already at the corner?
+16/04/26, 7:31 pm - Mahesh ji: Almost there, stuck in a little traffic.
+16/04/26, 7:37 pm - Prakash ji: Take your time, we are waiting near the bench.
+16/04/26, 7:42 pm - Prakash V.: Did everyone order tea?
+16/04/26, 7:46 pm - Ashok ji: Yes, hot tea is on the way.
+16/04/26, 7:50 pm - Mahesh ji: I just reached. I see you both over there.
+16/04/26, 7:54 pm - Prakash ji: Good to see you. Let us discuss our upcoming plans.
+16/04/26, 7:57 pm - Prakash V.: Yes, including the family gathering next week.
+16/04/26, 7:59 pm - Ashok ji: Perfect, let us enjoy the tea first.

@@ -67,7 +67,7 @@ def complete(prompt: str, *, system: str | None = None, model: str | None = None
     from google.genai import errors, types
     config = types.GenerateContentConfig(
         system_instruction=system, max_output_tokens=max_tokens,
-        http_options=types.HttpOptions(timeout=20_000))
+        http_options=types.HttpOptions(timeout=90_000 if patient else 20_000))  # batch runs: thinking models need longer
     attempts = 5 if patient else 2
     for attempt in range(attempts):
         try:
