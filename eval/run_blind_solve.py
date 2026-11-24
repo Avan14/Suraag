@@ -11,6 +11,8 @@ import tempfile
 from pathlib import Path
 
 from eval.results import merge_results
+from suraag import filler as filler_module
+from suraag.filler import llm_filler
 from suraag.grade import answer_matches
 from suraag.llm import LLMUnavailable, _load_dotenv, complete
 from suraag.parse import Artifacts, load_exif
@@ -42,6 +44,7 @@ Reply with only JSON: {{"Q1": "<suspect id>", "Q2": "<time like 9:14 pm>", "Q3":
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=10)
+    ap.add_argument("--real", action="store_true", help="use real LLM filler (skip a case if it fell back to stub)")
     args = ap.parse_args()
     _load_dotenv()
     model = os.environ.get("SURAAG_MODEL_SOLVER")
@@ -51,9 +54,14 @@ def main() -> None:
         lang = "en" if seed % 2 else "hinglish"
         case = build_case(seed, lang)
         with tempfile.TemporaryDirectory() as tmp:
-            res = generate_case(seed, lang, "hybrid", Path(tmp) / "c", filler_fn=lambda c, e: stub_filler(c),
+            res = generate_case(seed, lang, "hybrid", Path(tmp) / "c",
+                                filler_fn=llm_filler if args.real else (lambda c, e: stub_filler(c)),
                                 log_path=Path(tmp) / "f.jsonl")
             arts: Artifacts = res.arts
+        if args.real and (arts is None or filler_module.last_source != "llm"):
+            unavailable += 1
+            print(f"case {seed}: skipped (no real filler)")
+            continue
         b = case.brief
         prompt = PROMPT.format(
             summary=b.summary, suspects="; ".join(f"{s.id} {s.name} {s.phone}" for s in b.suspects),
@@ -73,8 +81,8 @@ def main() -> None:
             per_q[q.kind][0] += answer_matches(case, q, str(answers.get(q.id, "")))
     result = {"model": model, "n_requested": args.n, "completed": done, "skipped": unavailable,
               "agreement_with_key": {k: {"agree": a, "of": n} for k, (a, n) in per_q.items()},
-              "note": "unscored, answers only; the files were rendered with offline stub filler"}
-    merge_results("blind_solve", result)
+              "note": "unscored, answers only; the files were rendered with " + ("real LLM filler" if args.real else "offline stub filler")}
+    merge_results("blind_solve_real" if args.real else "blind_solve", result)
     print(result["agreement_with_key"])
 
 

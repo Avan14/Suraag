@@ -76,7 +76,7 @@
     "failures_first_try_by_code": {
      "cross_time": 3
     },
-    "seconds_per_case": 0.01
+    "seconds_per_case": 3.04
    }
   }
  },
@@ -100,5 +100,26 @@
    }
   },
   "note": "unscored, answers only; the files were rendered with offline stub filler"
+ },
+ "blind_solve_real": {
+  "model": "gemini-3.6-flash",
+  "n_requested": 10,
+  "completed": 10,
+  "skipped": 0,
+  "agreement_with_key": {
+   "who": {
+    "agree": 10,
+    "of": 10
+   },
+   "when": {
+    "agree": 10,
+    "of": 10
+   },
+   "where": {
+    "agree": 10,
+    "of": 10
+   }
+  },
+  "note": "unscored, answers only; the files were rendered with real LLM filler"
  }
 }
