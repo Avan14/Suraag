@@ -27,6 +27,7 @@ from suraag.defects import EXPECTED
 from suraag.grade import Citation, Claim, grade_all
 from suraag.hints import PERSONAS, SPEECH, TIERS, hint
 from suraag.i18n import EN, render_expl, render_failure, t
+from suraag.landing import body_html, hero_html
 from suraag.model import Brief, Case
 from suraag.parse import Artifacts, load_calls, load_chat, load_exif, text_at
 from suraag.pipeline import generate_case
@@ -37,7 +38,7 @@ CASES = ROOT / "cases"
 UI = ROOT / "suraag" / "ui"
 DAILY_CAP = 20
 CHECKS = ["anchor", "traceability", "contradiction", "solvability", "distractor"]
-VIEWS = ["lecturer", "student", "eval"]
+VIEWS = ["home", "lecturer", "student", "eval"]
 
 canvas = components.declare_component("suraag_canvas", path=str(ROOT / "suraag" / "components" / "canvas"))
 speak = components.declare_component("suraag_speak", path=str(ROOT / "suraag" / "components" / "speak"))
@@ -80,7 +81,7 @@ st.html(_css())
 # ---------------------------------------------------------------------------------------- helpers
 # View and language live in session_state and are set by button callbacks, which run before the script does.
 st.session_state.setdefault("lang", "en")
-st.session_state.setdefault("view", "lecturer")
+st.session_state.setdefault("view", "home")
 
 
 def _set(key: str, value: str) -> None:
@@ -225,7 +226,7 @@ with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
     st.html(f'<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="latin">Suraag</span>'
             f'<span class="tagline">{esc(L("app.tagline"))}</span></div>', width="content")
     with st.container(key="nav", horizontal=True, gap=None, width="content", vertical_alignment="center"):
-        for v, k in (("lecturer", "ui.tab_lecturer"), ("student", "ui.tab_student"), ("eval", "ui.tab_eval")):
+        for v, k in (("home", "ui.tab_home"), ("lecturer", "ui.tab_lecturer"), ("student", "ui.tab_student"), ("eval", "ui.tab_eval")):
             st.button(L(k), key=f"nav_{v}", type="tertiary", on_click=_set, args=("view", v))
     st.html(f'<span class="tag-synth" title="{esc(L("ui.synthetic"))}" aria-label="{esc(L("ui.synthetic"))}">'
             f'{esc(L("ui.synthetic_tag"))}</span>', width="content")
@@ -494,4 +495,13 @@ def eval_view() -> None:
                         f'<div class="note">{broken} of {len(rows)} {esc(how)}.</div>', unsafe_allow_html=True)
 
 
-{"lecturer": lecturer_view, "student": student_view, "eval": eval_view}[view]()
+# ---------------------------------------------------------------------------------------- home
+def home_view() -> None:
+    st.html(hero_html(st.session_state["lang"]))
+    with st.container(key="cta", horizontal=True):
+        st.button(L("home.cta_lecturer"), type="primary", key="cta_lec", on_click=_set, args=("view", "lecturer"))
+        st.button(L("home.cta_student"), key="cta_stu", on_click=_set, args=("view", "student"))
+    st.html(body_html(st.session_state["lang"]), unsafe_allow_javascript=True)
+
+
+{"home": home_view, "lecturer": lecturer_view, "student": student_view, "eval": eval_view}[view]()

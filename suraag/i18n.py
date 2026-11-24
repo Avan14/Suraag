@@ -12,7 +12,10 @@ EN: dict[str, str] = {
     # app chrome
     "app.tagline": "Verified forensic practice cases. Cite the exact line.",
     "ui.language": "Language",
+    "ui.tab_home": "Home",
     "ui.tab_lecturer": "Lecturer",
+    "home.cta_lecturer": "Open the case desk",
+    "home.cta_student": "Solve a case as a student",
     "ui.tab_student": "Student",
     "ui.tab_eval": "Evaluation",
     "ui.synthetic": "SYNTHETIC CASE: fictional, for teaching only. Not real data.",
@@ -180,7 +183,10 @@ EN: dict[str, str] = {
 HI: dict[str, str] = {
     "app.tagline": "सत्यापित फ़ॉरेंसिक अभ्यास केस। सटीक पंक्ति का हवाला दें।",
     "ui.language": "भाषा",
+    "ui.tab_home": "परिचय",
     "ui.tab_lecturer": "प्राध्यापक",
+    "home.cta_lecturer": "केस डेस्क खोलिए",
+    "home.cta_student": "छात्र की तरह केस हल कीजिए",
     "ui.tab_student": "छात्र",
     "ui.tab_eval": "मूल्यांकन",
     "ui.synthetic": "काल्पनिक केस: केवल शिक्षण के लिए। असली डेटा नहीं।",
