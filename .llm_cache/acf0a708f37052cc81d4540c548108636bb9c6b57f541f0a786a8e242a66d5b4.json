@@ -1,0 +1,6 @@
+{
+ "model": "gemini-3.6-flash",
+ "system": null,
+ "prompt": "Say OK eight times",
+ "text": "OK OK OK OK OK OK OK OK"
+}

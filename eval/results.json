@@ -65,18 +65,20 @@
     "first_try_pass": 10,
     "pass_after_repair": 10,
     "failures_first_try_by_code": {},
-    "seconds_per_case": 0.02
+    "seconds_per_case": 0.01
    },
    "raw": {
     "n_requested": 10,
-    "completed": 4,
-    "llm_unavailable_excluded": 6,
+    "completed": 9,
+    "llm_unavailable_excluded": 1,
     "first_try_pass": 1,
-    "pass_after_repair": 3,
+    "pass_after_repair": 4,
     "failures_first_try_by_code": {
-     "cross_time": 3
+     "cross_time": 8,
+     "trigger_in_filler": 1,
+     "solver_mismatch": 1
     },
-    "seconds_per_case": 3.04
+    "seconds_per_case": 75.44
    }
   }
  },
