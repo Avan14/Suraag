@@ -47,10 +47,12 @@
 
     document.getElementById("root").innerHTML =
       `<div class="board" id="board">
-        <section class="card" style="flex:2.6"><h3><i style="background:var(--exhibit-chat)"></i>chat.txt</h3><div class="rows">${chat}</div></section>
-        <section class="card" style="flex:1.5"><h3><i style="background:var(--exhibit-calls)"></i>calls.csv</h3><div class="rows">${calls}</div></section>
-        <section class="card" style="flex:1"><h3><i style="background:var(--exhibit-photo)"></i>photo.jpg</h3>
-          <div class="photo"><img alt="photo.jpg" src="${a.photo || ""}"></div><div class="rows">${exif}</div></section>
+        <div class="stack">
+          <section class="card"><h3><i style="background:var(--exhibit-chat)"></i>chat.txt</h3><div class="rows">${chat}</div></section>
+          <section class="card"><h3><i style="background:var(--exhibit-calls)"></i>calls.csv</h3><div class="rows">${calls}</div></section>
+          <section class="card"><h3><i style="background:var(--exhibit-photo)"></i>photo.jpg</h3>
+            <div class="photo-body"><div class="photo"><img alt="photo.jpg" src="${a.photo || ""}"></div><div class="rows">${exif}</div></div></section>
+        </div>
         <aside class="tray"><h4>${esc(L.tray)}</h4>${trayItems}</aside>
         <svg class="strings" id="strings"></svg>
       </div>`;
