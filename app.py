@@ -15,6 +15,7 @@ import io
 import json
 import os
 import tempfile
+from types import SimpleNamespace
 import zipfile
 from pathlib import Path
 
@@ -68,15 +69,11 @@ def _take_generation() -> bool:
 
 
 # ---------------------------------------------------------------------------------------- style
-def _css() -> str:  # four small files; read each run so CSS edits show up without a restart
-    # The token files are the kit's, verbatim. One <style> with the font @import first: a style-only st.html body
-    # takes no space in the layout (a <link> beside it would add an empty row above the top bar).
-    tokens = "\n".join((UI / "tokens" / f).read_text("utf-8") for f in ("colors.css", "spacing.css", "typography.css"))
-    tokens = "\n".join(ln for ln in tokens.splitlines() if not ln.startswith("@import"))
-    fonts = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700"
-             "&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Serif+Devanagari:wght@600;700&display=swap")
-    return f'<style>@import url("{fonts}");\n{tokens}\n{(UI / "app.css").read_text("utf-8")}</style>'
-
+def _css() -> str:  # read each run so CSS edits show up without a restart
+    # One style-only st.html body (font @import first) takes no space in the layout.
+    fonts = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700"
+             "&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap")
+    return f'<style>@import url("{fonts}");\n{(UI / "app.css").read_text("utf-8")}</style>'
 
 st.html(_css())
 
@@ -141,54 +138,92 @@ def make_zip(path: str, student: bool) -> bytes:
     return buf.getvalue()
 
 
-def lab_table(attempts, sealed: bool) -> str:
-    cols = "".join(f"<th>A{a.n}</th>" for a in attempts)
+def page_intro(view: str, title: str | None = None) -> None:
+    st.markdown(f'<section class="intro"><div class="eyebrow">{esc(L(f"page.{view}.eyebrow"))}</div>'
+                f'<div class="display" role="heading" aria-level="1">{esc(title or L(f"page.{view}.title"))}</div>'
+                f'<p class="lede">{esc(L(f"page.{view}.lede"))}</p></section>', unsafe_allow_html=True)
+
+
+TICK = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" '
+        'stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>')
+CROSS = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" '
+         'aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>')
+
+
+def stamp(kind: str, text: str, big: bool = False) -> str:
+    glyph = {"ok": TICK, "bad": CROSS}.get(kind, "")
+    return f'<span class="stamp {kind}{" big" if big else ""}">{glyph}{esc(text)}</span>'
+
+
+def action_text(action: str) -> str:
+    return " + ".join(L(f"act.{p}") if f"act.{p}" in EN else p for p in action.split(" + "))
+
+
+def lab_sheet(attempts, sealed: bool) -> str:
+    """One row per check: how it ended (passed, failed then repaired, failed) and the first error it caught."""
+    first, last, lang = attempts[0], attempts[-1], st.session_state["lang"]
+    shown = CHECKS + [c for c in ("filler_count",) if any(f.check == c for a in attempts for f in a.failures)]
     rows = []
-    shown = [c for c in CHECKS + ["filler_count"] if c in CHECKS or any(f.check == c for a in attempts for f in a.failures)]
-    for c in shown:
-        cells = "".join(
-            f'<td class="{"bad" if any(f.check == c for f in a.failures) else "ok"}">'
-            f'{"✕ " + L("lec.fail") if any(f.check == c for f in a.failures) else "✓ " + L("lec.pass")}</td>' for a in attempts)
-        rows.append(f"<tr><th>{L('check.' + c)}</th>{cells}</tr>")
-    cells = "".join('<td class="dim">–</td>' for _ in attempts[:-1])
-    cells += f'<td class="{"ok" if sealed else "dim"}">{"✓ " + L("lec.pass") if sealed else "–"}</td>'
-    rows.append(f"<tr><th>{L('check.integrity')}</th>{cells}</tr>")
-    return f'<table class="lab"><tr><th></th>{cols}</tr>{"".join(rows)}</table>'
+    for i, c in enumerate(shown + ["integrity"], 1):
+        name, _, desc = L("check." + c).partition(": ")
+        desc = desc[:1].upper() + desc[1:]
+        if c == "integrity":
+            mark = stamp("ok", L("lec.stamp_pass")) if sealed else stamp("mute", L("lec.stamp_unsealed"))
+            detail = ""
+        else:
+            f1 = [f for f in first.failures if f.check == c]
+            fl = [f for f in last.failures if f.check == c]
+            mark = (stamp("bad", L("lec.stamp_fail")) if fl else stamp("bad", L("lec.stamp_repaired")) if f1
+                    else stamp("ok", L("lec.stamp_pass")))
+            detail = f'<div class="detail">{esc(render_failure((fl or f1)[0], lang))}</div>' if (fl or f1) else ""
+        rows.append(f'<div class="check"><span class="num">{i}</span><div class="body"><div class="name">{esc(name)}</div>'
+                    f'<div class="desc">{esc(desc)}</div>{detail}</div>{mark}</div>')
+    return (f'<section class="sheet"><div class="sheet-head"><span>{esc(L("lec.sheet"))}</span>'
+            f'<span class="mono">{esc(L("lec.repairs_used", n=len(attempts) - 1))}</span></div>{"".join(rows)}</section>')
 
 
-def attempt_html(a) -> str:
-    action = " + ".join(L(f"act.{p}") if f"act.{p}" in EN else p for p in a.action.split(" + "))
-    head = f'<div class="attempt">{esc(L("lec.attempt", n=a.n, action=action))}</div>'
-    if not a.failures:
-        return f'{head}<div class="msg pass">✓ {L("lec.pass")}</div>'
-    return head + "".join(f'<div class="msg">✕ {esc(render_failure(f, st.session_state["lang"]))}</div>' for f in a.failures)
+def run_log(attempts, sealed: bool) -> str:
+    lang, lines = st.session_state["lang"], []
+    for a in attempts:
+        lines.append(("", f"[A{a.n}] {action_text(a.action)}"))
+        if a.failures:
+            lines += [("bad indent", f"✕ {render_failure(f, lang)}") for f in a.failures]
+        else:
+            lines.append(("ok indent", f"✓ {L('lec.verify_line')}"))
+    lines.append(("ok", f"→ {L('lec.sealed_line')}") if sealed else ("bad", f"✕ {L('lec.discarded', n=len(attempts))}"))
+    body = "".join(f'<div class="ln {k}" style="animation-delay:{i * 45}ms">{esc(x)}</div>' for i, (k, x) in enumerate(lines))
+    return f'<section class="log"><div class="title">{esc(L("lec.log"))}</div>{body}</section>'
 
 
-def certificate(manifest: dict, path: Path, key: str) -> None:
-    files = "".join(f'<div class="file"><b>{esc(n)}</b><br><code>{esc(h)}</code></div>' for n, h in manifest["files"].items())
-    stub = f'<div class="msg">{esc(L("lec.stub_notice"))}</div>' if manifest.get("model") == "stub" else ""
-    st.markdown(
-        f'<div class="cert"><b>{esc(L("lec.certificate"))}</b>: <span class="mono">{esc(manifest["case_id"])}</span> '
-        f'({esc(manifest["lang"])}, {esc(manifest["mode"])}), seed {manifest["seed"]}, model <code>{esc(manifest["model"])}</code>'
-        f'<div class="label" style="margin-top:12px">{esc(L("lec.hashes"))}</div>{files}'
-        f'<p class="dim" style="margin-top:10px">{esc(L("lec.hash_note"))}</p>{stub}</div>', unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    c1.download_button(L("lec.zip_student"), make_zip(str(path), True), f"{path.name}-student.zip", key=f"zs-{key}")
-    c2.download_button(L("lec.zip_key"), make_zip(str(path), False), f"{path.name}-key.zip", key=f"zk-{key}")
+def certificate(manifest: dict | None, path: Path, key: str, sealed: bool, fresh: bool) -> None:
+    with st.container(key="certbox"):
+        head = (f'<div class="cert-head"><div class="panel-title" role="heading" aria-level="2">{esc(L("lec.certificate"))}</div>'
+                f'{stamp("ok" if sealed else "bad", L("lec.verified") if sealed else L("lec.discarded_stamp"), big=True)}</div>')
+        wrap = "fresh" if fresh else ""
+        if not sealed or not manifest:
+            st.markdown(f'<div class="{wrap}">{head}<p class="fine">{esc(L("lec.not_shipped"))}</p></div>', unsafe_allow_html=True)
+            return
+        kv = list(manifest["files"].items())
+        kv += [(L("lec.k_case"), manifest["case_id"]), (L("lec.k_seed"), f'{manifest["seed"]:03d} / {manifest["mode"]}'),
+               (L("lec.k_lang"), manifest["lang"]), (L("lec.k_model"), manifest["model"]),
+               (L("lec.k_prompt"), (manifest.get("prompt_hashes") or {}).get("filler", "–"))]
+        dl = "".join(f'<dt>{esc(k)}</dt><dd title="{esc(v)}">{esc(v)}</dd>' for k, v in kv)
+        stub = f'<div class="note bad">{esc(L("lec.stub_notice"))}</div>' if manifest.get("model") == "stub" else ""
+        st.markdown(f'<div class="{wrap}">{head}<dl class="kv">{dl}</dl>'
+                    f'<p class="fine">{esc(L("lec.hash_note"))} {esc(L("lec.not_real"))}</p>{stub}</div>', unsafe_allow_html=True)
+        with st.container(horizontal=True, gap="small"):
+            st.download_button(L("lec.zip_student"), make_zip(str(path), True), f"{path.name}-student.zip", key=f"zs-{key}")
+            st.download_button(L("lec.zip_key"), make_zip(str(path), False), f"{path.name}-key.zip", key=f"zk-{key}")
 
 
 # ---------------------------------------------------------------------------------------- header
 cases_now = available_cases()
 view, lang = st.session_state["view"], st.session_state["lang"]
-pill_case = {"lecturer": st.session_state.get("lec_pick"), "student": st.session_state.get("stu_pick")}.get(view)
-if view != "eval" and not pill_case and cases_now:
-    pill_case = next(iter(cases_now))
 
 # Plain buttons, not st.segmented_control: its active option draws side borders that CSS cannot remove.
 with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
-    st.html('<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="name">SURAAG</span></div>', width="content")
-    if pill_case:
-        st.html(f'<span class="pill">{esc(pill_case)}</span>', width="content")
+    st.html(f'<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="latin">Suraag</span>'
+            f'<span class="tagline">{esc(L("app.tagline"))}</span></div>', width="content")
     with st.container(key="nav", horizontal=True, gap=None, width="content", vertical_alignment="center"):
         for v, k in (("lecturer", "ui.tab_lecturer"), ("student", "ui.tab_student"), ("eval", "ui.tab_eval")):
             st.button(L(k), key=f"nav_{v}", type="tertiary", on_click=_set, args=("view", v))
@@ -197,37 +232,51 @@ with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
     with st.container(key="langsw", horizontal=True, gap=None, width="content", vertical_alignment="center"):
         st.button("हिं", key="lang_hi", type="tertiary", on_click=_set, args=("lang", "hi"))
         st.button("EN", key="lang_en", type="tertiary", on_click=_set, args=("lang", "en"))
-# Mark the active nav item and language (style-only, so it takes no space). The underline is a 2px background,
-# not an inset shadow: Chrome draws faint side edges on inset shadows at fractional pixel positions.
-st.html(f"<style>.st-key-nav_{view} button {{ color: var(--ink-1) !important; background: linear-gradient(var(--nav-active-underline), var(--nav-active-underline)) bottom / 100% 2px no-repeat !important; }}"
-        f".st-key-lang_{lang} button {{ background: var(--action-primary-bg) !important; color: var(--action-primary-fg) !important; }}</style>")
+# The active nav pill, language and case language are filled with ink (style-only, so it takes no space).
+st.html(f"<style>.st-key-nav_{view} button, .st-key-lang_{lang} button, "
+        f".st-key-genlang_{st.session_state.get('gen_lang', 'hinglish')} button "
+        f"{{ background: var(--ink) !important; color: var(--paper) !important; }}</style>")
 
 
 # ---------------------------------------------------------------------------------------- lecturer
 def lecturer_view() -> None:
-    left, right = st.columns([1, 1.6], gap="large")
-    with left:
-        st.subheader(L("lec.generate"))
+    page_intro("lec")
+    st.session_state.setdefault("gen_lang", "hinglish")
+    left, right = st.columns([1, 1.75], gap="large")
+    with left, st.container(key="aside"):
+        st.markdown(f'<div class="panel-title" role="heading" aria-level="2">{esc(L("lec.generate"))}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="label">{esc(L("lec.mode"))}</div>', unsafe_allow_html=True)
+        with st.container(key="genlang", horizontal=True, gap=None):
+            for code, label in (("en", "English"), ("hinglish", "Hinglish")):
+                st.button(label, key=f"genlang_{code}", type="tertiary", on_click=_set, args=("gen_lang", code))
         seed = st.number_input(L("lec.seed"), 1, 9999, 7, key="gen_seed")
-        case_lang = st.selectbox(L("lec.mode"), ["hinglish", "en"], key="gen_lang")
-        plant = st.checkbox(L("lec.plant"), value=True, key="gen_plant", help=L("lec.defects_help"))
+        plant = st.toggle(L("lec.plant"), value=True, key="gen_plant", help=L("lec.defects_help"))
         defect = target = None
         if plant:
             defect = st.selectbox(L("lec.defect"), list(EXPECTED), key="gen_defect")
-            target = "calls" if defect == "unsolvable_question" else st.selectbox(L("lec.defect_target"), ["chat", "calls"], key="gen_target")
-        go = st.button(L("lec.run"), type="primary", key="gen_go")
+            target = ("calls" if defect == "unsolvable_question"
+                      else st.selectbox(L("lec.defect_target"), ["chat", "calls"], key="gen_target"))
+        with st.container(horizontal=True, vertical_alignment="center"):
+            go = st.button(L("lec.run"), type="primary", key="gen_go")
+            st.markdown(f'<span class="seedline">seed {int(seed):03d} · hybrid</span>', unsafe_allow_html=True)
+        st.markdown(f'<div class="fine ruled">{esc(L("lec.cap_note", cap=DAILY_CAP))}</div>', unsafe_allow_html=True)
+        if cases_now:
+            st.selectbox(L("lec.open_case"), list(cases_now), key="lec_pick", on_change=_set, args=("show", "pick"))
+
     with right:
         if go:
             if not _take_generation():
                 note(L("lec.cap", cap=DAILY_CAP), "bad")
             else:
+                case_lang = st.session_state["gen_lang"]
                 out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"upi-ring-{int(seed):03d}-{case_lang}"
                 attempts = []
-                st.subheader(L("lec.log"))
                 with st.status(L("lec.generating"), expanded=True) as status:
                     def on_attempt(a):
                         attempts.append(a)
-                        st.markdown(attempt_html(a), unsafe_allow_html=True)
+                        lines = [f"**{esc(L('lec.attempt', n=a.n, action=action_text(a.action)))}**"]
+                        lines += ["✕ " + esc(render_failure(f, st.session_state["lang"])) for f in a.failures] or ["✓ " + L("lec.pass")]
+                        st.markdown("  \n".join(lines))
 
                     res = generate_case(int(seed), case_lang, "hybrid", out, defect=defect, defect_target=target or "chat",
                                         on_attempt=on_attempt, log_path=ROOT / "logs" / "failures.jsonl")
@@ -235,28 +284,24 @@ def lecturer_view() -> None:
                 st.session_state["last_run"] = {"attempts": attempts, "ok": res.ok, "path": str(out), "manifest": res.manifest}
                 if res.ok:
                     st.session_state.setdefault("live_cases", {})[out.name] = out
-                st.rerun()  # redraw once so the header pill and the case list include the new case
+                st.session_state.update(show="run", fresh=True)
+                st.rerun()
+
+        fresh = st.session_state.pop("fresh", False)
         run = st.session_state.get("last_run")
-        if run:
-            st.subheader(L("lec.log"))
-            st.markdown("".join(attempt_html(a) for a in run["attempts"]), unsafe_allow_html=True)
-            st.subheader(L("lec.lab_sheet"))
-            st.markdown(lab_table(run["attempts"], run["ok"]), unsafe_allow_html=True)
-            if run["ok"]:
-                n = len(run["attempts"])
-                note(L("lec.repaired", n=n) if n > 1 else L("lec.pass"), "ok")
-                certificate(run["manifest"], Path(run["path"]), "run")
-            else:
-                note(L("lec.discarded", n=len(run["attempts"])), "bad")
-    st.divider()
-    st.subheader(L("ui.case"))
-    if not cases_now:
-        note(L("ui.no_cases"))
-        return
-    pick = st.selectbox(L("ui.case"), list(cases_now), key="lec_pick", label_visibility="collapsed")
-    fails = verify_dir(str(cases_now[pick]))
-    st.markdown(lab_table([type("A", (), {"n": 1, "failures": fails})()], not fails), unsafe_allow_html=True)
-    certificate(load_dir(str(cases_now[pick]))[2], cases_now[pick], "pick")
+        if run and st.session_state.get("show") == "run":
+            attempts, sealed, path, manifest, key = run["attempts"], run["ok"], Path(run["path"]), run["manifest"], "run"
+        elif cases_now:
+            path = cases_now[st.session_state.get("lec_pick") or next(iter(cases_now))]
+            fails = verify_dir(str(path))
+            attempts = [SimpleNamespace(n=1, failures=fails, action="initial")]
+            sealed, manifest, key = not fails, load_dir(str(path))[2], "pick"
+        else:
+            note(L("ui.no_cases"))
+            return
+        st.markdown(f'<div class="{"fresh" if fresh else ""}">{lab_sheet(attempts, sealed)}<div style="height:24px"></div>'
+                    f'{run_log(attempts, sealed)}</div>', unsafe_allow_html=True)
+        certificate(manifest, path, key, sealed, fresh)
 
 
 # ---------------------------------------------------------------------------------------- student
@@ -382,6 +427,7 @@ def student_bench(name: str, path: str) -> None:
 
 
 def student_view() -> None:
+    page_intro("stu")
     if not cases_now:
         note(L("ui.no_cases"))
         return
@@ -402,8 +448,7 @@ def student_view() -> None:
 
 # ---------------------------------------------------------------------------------------- evaluation
 def eval_view() -> None:
-    st.subheader(L("eval.title"))
-    st.caption(L("eval.note"))
+    page_intro("eval", L("eval.title"))
     res_path = ROOT / "eval" / "results.json"
     results = json.loads(res_path.read_text("utf-8")) if res_path.exists() else {}
     if not results:

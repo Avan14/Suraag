@@ -1,4 +1,4 @@
-# Pinned to the versions the tests ran on. A change here also makes Streamlit Cloud restart the app fully.
+# Pinned to the versions the tests ran on. Editing this file also makes Streamlit Cloud restart the app fully.
 pydantic==2.14.4
 pillow==13.0.0
 piexif==1.1.3

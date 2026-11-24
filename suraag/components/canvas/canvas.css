@@ -1,75 +1,65 @@
-/* Suraag "Case Canvas": values come from the design kit's tokens (suraag/ui/tokens). */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap');
+/* Suraag evidence table: paper, ink and dashed rules, matching the case-desk shell (suraag/ui/app.css). */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap');
 :root {
-  --board-bg: #E3D6BF; --board-speckle: rgba(130,95,50,.2); --board-glint: rgba(255,255,255,.4);
-  --surface-card: #FFFFFF; --surface-sunken: #F7F6F3; --border-1: #E2E0DA; --divider-1: #EEECE7;
-  --ink-1: #1B1D21; --ink-2: #3B3F47; --ink-3: #6B6F78; --ink-4: #9A9EA6;
-  --success: #2E7D52; --success-tint: #EEF6F0; --danger: #C2412F; --danger-tint: #FCF1EF; --danger-border: #EFC2BA;
-  --pen: #2456A6; --highlighter: oklch(0.88 0.12 95);
-  --exhibit-chat: oklch(0.62 0.12 40); --exhibit-calls: oklch(0.62 0.12 200); --exhibit-photo: oklch(0.62 0.12 300);
-  --pin-brass: radial-gradient(circle at 35% 30%, #FFF3D1 0 12%, #D9B46A 40%, #8C6A2C 100%);
-  --pin-shadow: 1px 2px 2px rgba(60,40,15,.45);
-  --font-ui: 'IBM Plex Sans','Noto Sans Devanagari',system-ui,sans-serif;
-  --font-evidence: 'IBM Plex Mono',ui-monospace,monospace;
-  --radius-card: 8px; --row: 32px; --header-exhibit: 40px;
-  --shadow-note: 0 1px 2px rgba(60,40,15,.08), 0 3px 6px -2px rgba(60,40,15,.08), 0 14px 26px -16px rgba(60,40,15,.35);
-  --ease-out: cubic-bezier(.2,.7,.2,1);
+  --paper: #F4EDE0; --card: #FBF7EE; --fill: #EBE1CF; --tab: #D9B97A; --rule: #C9BBA0;
+  --ink-1: #1B1A17; --ink-2: #4A4339; --ink-3: #7A7062; --ink-4: #9A8F7E;
+  --success: #2E6B4F; --success-tint: #E3EEE6; --danger: #B3261E; --danger-tint: #F6E3DF;
+  --cited: #F3E6C4; --highlighter: #F2D98A;
+  --exhibit-chat: #B3261E; --exhibit-calls: #2E6B4F; --exhibit-photo: #5B4A8A;
+  --font-ui: 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-evidence: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius-card: 4px; --row: 32px; --header-exhibit: 42px;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: transparent; font-family: var(--font-ui); color: var(--ink-1); }
 .board {
   position: relative; border-radius: var(--radius-card); padding: 20px; display: flex; gap: 20px; align-items: flex-start; overflow: hidden;
-  background:
-    radial-gradient(circle at 20% 30%, var(--board-glint) 0 1px, transparent 2px) 0 0/38px 41px,
-    radial-gradient(circle at 70% 60%, var(--board-speckle) 0 1px, transparent 2px) 0 0/29px 33px,
-    var(--board-bg);
+  border: 2px solid var(--ink-1);
+  background: radial-gradient(circle, rgba(74, 67, 57, .14) 1px, transparent 1.5px) 0 0 / 22px 22px, var(--fill);
 }
 .card {
-  position: relative; background: var(--surface-card); border: 1px solid var(--border-1); border-radius: var(--radius-card);
-  box-shadow: var(--shadow-note); display: flex; flex-direction: column; min-width: 0;
+  position: relative; background: var(--card); border: 2px solid var(--ink-1); border-radius: var(--radius-card);
+  display: flex; flex-direction: column; min-width: 0; overflow: hidden;
 }
 /* Exhibits stacked one below the other at full width, so every line reads in full. */
 .stack { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
-.card::before, .card::after { content: ""; position: absolute; top: 10px; width: 10px; height: 10px; border-radius: 50%;
-  background: var(--pin-brass); box-shadow: var(--pin-shadow), 0 0 0 3px #fff; z-index: 3; }
-.card::before { left: 10px; } .card::after { right: 10px; }
-.card h3 { margin: 0; height: var(--header-exhibit); padding: 0 34px; display: flex; align-items: center; gap: 8px;
-  font: 600 11px/1.3 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2);
-  border-bottom: 1px solid var(--divider-1); }
-.card h3 i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.card h3 { margin: 0; height: var(--header-exhibit); padding: 0 16px; display: flex; align-items: center; gap: 10px;
+  font: 500 14px/1 var(--font-evidence); color: var(--ink-1); background: var(--tab); border-bottom: 2px solid var(--ink-1); }
+.card h3 i { width: 12px; height: 12px; border-radius: 2px; display: inline-block; border: 1.5px solid var(--ink-1); }
 .rows { overflow-x: auto; flex: 1; min-width: 0; }
-.row { min-height: var(--row); display: flex; align-items: baseline; gap: 8px; padding: 6px 12px; border-bottom: 1px solid var(--divider-1);
-  font: 400 12.5px/1.45 var(--font-evidence); cursor: pointer; transition: background .12s var(--ease-out), border-color .12s var(--ease-out); position: relative; }
-.row:hover { background: var(--surface-sunken); }
-.row.head { cursor: default; color: var(--ink-4); background: var(--surface-sunken); }
+.row { min-height: var(--row); display: flex; align-items: baseline; gap: 8px; padding: 6px 12px; border-bottom: 1px dashed var(--rule);
+  font: 400 13px/1.5 var(--font-evidence); cursor: pointer; transition: background-color 120ms var(--ease-out); position: relative; }
+.row:hover { background: var(--paper); }
+.row.head { cursor: default; color: var(--ink-3); background: var(--paper); }
 .row .n { color: var(--ink-4); min-width: 28px; text-align: right; flex: none; }
 .row .n:empty { display: none; }
 .row .t { flex: 1; min-width: 0; padding-right: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }  /* long lines wrap, never cut */
 .row .mark { flex: none; font: 600 11px var(--font-ui); letter-spacing: .02em; }
-.row.cited { box-shadow: inset 3px 0 0 var(--pen); background: #F1F5FB; }
-.row.cited .n { color: var(--pen); font-weight: 600; }
-.row.holds { box-shadow: inset 3px 0 0 var(--success); background: var(--success-tint); }
+.row.cited { box-shadow: inset 4px 0 0 var(--ink-1); background: var(--cited); }
+.row.cited .n { color: var(--ink-1); font-weight: 600; }
+.row.holds { box-shadow: inset 4px 0 0 var(--success); background: var(--success-tint); }
 .row.holds .mark { color: var(--success); }
-.row.snapped { background: var(--danger-tint); box-shadow: inset 3px 0 0 var(--danger); }
+.row.snapped { background: var(--danger-tint); box-shadow: inset 4px 0 0 var(--danger); }
 .row.snapped .t { text-decoration: line-through; text-decoration-color: var(--danger); }
 .row.snapped .mark { color: var(--danger); }
-.row.partial { background: var(--surface-sunken); box-shadow: inset 3px 0 0 var(--ink-3); }
+.row.partial { background: var(--paper); box-shadow: inset 4px 0 0 var(--ink-3); }
 mark { background: var(--highlighter); color: inherit; padding: 0 1px; border-radius: 2px; }
 .photo-body { display: flex; align-items: flex-start; min-width: 0; }
-.photo { flex: none; width: 200px; padding: 12px; } .photo img { width: 100%; border-radius: 4px; border: 1px solid var(--border-1); display: block; }
-.photo-body .rows { border-left: 1px solid var(--divider-1); }
+.photo { flex: none; width: 200px; padding: 12px; } .photo img { width: 100%; border-radius: 2px; border: 2px solid var(--ink-1); display: block; }
+.photo-body .rows { border-left: 1px dashed var(--rule); }
 .tray { width: 170px; flex: none; position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
-.tray h4 { margin: 0 0 2px; font: 600 11px/1.3 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
-.sticky { position: relative; background: oklch(0.95 0.05 95); border: 1px solid oklch(0.88 0.08 95); border-radius: 4px; padding: 14px 10px 8px;
-  box-shadow: var(--shadow-note); font: 500 12px/1.35 var(--font-ui); }
-.sticky::before { content: ""; position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff 0 10%, oklch(0.68 0.13 25) 38%, oklch(0.45 0.12 25) 100%); box-shadow: 2px 4px 3px rgba(60,40,15,.35); }
-.sticky .q { display: inline-block; font: 600 10px var(--font-ui); color: var(--ink-3); letter-spacing: .08em; }
+.tray h4 { margin: 0 0 4px; font: 600 15px/1.3 var(--font-ui); color: var(--ink-1); }
+/* citation tags: paper slips with an ink border, set slightly askew like notes on a desk */
+.sticky { position: relative; background: var(--card); border: 2px solid var(--ink-1); border-radius: var(--radius-card); padding: 8px 10px;
+  font: 500 12px/1.35 var(--font-ui); transform: rotate(-1deg); }
+.sticky:nth-child(odd) { transform: rotate(.8deg); }
+.sticky .q { display: inline-block; font: 600 11px var(--font-ui); color: var(--ink-2); }
 .sticky .loc { font: 500 11.5px var(--font-evidence); display: block; margin-top: 2px; word-break: break-all; }
-.sticky.holds { border-color: var(--success); } .sticky.snapped { border-color: var(--danger); }
+.sticky.holds { border-color: var(--success); background: var(--success-tint); } .sticky.snapped { border-color: var(--danger); background: var(--danger-tint); }
 .empty { font: 400 12px/1.4 var(--font-ui); color: var(--ink-2); padding: 6px 2px; }
 svg.strings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
 svg.strings path { fill: none; stroke-width: 2; }
-svg.strings circle { stroke: #fff; stroke-width: 3; }
+svg.strings circle { stroke: var(--card); stroke-width: 3; }
 /* The breakpoint is the board's own width (it lives in an iframe), not the page's. */
 @media (max-width: 720px) { svg.strings { display: none; } .board { flex-direction: column; padding: 12px; } .stack { width: 100%; } .tray { width: 100%; position: static; } .photo-body { flex-direction: column; } .photo { width: 100%; } .photo-body .rows { border-left: 0; width: 100%; } }

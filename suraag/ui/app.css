@@ -1,120 +1,185 @@
-/* Streamlit shell styles for Suraag. Every value comes from the Case Canvas kit tokens in suraag/ui/tokens/.
-   Motion follows the kit: 120-200ms ease-out on background and border only. The kit says "Press: no scale",
-   so buttons deliberately have no :active transform. */
-:root { --action-primary-hover: #33363C; --focus-ring: 0 0 0 3px rgba(36, 86, 166, .18); }
+/* Suraag "case desk": paper, ink and rubber stamps (from the Lecturer.dc template), applied to the Streamlit shell.
+   Motion (Emil Kowalski's rules): only colour, border and transform; 120-200ms with a strong ease-out; buttons
+   press to 0.97; stamps land once, only right after a fresh run; prefers-reduced-motion turns movement off. */
+:root {
+  --paper: #F4EDE0; --card: #FBF7EE; --fill: #EBE1CF; --fill-hover: #E2D5BD; --tab: #D9B97A;
+  --ink: #1B1A17; --ink-2: #4A4339; --ink-3: #7A7062; --rule: #C9BBA0;
+  --red: #B3261E; --red-tint: #F6E3DF; --green: #2E6B4F; --green-tint: #E3EEE6;
+  --font-display: 'Tiro Devanagari Hindi', Georgia, serif;
+  --font-ui: 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --fast: 140ms; --base: 200ms;
+  --radius: 4px; --radius-control: 6px;
+}
 
-/* ---- page ---------------------------------------------------------------------------------------- */
-.stApp { background: var(--surface-sunken); color: var(--ink-1); }
+/* ---- page ------------------------------------------------------------------------------------------- */
+.stApp { background: var(--paper); color: var(--ink); }
 .stApp, .stApp p, .stApp li, .stApp label, .stApp input, .stApp textarea, .stApp button, .stApp [data-baseweb] { font-family: var(--font-ui); }
-.stApp p, .stApp li { font-size: 13.5px; line-height: 1.45; }
-/* Streamlit's icons are ligatures in an icon font; a text font would turn them into words ("arrow_down"). */
+.stApp p, .stApp li { font-size: 15px; line-height: 1.5; }
 [data-testid="stIconMaterial"], .material-symbols-rounded, [class*="material-symbols"] { font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important; }
 header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stAppToolbar"], [data-testid="stDecoration"],
 [data-testid="stHeaderActionElements"] { display: none !important; }
-.block-container, [data-testid="stMainBlockContainer"] { padding: 0 24px 56px !important; max-width: 1440px; }
-/* No grey-out while a rerun is in flight: it made every click look slow. */
-[data-stale="true"], .stale-element { opacity: 1 !important; transition: none !important; }
+.block-container, [data-testid="stMainBlockContainer"] { padding: 0 48px 72px !important; max-width: 1480px; }
+[data-stale="true"], .stale-element { opacity: 1 !important; transition: none !important; }  /* no grey-out on rerun */
+a { color: var(--ink); } a:hover { color: var(--red); }
+code, .mono { font-family: var(--font-mono); }
+.dim { color: var(--ink-2); }
+.stApp h1, .stApp h2, .stApp h3 { font-family: var(--font-display); font-weight: 400; color: var(--ink); letter-spacing: 0; padding: 0; }
+.stApp h3 { font-size: 24px; margin: 6px 0 10px; }
 
-.stApp h1, .stApp h2, .stApp h3 { font: var(--text-title); color: var(--ink-1); letter-spacing: 0; padding: 0; margin: 4px 0 10px; }
-.label { font: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--ink-3); margin: 0 0 6px; }
-.dim { color: var(--ink-3); }
-.sub { font: 600 14px/1.3 var(--font-ui); color: var(--ink-1); margin: 24px 0 8px; }
-code, .mono { font-family: var(--font-evidence); }
-
-/* ---- top bar (kit: one 56px white row, flat, no shadow) ------------------------------------------- */
-.st-key-topbar { background: var(--surface-chrome); border-bottom: 1px solid var(--border-1); min-height: var(--topbar);
-  padding: 8px 24px; margin: 0 -24px 24px !important; width: calc(100% + 48px) !important; max-width: none !important;
-  gap: 10px 18px !important; align-items: center; }
+/* ---- header -------------------------------------------------------------------------------------------- */
+.st-key-topbar { border-bottom: 2px solid var(--ink); padding: 18px 48px; margin: 0 -48px 0 !important;
+  width: calc(100% + 96px) !important; max-width: none !important; gap: 14px 28px !important; background: var(--paper); }
 .st-key-topbar [data-testid="stElementContainer"], .st-key-topbar .stElementContainer { width: auto !important; flex: none; }
-/* everything from the SYNTHETIC tag onwards sits at the right end */
 .st-key-topbar > .stElementContainer:has(.tag-synth) { margin-left: auto; }
-.brand { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
-.brand .wm { font-family: var(--font-wordmark); font-size: 21px; font-weight: 700; color: var(--ink-1); line-height: 1; }
-.brand .name { font: 500 11px/1 var(--font-ui); letter-spacing: .22em; color: var(--ink-3); }
-.pill { font: 400 12px/1.4 var(--font-evidence); color: var(--ink-3); background: var(--surface-sunken); border: 1px solid var(--border-1);
-  padding: 3px 10px; border-radius: var(--radius-pill); white-space: nowrap; }
-.tag-synth { font: 500 11px/1.4 var(--font-evidence); letter-spacing: .14em; color: var(--danger); border: 1px solid var(--danger-border);
-  background: var(--danger-tint); padding: 2px 8px; border-radius: 3px; white-space: nowrap; cursor: help; }
+.brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.brand .wm { font-family: var(--font-display); font-size: 42px; line-height: 1; color: var(--ink); }
+.brand .latin { font-family: var(--font-display); font-size: 22px; letter-spacing: .04em; }
+.brand .tagline { font-size: 14px; color: var(--ink-2); }
+.tag-synth { display: inline-block; border: 2px solid var(--red); color: var(--red); padding: 2px 10px; border-radius: var(--radius);
+  font: 600 13px/1.5 var(--font-ui); letter-spacing: .02em; transform: rotate(-2deg); white-space: nowrap; cursor: help; }
 
-/* nav: text items, the active one gets a 2px danger underline (the active rule is written by app.py) */
-.st-key-topbar .st-key-nav { gap: 2px !important; width: auto !important; flex: none; }
-.st-key-topbar .st-key-nav .stButton > button { background: transparent; border: 0; border-radius: 0; box-shadow: none; min-height: 36px;
-  padding: 6px 12px; color: var(--ink-3); transition: color var(--dur-fast) var(--ease-out); }
-.st-key-topbar .st-key-nav .stButton > button p { font: 500 13.5px/1 var(--font-ui); white-space: nowrap; }
-.st-key-topbar .st-key-nav .stButton > button:hover { color: var(--ink-1); }
+/* nav: bordered pills; the active one is filled with ink (rule written by app.py) */
+.st-key-topbar .st-key-nav { gap: 8px !important; width: auto !important; flex: none; }
+.st-key-topbar .st-key-nav .stButton > button { min-height: 40px; padding: 0 18px; border: 2px solid var(--ink); border-radius: var(--radius-control);
+  background: var(--fill); color: var(--ink); box-shadow: none;
+  transition: background-color var(--fast) var(--ease-out), color var(--fast) var(--ease-out), transform 160ms var(--ease-out); }
+.st-key-topbar .st-key-nav .stButton > button p { font: 500 15px/1.4 var(--font-ui); white-space: nowrap; }
+.st-key-topbar .st-key-nav .stButton > button:hover { background: var(--fill-hover); color: var(--ink); }
 
-/* language: a bordered segmented pair, the active option filled with ink */
-.st-key-topbar .st-key-langsw { gap: 0 !important; width: auto !important; flex: none; border: 1px solid var(--border-1);
-  border-radius: var(--radius-control); overflow: hidden; }
-.st-key-topbar .st-key-langsw .stButton > button { min-height: 28px; padding: 3px 10px; border: 0; border-radius: 0; box-shadow: none;
-  background: var(--surface-card); color: var(--ink-3); transition: background-color var(--dur-fast) var(--ease-out); }
-.st-key-topbar .st-key-langsw .stButton > button p { font: 500 12.5px/1 var(--font-ui); }
+/* language: one bordered group, the active half filled with ink */
+.st-key-topbar .st-key-langsw { gap: 0 !important; width: auto !important; flex: none; border: 2px solid var(--ink); border-radius: var(--radius-control); overflow: hidden; }
+.st-key-topbar .st-key-langsw .stButton > button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 0; box-shadow: none;
+  background: var(--card); color: var(--ink); transition: background-color var(--fast) var(--ease-out); }
+.st-key-topbar .st-key-langsw .stButton > button p { font: 600 14px/1.4 var(--font-ui); }
+.st-key-topbar .st-key-langsw .stButton > button:hover { background: var(--fill); }
 
-/* ---- controls ------------------------------------------------------------------------------------- */
-[data-testid="stWidgetLabel"] p, [data-testid="stWidgetLabel"] label { font: var(--text-label) !important; text-transform: uppercase;
-  letter-spacing: var(--tracking-label); color: var(--ink-3) !important; }
-[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p, [data-testid="stRadio"] [role="radiogroup"] p {
-  font: var(--text-body) !important; text-transform: none; letter-spacing: 0; color: var(--ink-1) !important; }
-[data-baseweb="input"], [data-baseweb="select"] > div, [data-baseweb="textarea"], [data-testid="stNumberInputContainer"] {
-  border-radius: var(--radius-control) !important; border-color: var(--border-1) !important; background: var(--surface-card) !important;
-  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
-[data-baseweb="input"]:focus-within, [data-baseweb="select"] > div:focus-within, [data-testid="stNumberInputContainer"]:focus-within {
-  border-color: var(--ink-1) !important; box-shadow: var(--focus-ring); }
-[data-baseweb="input"] input, [data-baseweb="select"] div { font-size: 13.5px; }
+/* ---- page intro ------------------------------------------------------------------------------------------ */
+.intro { padding: 30px 0 14px; }
+.intro .eyebrow { font: 400 14px/1.4 var(--font-mono); color: var(--ink-2); }
+.intro .display { font: 400 38px/1.15 var(--font-display); margin: 4px 0 8px; color: var(--ink); }
+.intro .lede { margin: 0; max-width: 70ch; color: var(--ink-2); font-size: 16px; }
 
-.stButton > button, .stDownloadButton > button { min-height: 40px; padding: 0 18px; border-radius: var(--radius-control);
-  background: var(--surface-card); color: var(--ink-1); border: 1px solid var(--border-1); box-shadow: none;
-  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
-.stButton > button p, .stDownloadButton > button p { font: 500 13.5px/1.3 var(--font-ui); margin: 0 !important; padding: 0; }
+/* ---- controls -------------------------------------------------------------------------------------------- */
+[data-testid="stWidgetLabel"] p, [data-testid="stWidgetLabel"] label { font: 600 15px/1.4 var(--font-ui) !important; color: var(--ink) !important; }
+[data-baseweb="input"], [data-baseweb="select"] > div, [data-baseweb="textarea"], [data-testid="stNumberInputContainer"],
+[data-testid="stSelectbox"] [role="group"], [data-testid="stTextInputRootElement"] {
+  border: 2px solid var(--ink) !important; border-radius: var(--radius-control) !important; background: var(--card) !important; min-height: 44px;
+  transition: box-shadow var(--fast) var(--ease-out); }
+[data-baseweb="input"] > div, [data-testid="stNumberInputContainer"] [data-baseweb="input"] { border: 0 !important; background: transparent !important; }
+[data-baseweb="input"]:focus-within, [data-baseweb="select"] > div:focus-within, [data-testid="stNumberInputContainer"]:focus-within,
+[data-testid="stSelectbox"] [role="group"]:focus-within, [data-testid="stTextInputRootElement"]:focus-within {
+  box-shadow: 0 0 0 3px rgba(27, 26, 23, .18); }
+[data-baseweb="input"] input, [data-baseweb="select"] div { font-size: 15px; color: var(--ink); }
+
+.stButton > button, .stDownloadButton > button { min-height: 44px; padding: 0 20px; border-radius: var(--radius-control);
+  border: 2px solid var(--ink); background: var(--fill); color: var(--ink); box-shadow: none;
+  transition: background-color var(--fast) var(--ease-out), transform 160ms var(--ease-out); }
+.stButton > button p, .stDownloadButton > button p { font: 600 15px/1.3 var(--font-ui); margin: 0 !important; }
 .stButton > button [data-testid="stMarkdownContainer"], .stDownloadButton > button [data-testid="stMarkdownContainer"] { display: flex; align-items: center; }
-.stButton > button:hover, .stDownloadButton > button:hover { border-color: var(--ink-5); color: var(--ink-1); background: var(--surface-card); }
-.stButton > button[kind="primary"] { background: var(--action-primary-bg); color: var(--action-primary-fg); border-color: var(--action-primary-bg); }
-.stButton > button[kind="primary"] p { font-weight: 600; }
-.stButton > button[kind="primary"]:hover { background: var(--action-primary-hover); border-color: var(--action-primary-hover); color: var(--action-primary-fg); }
-.stButton > button:focus-visible, .stDownloadButton > button:focus-visible, [data-testid="stButtonGroup"] button:focus-visible, .st-key-topbar button:focus-visible {
-  outline: 2px solid var(--pen); outline-offset: 2px; }
+.stButton > button:hover, .stDownloadButton > button:hover { background: var(--fill-hover); border-color: var(--ink); color: var(--ink); }
+.stButton > button[kind="primary"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.stButton > button[kind="primary"]:hover { background: #33302A; color: var(--paper); }
+/* Press feedback: the interface heard the click. */
+.stButton > button:active, .stDownloadButton > button:active { transform: scale(.97); }
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
-[data-testid="stExpander"] details { border: 1px solid var(--border-1); border-radius: var(--radius-card); background: var(--surface-card); }
-[data-testid="stExpander"] summary p { font: 600 13.5px/1.3 var(--font-ui); }
-hr, [data-testid="stDivider"] { border-color: var(--divider-1) !important; }
+[data-testid="stExpander"] details { border: 2px solid var(--ink); border-radius: var(--radius); background: var(--card); }
+[data-testid="stExpander"] summary p { font: 600 15px/1.3 var(--font-ui); }
+hr, [data-testid="stDivider"] { border-color: var(--rule) !important; }
+[data-testid="stCaptionContainer"] p { color: var(--ink-2); font-size: 13px; }
 
-/* ---- panels and messages ------------------------------------------------------------------------- */
-.panel { background: var(--surface-card); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 16px 18px; }
-.note { font: var(--text-body); padding: 8px 12px; margin: 6px 0; border-radius: var(--radius-sm); border-left: 3px solid var(--ink-3);
-  background: var(--surface-card); color: var(--ink-1); }
-.note.ok { background: var(--success-tint); border-left-color: var(--success); }
-.note.bad { background: var(--danger-tint); border-left-color: var(--danger); }
-.msg { font: var(--text-evidence); background: var(--danger-tint); border-left: 3px solid var(--danger); padding: 6px 10px; margin: 4px 0; border-radius: var(--radius-sm); }
-.msg.pass { background: var(--success-tint); border-left-color: var(--success); }
-.attempt { font: 600 13px/1.3 var(--font-ui); margin: 12px 0 4px; }
-.ok { color: var(--success); font-weight: 600; } .bad { color: var(--danger); font-weight: 600; }
+/* ---- panels ------------------------------------------------------------------------------------------------ */
+.st-key-certbox { margin-top: 24px; }
+.st-key-aside, .st-key-inspector, .st-key-certbox { background: var(--card); border: 2px solid var(--ink); border-radius: var(--radius); padding: 24px; }
+.st-key-aside { gap: 18px !important; }
+.panel-title { font: 400 26px/1.2 var(--font-display); margin: 0 0 2px; color: var(--ink); }
+.fine { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.fine.ruled { border-top: 1px dashed var(--ink-2); padding-top: 14px; margin: 4px 0 6px; }
+.seedline { font: 400 13px/1.4 var(--font-mono); color: var(--ink-2); }
 
-table.lab { border-collapse: collapse; width: 100%; font: var(--text-meta); font-size: 13px; background: var(--surface-card); border-radius: var(--radius-card); overflow: hidden; }
-table.lab th, table.lab td { border: 1px solid var(--border-1); padding: 7px 10px; text-align: left; vertical-align: top; }
-table.lab th { background: var(--surface-sunken); font-weight: 600; color: var(--ink-2); }
-table.lab td.num { font-family: var(--font-evidence); }
+/* case language: bordered segmented group made of buttons */
+.st-key-genlang { gap: 0 !important; border: 2px solid var(--ink); border-radius: var(--radius-control); overflow: hidden; width: 100% !important; }
+.st-key-genlang .stElementContainer { flex: 1 1 0 !important; width: auto !important; }
+.st-key-genlang .stButton > button { width: 100%; border: 0; border-radius: 0; background: var(--card); min-height: 44px; }
+.st-key-genlang .stButton > button:hover { background: var(--fill); }
+.st-key-genlang .stButton > button:active { transform: none; }
 
-.cert { background: var(--surface-card); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 16px 18px; box-shadow: var(--shadow-note); margin: 12px 0; }
-.cert code { font: 400 12px/1.5 var(--font-evidence); word-break: break-all; color: var(--ink-2); }
-.cert .file { margin-top: 8px; }
+/* ---- lab sheet --------------------------------------------------------------------------------------------- */
+.sheet { background: var(--card); border: 2px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px;
+  background: var(--tab); border-bottom: 2px solid var(--ink); font-weight: 600; }
+.sheet-head .mono { font-size: 14px; font-weight: 400; }
+.check { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 16px; padding: 14px 20px; border-bottom: 1px dashed var(--rule); }
+.check:last-child { border-bottom: 0; }
+.check .num { flex: 0 0 28px; font-family: var(--font-mono); color: var(--ink-2); }
+.check .body { flex: 1 1 300px; min-width: 0; }
+.check .name { font-weight: 600; }
+.check .desc { font-size: 14px; color: var(--ink-2); }
+.check .detail { margin-top: 6px; padding: 6px 10px; border: 1px dashed var(--red); border-radius: var(--radius); font: 400 13px/1.5 var(--font-mono);
+  background: var(--paper); overflow-wrap: anywhere; }
 
-.hint { position: relative; background: var(--sticky); border: 1px solid var(--sticky-border); border-radius: var(--radius-sm);
-  padding: 16px 12px 10px; margin: 14px 0 8px; box-shadow: var(--shadow-note); font: 500 13px/1.4 var(--font-ui); }
-.hint::before { content: ""; position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px; border-radius: 50%;
-  background: var(--pin-map); box-shadow: var(--pin-map-shadow); }
+/* rubber stamps: colour + glyph + word, never colour alone */
+.stamp { display: inline-flex; align-items: center; gap: 6px; border: 2px solid currentColor; padding: 2px 10px; border-radius: var(--radius);
+  font: 600 14px/1.5 var(--font-ui); transform: rotate(-2deg); white-space: nowrap; }
+.stamp svg { width: 16px; height: 16px; flex: none; }
+.stamp.ok { color: var(--green); } .stamp.bad { color: var(--red); } .stamp.mute { color: var(--ink-3); border-style: dashed; }
+.stamp.big { border-width: 3px; padding: 4px 16px; font-size: 18px; letter-spacing: .14em; transform: rotate(-3deg); }
+/* A stamp lands once, right after a fresh run (rare, so it may carry a little delight). */
+.fresh .stamp { animation: stamp-in 260ms var(--ease-out) both; }
+.fresh .check:nth-child(2) .stamp { animation-delay: 40ms; } .fresh .check:nth-child(3) .stamp { animation-delay: 80ms; }
+.fresh .check:nth-child(4) .stamp { animation-delay: 120ms; } .fresh .check:nth-child(5) .stamp { animation-delay: 150ms; }
+.fresh .check:nth-child(6) .stamp { animation-delay: 180ms; } .fresh .check:nth-child(7) .stamp { animation-delay: 210ms; }
+.fresh .stamp.big { animation-delay: 260ms; }
+@keyframes stamp-in { from { opacity: 0; transform: rotate(-3deg) scale(1.25); } }
 
-.score { font: var(--text-score); color: var(--ink-1); }
-.pt { font-size: 13px; } .expl { font-size: 13px; color: var(--ink-2); margin: 2px 0; }
+/* ---- run log: a dark terminal strip -------------------------------------------------------------------------- */
+.log { background: var(--ink); color: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius); padding: 16px 20px; }
+.log .title { font-weight: 600; margin-bottom: 8px; }
+.log .ln { font: 400 13px/1.7 var(--font-mono); overflow-wrap: anywhere; }
+.log .ln.bad { color: #F2B8B0; } .log .ln.ok { color: #B9DCC6; } .log .ln.indent { padding-left: 18px; }
+.fresh .log .ln { animation: line-in 200ms var(--ease-out) both; }
+@keyframes line-in { from { opacity: 0; transform: translateY(4px); } }
 
-/* ---- student bench: board + 340px inspector, stacked below 1100px (kit layout) -------------------- */
-.st-key-bench > [data-testid="stHorizontalBlock"] { gap: 20px; }
-.st-key-inspector { background: var(--surface-chrome); border: 1px solid var(--border-1); border-radius: var(--radius-card); padding: 14px 16px; }
+/* ---- certificate ----------------------------------------------------------------------------------------------- */
+.cert-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 24px; font: 400 13px/1.5 var(--font-mono); margin: 0 0 14px; }
+.kv dt, .kv dd { font: 400 13px/1.5 var(--font-mono); } .kv dt { color: var(--ink-2); } .kv dd { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- messages, tables, hints, score ------------------------------------------------------------------------ */
+.note { padding: 10px 14px; margin: 8px 0; border: 2px solid var(--ink); border-radius: var(--radius); background: var(--card); font-size: 15px; }
+.note.ok { border-color: var(--green); color: var(--green); background: var(--green-tint); }
+.note.bad { border-color: var(--red); color: var(--red); background: var(--red-tint); }
+.ok { color: var(--green); font-weight: 600; } .bad { color: var(--red); font-weight: 600; }
+.label { font-weight: 600; font-size: 15px; margin: 0 0 6px; color: var(--ink); }
+.sub { font: 400 22px/1.3 var(--font-display); color: var(--ink); margin: 30px 0 10px; }
+
+table.lab { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 14px; background: var(--card);
+  border: 2px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+table.lab th, table.lab td { padding: 9px 14px; text-align: left; vertical-align: top; border-bottom: 1px dashed var(--rule); }
+table.lab tr:last-child td { border-bottom: 0; }
+table.lab th { background: var(--fill); font-weight: 600; border-bottom: 2px solid var(--ink); }
+
+.hint { background: var(--card); border: 2px dashed var(--ink-2); border-radius: var(--radius); padding: 12px 14px;
+  margin: 12px 0 8px; font-size: 14px; transform: rotate(-.6deg); }
+.score { font: 400 56px/1 var(--font-display); color: var(--ink); margin-top: 18px; }
+.pt { font-size: 14px; } .expl { font-size: 14px; color: var(--ink-2); margin: 2px 0; }
+
+/* ---- student bench ------------------------------------------------------------------------------------------- */
+.st-key-bench > [data-testid="stHorizontalBlock"] { gap: 24px; }
 @media (max-width: 1100px) {
   .st-key-bench > [data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
   .st-key-bench > [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] { flex: 1 1 100% !important; width: 100% !important; min-width: 100%; }
 }
 @media (max-width: 720px) {
-  .block-container, [data-testid="stMainBlockContainer"] { padding: 0 16px 48px !important; }
-  .st-key-topbar { padding: 8px 16px; margin: 0 -16px 16px; width: calc(100% + 32px) !important; }
+  .block-container, [data-testid="stMainBlockContainer"] { padding: 0 16px 56px !important; }
+  .st-key-topbar { padding: 14px 16px; margin: 0 -16px !important; width: calc(100% + 32px) !important; }
+  .brand .wm { font-size: 34px; } .intro .display { font-size: 30px; }
+  .st-key-aside, .st-key-inspector, .st-key-certbox { padding: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .stApp * { transition-duration: 0ms !important; } }
+@media (prefers-reduced-motion: reduce) {
+  .stApp * { transition-duration: 0ms !important; }
+  .fresh .stamp, .fresh .log .ln { animation: none; }
+  .stButton > button:active, .stDownloadButton > button:active { transform: none; }
+}
