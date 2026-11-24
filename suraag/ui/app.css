@@ -18,6 +18,7 @@ header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stAppTo
 .stApp h1, .stApp h2, .stApp h3 { font: var(--text-title); color: var(--ink-1); letter-spacing: 0; padding: 0; margin: 4px 0 10px; }
 .label { font: var(--text-label); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--ink-3); margin: 0 0 6px; }
 .dim { color: var(--ink-3); }
+.sub { font: 600 14px/1.3 var(--font-ui); color: var(--ink-1); margin: 24px 0 8px; }
 code, .mono { font-family: var(--font-evidence); }
 
 /* ---- top bar (kit: one 56px white row, flat, no shadow) ------------------------------------------- */
@@ -35,23 +36,19 @@ code, .mono { font-family: var(--font-evidence); }
 .tag-synth { font: 500 11px/1.4 var(--font-evidence); letter-spacing: .14em; color: var(--danger); border: 1px solid var(--danger-border);
   background: var(--danger-tint); padding: 2px 8px; border-radius: 3px; white-space: nowrap; cursor: help; }
 
-/* nav: text items, the active one gets a 2px danger underline */
-.st-key-view [data-testid="stButtonGroup"] { gap: 2px; }
-.st-key-view button { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none;
-  padding: 6px 12px !important; min-height: 36px; color: var(--ink-3) !important;
-  transition: color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
-.st-key-view button p { font: 500 13.5px/1 var(--font-ui) !important; white-space: nowrap; }
-.st-key-view button:hover { color: var(--ink-1) !important; }
-.st-key-view button[aria-checked="true"], .st-key-view button[aria-pressed="true"] {
-  color: var(--ink-1) !important; box-shadow: inset 0 -2px 0 var(--nav-active-underline) !important; }
+/* nav: text items, the active one gets a 2px danger underline (the active rule is written by app.py) */
+.st-key-topbar .st-key-nav { gap: 2px !important; width: auto !important; flex: none; }
+.st-key-topbar .st-key-nav .stButton > button { background: transparent; border: 0; border-radius: 0; box-shadow: none; min-height: 36px;
+  padding: 6px 12px; color: var(--ink-3); transition: color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
+.st-key-topbar .st-key-nav .stButton > button p { font: 500 13.5px/1 var(--font-ui); white-space: nowrap; }
+.st-key-topbar .st-key-nav .stButton > button:hover { color: var(--ink-1); background: transparent; }
 
-/* language: a bordered segmented control, the active option filled with ink */
-.st-key-lang_choice [data-testid="stButtonGroup"] { gap: 0; border: 1px solid var(--border-1); border-radius: var(--radius-control); overflow: hidden; }
-.st-key-lang_choice button { border: 0 !important; border-radius: 0 !important; min-height: 28px; padding: 3px 10px !important;
-  background: var(--surface-card) !important; color: var(--ink-3) !important; transition: background-color var(--dur-fast) var(--ease-out); }
-.st-key-lang_choice button p { font: 500 12.5px/1 var(--font-ui) !important; }
-.st-key-lang_choice button[aria-checked="true"], .st-key-lang_choice button[aria-pressed="true"] {
-  background: var(--action-primary-bg) !important; color: var(--action-primary-fg) !important; }
+/* language: a bordered segmented pair, the active option filled with ink */
+.st-key-topbar .st-key-langsw { gap: 0 !important; width: auto !important; flex: none; border: 1px solid var(--border-1);
+  border-radius: var(--radius-control); overflow: hidden; }
+.st-key-topbar .st-key-langsw .stButton > button { min-height: 28px; padding: 3px 10px; border: 0; border-radius: 0; box-shadow: none;
+  background: var(--surface-card); color: var(--ink-3); transition: background-color var(--dur-fast) var(--ease-out); }
+.st-key-topbar .st-key-langsw .stButton > button p { font: 500 12.5px/1 var(--font-ui); }
 
 /* ---- controls ------------------------------------------------------------------------------------- */
 [data-testid="stWidgetLabel"] p, [data-testid="stWidgetLabel"] label { font: var(--text-label) !important; text-transform: uppercase;
@@ -74,7 +71,7 @@ code, .mono { font-family: var(--font-evidence); }
 .stButton > button[kind="primary"] { background: var(--action-primary-bg); color: var(--action-primary-fg); border-color: var(--action-primary-bg); }
 .stButton > button[kind="primary"] p { font-weight: 600; }
 .stButton > button[kind="primary"]:hover { background: var(--action-primary-hover); border-color: var(--action-primary-hover); color: var(--action-primary-fg); }
-.stButton > button:focus-visible, .stDownloadButton > button:focus-visible, [data-testid="stButtonGroup"] button:focus-visible {
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible, [data-testid="stButtonGroup"] button:focus-visible, .st-key-topbar button:focus-visible {
   outline: 2px solid var(--pen); outline-offset: 2px; }
 
 [data-testid="stExpander"] details { border: 1px solid var(--border-1); border-radius: var(--radius-card); background: var(--surface-card); }

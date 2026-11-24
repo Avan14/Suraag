@@ -25,7 +25,7 @@ from suraag import filler as filler_module  # noqa: F401  (kept: the filler reco
 from suraag.defects import EXPECTED
 from suraag.grade import Citation, Claim, grade_all
 from suraag.hints import PERSONAS, SPEECH, TIERS, hint
-from suraag.i18n import render_expl, render_failure, t
+from suraag.i18n import EN, render_expl, render_failure, t
 from suraag.model import Brief, Case
 from suraag.parse import Artifacts, load_calls, load_chat, load_exif, text_at
 from suraag.pipeline import generate_case
@@ -81,8 +81,13 @@ def _css() -> str:  # four small files; read each run so CSS edits show up witho
 st.html(_css())
 
 # ---------------------------------------------------------------------------------------- helpers
-# Widget values are already current when the script starts, so read the language before the header draws.
-st.session_state["lang"] = st.session_state.get("lang_choice") or "en"
+# View and language live in session_state and are set by button callbacks, which run before the script does.
+st.session_state.setdefault("lang", "en")
+st.session_state.setdefault("view", "lecturer")
+
+
+def _set(key: str, value: str) -> None:
+    st.session_state[key] = value
 
 
 def L(key: str, **kw) -> str:
@@ -152,7 +157,8 @@ def lab_table(attempts, sealed: bool) -> str:
 
 
 def attempt_html(a) -> str:
-    head = f'<div class="attempt">{esc(L("lec.attempt", n=a.n, action=a.action))}</div>'
+    action = " + ".join(L(f"act.{p}") if f"act.{p}" in EN else p for p in a.action.split(" + "))
+    head = f'<div class="attempt">{esc(L("lec.attempt", n=a.n, action=action))}</div>'
     if not a.failures:
         return f'{head}<div class="msg pass">✓ {L("lec.pass")}</div>'
     return head + "".join(f'<div class="msg">✕ {esc(render_failure(f, st.session_state["lang"]))}</div>' for f in a.failures)
@@ -173,21 +179,27 @@ def certificate(manifest: dict, path: Path, key: str) -> None:
 
 # ---------------------------------------------------------------------------------------- header
 cases_now = available_cases()
-view = st.session_state.get("view") or "lecturer"
+view, lang = st.session_state["view"], st.session_state["lang"]
 pill_case = {"lecturer": st.session_state.get("lec_pick"), "student": st.session_state.get("stu_pick")}.get(view)
 if view != "eval" and not pill_case and cases_now:
     pill_case = next(iter(cases_now))
 
+# Plain buttons, not st.segmented_control: its active option draws side borders that CSS cannot remove.
 with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
     st.html('<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="name">SURAAG</span></div>', width="content")
     if pill_case:
         st.html(f'<span class="pill">{esc(pill_case)}</span>', width="content")
-    st.segmented_control(L("ui.view"), VIEWS, key="view", default="lecturer", required=True, label_visibility="collapsed",
-                         format_func=lambda v: L({"lecturer": "ui.tab_lecturer", "student": "ui.tab_student", "eval": "ui.tab_eval"}[v]))
+    with st.container(key="nav", horizontal=True, gap=None, width="content", vertical_alignment="center"):
+        for v, k in (("lecturer", "ui.tab_lecturer"), ("student", "ui.tab_student"), ("eval", "ui.tab_eval")):
+            st.button(L(k), key=f"nav_{v}", type="tertiary", on_click=_set, args=("view", v))
     st.html(f'<span class="tag-synth" title="{esc(L("ui.synthetic"))}" aria-label="{esc(L("ui.synthetic"))}">'
             f'{esc(L("ui.synthetic_tag"))}</span>', width="content")
-    st.segmented_control(L("ui.language"), ["hi", "en"], key="lang_choice", default="en", required=True,
-                         label_visibility="collapsed", format_func=lambda x: "हिं" if x == "hi" else "EN")
+    with st.container(key="langsw", horizontal=True, gap=None, width="content", vertical_alignment="center"):
+        st.button("हिं", key="lang_hi", type="tertiary", on_click=_set, args=("lang", "hi"))
+        st.button("EN", key="lang_en", type="tertiary", on_click=_set, args=("lang", "en"))
+# Mark the active nav item and language (style-only, so it takes no space).
+st.html(f"<style>.st-key-nav_{view} button {{ color: var(--ink-1) !important; box-shadow: inset 0 -2px 0 var(--nav-active-underline) !important; }}"
+        f".st-key-lang_{lang} button {{ background: var(--action-primary-bg) !important; color: var(--action-primary-fg) !important; }}</style>")
 
 
 # ---------------------------------------------------------------------------------------- lecturer
@@ -260,7 +272,9 @@ def student_bench(name: str, path: str) -> None:
     if val and "cites" in val and not st.session_state.get(gk):
         st.session_state[ck] = val["cites"]
     graded = st.session_state.get(gk)
-    active_i = st.session_state.get(f"active::{name}") or 0
+    # The chosen question is kept under its own key: read before the radio is drawn, a widget's stored value can
+    # come back in its serialised form (the label text), not the option.
+    active_i = st.session_state.get(f"q::{name}", 0)
 
     marks, needles = [], {}
     if graded:
@@ -291,18 +305,22 @@ def student_bench(name: str, path: str) -> None:
     with inspector_col, st.container(key="inspector"):
         # A fixed, hidden label: Streamlit resets a widget whose label changes, which would drop the choice on a language switch.
         st.markdown(f'<div class="label">{esc(L("stu.question", n=""))}</div>', unsafe_allow_html=True)
+        # Streamlit stores a radio's choice as its label text, so a language switch would leave nothing selected;
+        # write the choice back from our own key before drawing it.
+        st.session_state[f"active::{name}"] = active_i
         st.radio("question", range(len(qs)), key=f"active::{name}", label_visibility="collapsed",
-                 format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}")
+                 format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}",
+                 on_change=lambda: _set(f"q::{name}", st.session_state[f"active::{name}"]))
         answers, rationales = {}, {}
         for i, q in enumerate(qs):
             st.markdown(f'<div class="label" style="margin-top:14px">{esc(L("stu.question", n=i + 1))}</div>', unsafe_allow_html=True)
             if q.kind == "who":
                 ids = [s.id for s in brief.suspects]
-                answers[q.id] = st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None,
+                answers[q.id] = st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
                                              format_func=lambda x: next(s.name for s in brief.suspects if s.id == x))
             elif q.kind == "where":
                 ids = [p.id for p in brief.places]
-                answers[q.id] = st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None,
+                answers[q.id] = st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
                                              format_func=lambda x: next(p.name for p in brief.places if p.id == x))
             else:
                 answers[q.id] = st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
@@ -391,7 +409,7 @@ def eval_view() -> None:
         note(L("eval.empty"))
 
     def block(title: str, header, rows, caption: str = "") -> None:
-        st.markdown(f'<div class="label" style="margin-top:22px">{esc(title)}</div>' + html_table(header, rows), unsafe_allow_html=True)
+        st.markdown(f'<div class="sub">{esc(title)}</div>' + html_table(header, rows), unsafe_allow_html=True)
         if caption:
             st.caption(caption)
 
@@ -401,7 +419,7 @@ def eval_view() -> None:
               ["defect", "n", "caught by the intended check", "caught by any check"],
               [[k, v["n"], v["caught_by_intended_check"], v["caught_by_any_check"]] for k, v in dd["per_type"].items()],
               f"False positives on clean cases: {dd['false_positives']} of {dd['clean_cases_checked']} "
-              f"({L('eval.n', n=dd['clean_cases_checked'])}). {dd['note']}")
+              f"({L('eval.n', n=dd['clean_cases_checked'])}). {dd['note'][:1].upper() + dd['note'][1:]}.")
     gq = results.get("generator_quality")
     if gq:
         block("Generator quality: raw LLM vs hybrid + verifier",
@@ -426,7 +444,7 @@ def eval_view() -> None:
             first_pass = any("claude" in r.get("checker", "") for r in rows)
             how = ("flagged by a first-pass model check, not yet confirmed by a person (some on a strict reading)"
                    if first_pass else "hand-checked cases had at least one defect")
-            st.markdown(f'<div class="label" style="margin-top:22px">Plain-chat baseline ({esc(L("eval.n", n=len(rows)))})</div>'
+            st.markdown(f'<div class="sub">Plain-chat baseline ({esc(L("eval.n", n=len(rows)))})</div>'
                         f'<div class="note">{broken} of {len(rows)} {esc(how)}.</div>', unsafe_allow_html=True)
 
 
