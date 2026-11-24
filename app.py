@@ -197,8 +197,9 @@ with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
     with st.container(key="langsw", horizontal=True, gap=None, width="content", vertical_alignment="center"):
         st.button("हिं", key="lang_hi", type="tertiary", on_click=_set, args=("lang", "hi"))
         st.button("EN", key="lang_en", type="tertiary", on_click=_set, args=("lang", "en"))
-# Mark the active nav item and language (style-only, so it takes no space).
-st.html(f"<style>.st-key-nav_{view} button {{ color: var(--ink-1) !important; box-shadow: inset 0 -2px 0 var(--nav-active-underline) !important; }}"
+# Mark the active nav item and language (style-only, so it takes no space). The underline is a 2px background,
+# not an inset shadow: Chrome draws faint side edges on inset shadows at fractional pixel positions.
+st.html(f"<style>.st-key-nav_{view} button {{ color: var(--ink-1) !important; background: linear-gradient(var(--nav-active-underline), var(--nav-active-underline)) bottom / 100% 2px no-repeat !important; }}"
         f".st-key-lang_{lang} button {{ background: var(--action-primary-bg) !important; color: var(--action-primary-fg) !important; }}</style>")
 
 

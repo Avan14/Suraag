@@ -39,9 +39,9 @@ code, .mono { font-family: var(--font-evidence); }
 /* nav: text items, the active one gets a 2px danger underline (the active rule is written by app.py) */
 .st-key-topbar .st-key-nav { gap: 2px !important; width: auto !important; flex: none; }
 .st-key-topbar .st-key-nav .stButton > button { background: transparent; border: 0; border-radius: 0; box-shadow: none; min-height: 36px;
-  padding: 6px 12px; color: var(--ink-3); transition: color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out); }
+  padding: 6px 12px; color: var(--ink-3); transition: color var(--dur-fast) var(--ease-out); }
 .st-key-topbar .st-key-nav .stButton > button p { font: 500 13.5px/1 var(--font-ui); white-space: nowrap; }
-.st-key-topbar .st-key-nav .stButton > button:hover { color: var(--ink-1); background: transparent; }
+.st-key-topbar .st-key-nav .stButton > button:hover { color: var(--ink-1); }
 
 /* language: a bordered segmented pair, the active option filled with ink */
 .st-key-topbar .st-key-langsw { gap: 0 !important; width: auto !important; flex: none; border: 1px solid var(--border-1);
