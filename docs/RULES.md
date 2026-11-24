@@ -599,7 +599,7 @@ Grading is deterministic. The LLM overclaim check is advisory only.
 - **Source:** PROJECT CONVENTION: no external source.
 - **Strength:** PROJECT CONVENTION
 - **Checked by:** `eval/plain_baseline/scores.csv`, `eval/notes.md`.
-- **Status:** Partial. Not built yet: the 10-case raw-mode run is blocked by LLM availability (3 of 10 samples completed), and the plain-chat baseline (8 of 10 flagged, 3 clear-cut) is a model first pass awaiting human confirmation.
+- **Status:** Partial. Not built yet: the plain-chat baseline (8 of 10 flagged, 3 clear-cut) is a model first pass awaiting human confirmation. The raw-mode run is done through `eval/run_generator.py` (19 of 20 cases completed; results in `eval/results.json`).
 - **Caveat:** Ten cases is a small sample; any rate must be stated with its sample size (E-03).
 
 ### E-02. Report per language and per check
@@ -608,7 +608,7 @@ Grading is deterministic. The LLM overclaim check is advisory only.
 - **Source:** PROJECT CONVENTION: no external source.
 - **Strength:** PROJECT CONVENTION
 - **Checked by:** `eval/run_generator.py`; the failure log written by `suraag/repair.py` records the check and code per failure.
-- **Status:** Partial. Not built yet: built but not yet run.
+- **Status:** Partial. Not built yet: failure counts come from `eval/results.json` (per language, per code), not yet from a per-check breakdown of `logs/failures.jsonl`. Run for English (10 hybrid, 10 raw) and Hinglish (10 hybrid, 9 raw).
 - **Caveat:** The notes found no source measuring contradiction rates in generated chat logs, so there is no external figure to compare against.
 
 ### E-03. No invented numbers

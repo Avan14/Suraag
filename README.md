@@ -50,10 +50,10 @@ python -m pytest                                                                
 | Experiment | Result | n | Notes |
 |---|---|---|---|
 | Defect detection | 20 of 20 planted defects caught by the check meant for them | 20 (5 per type) | The defects are planted by our own code, so this shows the checks work, not how often real generators err. 0 of 5 clean cases flagged. |
-| Raw LLM vs hybrid + verifier | **not usable yet.** A 10-sample raw pilot on `gemini-3.5-flash-lite` completed only 3 samples (the API returned overload errors for the rest); all 3 passed the chat checks | 3 of 10 | Raw mode is judged on chat checks only, so expect it to look better than the plain-chat baseline. `python -m eval.run_generator` is the full comparison and still needs the API. |
+| Raw LLM vs hybrid + verifier | **Hybrid + verifier: 20 of 20 cases shipped** (English 7/10 on the first try, Hinglish 10/10; the 3 English first-try failures were filler-content rule violations, repaired). **Raw (LLM writes the whole chat): 2 of 19 passed on the first try, 8 of 19 after up to 3 repairs.** Most common raw failure: chat and call-log times disagreeing (17 of 19 cases) | English 10+10, Hinglish 10+9 (1 raw case excluded: API quota) | One case family, synthetic data, one model (`gemini-3.5-flash`). Raw mode is judged on chat checks only, so it should look better than a plain chat. Excluded cases are reported, never counted as failures. `eval/results.json`. |
 | Plain-chat baseline | 8 of 10 flagged by a model first pass; **3 clear-cut** (wrong cited lines, a range instead of a time, a self-contradicting key); human confirmation pending | 10 | One chat app, one prompt, `eval/plain_baseline/`. The other 5 flags rest on a strict reading. Not yet a person's check. |
 | Grader agreement with manual grading | **not run yet** | 20 drafted | Needs human labels: `eval/grader_worksheet.md` |
-| Blind solve by a second model | **not run yet** | | `python -m eval.run_blind_solve` |
+| Blind solve by a second model | `gemini-3.6-flash` agreed with the key on **30 of 30 questions** (who, when, where; 10 of 10 cases each) on stub filler, and again **30 of 30 on real LLM filler** | 10 + 10 | Shows the cases are solvable from the files alone; it does not show they are hard. Unscored, one model. |
 
 ## Limits (please read)
 
@@ -62,7 +62,7 @@ python -m pytest                                                                
   planted-defect experiment shows the checks fire, not that real LLM filler needs them. The raw-vs-hybrid
   experiment is the one that measures that.
 - The rule-based solver proves a case is consistent with its templates. Whether a *person* can solve it is
-  what the blind solve and a human playtest are for; neither is done yet.
+  what a human playtest is for; the model blind solve is done (above), the human one is not.
 - The Hindi strings are a first draft and **need a native reader's review**.
 - The hash is an integrity record, not proof of authenticity.
 - The exported-file artifacts (`chat.txt`, `calls.csv`, `photo.jpg`) are less realistic than full device
