@@ -10,6 +10,7 @@ the bench alone. Styles come from the Case Canvas kit tokens in suraag/ui/.
 import base64
 import csv
 import datetime as dt
+import hmac
 import html
 import io
 import json
@@ -49,7 +50,7 @@ st.set_page_config(page_title="Suraag", page_icon=None, layout="wide")
 
 # On Streamlit Community Cloud the key lives in secrets; mirror it into the environment for llm.py.
 try:
-    for _k in ("GEMINI_API_KEY", "SURAAG_MODEL_FILLER", "SURAAG_MODEL_SOLVER"):
+    for _k in ("GEMINI_API_KEY", "SURAAG_MODEL_FILLER", "SURAAG_MODEL_SOLVER", "SURAAG_LECTURER_CODE"):
         if _k in st.secrets and _k not in os.environ:
             os.environ[_k] = str(st.secrets[_k])
 except Exception:
@@ -223,8 +224,14 @@ def certificate(manifest: dict | None, path: Path, key: str, sealed: bool, fresh
         st.markdown(f'<div class="{wrap}">{head}<dl class="kv">{dl}</dl>'
                     f'<p class="fine">{esc(L("lec.hash_note"))} {esc(L("lec.not_real"))}</p>{stub}</div>', unsafe_allow_html=True)
         with st.container(horizontal=True, gap="small"):
-            st.download_button(L("lec.zip_student"), make_zip(str(path), True), f"{path.name}-student.zip", key=f"zs-{key}")
-            st.download_button(L("lec.zip_key"), make_zip(str(path), False), f"{path.name}-key.zip", key=f"zk-{key}")
+            st.download_button(L("lec.zip_student"), make_zip(str(path), True), f"SYNTHETIC-{path.name}-student.zip",
+                               key=f"zs-{key}")
+            # With SURAAG_LECTURER_CODE set (in secrets), the key needs the code. The keys are also in the public repo,
+            # so this keeps casual visitors out of the live demo; real assessment should use fresh seeds.
+            code = os.environ.get("SURAAG_LECTURER_CODE", "")
+            if not code or hmac.compare_digest(st.text_input(L("lec.code"), type="password", key=f"code-{key}"), code):
+                st.download_button(L("lec.zip_key"), make_zip(str(path), False), f"SYNTHETIC-{path.name}-key.zip",
+                                   key=f"zk-{key}")
 
 
 # ---------------------------------------------------------------------------------------- header
@@ -242,8 +249,15 @@ for _k in [k for k in st.session_state if isinstance(k, str) and k.startswith(_h
 
 # Plain buttons, not st.segmented_control: its active option draws side borders that CSS cannot remove.
 with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
+    # The script marks the active nav button aria-current, so the current view is not shown by colour alone.
+    # shortcut: re-applied on two timers because Streamlit may draw the buttons after it runs; use a MutationObserver
+    # if it ever misses.
+    current = ("<script>(function(){const f=function(){document.querySelectorAll('.st-key-nav button').forEach("
+               "function(b){b.removeAttribute('aria-current')});const a=document.querySelector('.st-key-nav_" + view +
+               " button');if(a)a.setAttribute('aria-current','page')};f();setTimeout(f,300);setTimeout(f,1500)})()</script>")
     st.html(f'<div class="brand"><span class="wm" lang="hi">सुराग</span><span class="latin">Suraag</span>'
-            f'<span class="tagline">{esc(L("app.tagline"))}</span></div>', width="content")
+            f'<span class="tagline">{esc(L("app.tagline"))}</span></div>{current}', width="content",
+            unsafe_allow_javascript=True)
     with st.container(key="nav", horizontal=True, gap=None, width="content", vertical_alignment="center"):
         for v, k in (("home", "ui.tab_home"), ("lecturer", "ui.tab_lecturer"), ("student", "ui.tab_student"), ("eval", "ui.tab_eval")):
             st.button(L(k), key=f"nav_{v}", type="tertiary", on_click=_set, args=("view", v))
@@ -391,7 +405,9 @@ def student_bench(name: str, path: str) -> None:
                active={"id": qs[active_i].id, "label": L("stu.question", n=active_i + 1)},
                cites=st.session_state[ck], marks=marks, needles=needles, locked=bool(graded),
                labels={"holds": L("stu.holds"), "snapped": L("stu.snapped"), "partial": L("stu.partial"),
-                       "tray": L("stu.cited", n="").strip(), "empty": L("stu.cite")})
+                       "tray": L("stu.cited", n="").strip(), "empty": L("stu.cite"), "added": L("stu.cite_added"),
+                       "removed": L("stu.cite_removed"), "graded": L("stu.graded_live"), "photo_alt": L("stu.photo_alt")},
+               lang=st.session_state["lang"])
 
     with inspector_col, st.container(key="inspector"):
         # A fixed, hidden label: Streamlit resets a widget whose label changes, which would drop the choice on a language switch.
@@ -563,3 +579,6 @@ def home_view() -> None:
 
 
 {"home": home_view, "lecturer": lecturer_view, "student": student_view, "eval": eval_view}[view]()
+
+_portal = '<a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>'
+st.markdown(f'<footer class="foot">{esc(L("ui.footer", portal="@@")).replace("@@", _portal)}</footer>', unsafe_allow_html=True)

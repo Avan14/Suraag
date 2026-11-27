@@ -14,7 +14,8 @@ S = {
                 "can be solved from the files alone, and grades students on the exact line they cite.",
         "steps": [
             ("Generate", "Code builds the case and plants the clues. An LLM writes only the small talk around them."),
-            ("Verify", "Six plain-code checks run on every case. A case that fails is repaired or thrown away, never shipped."),
+            ("Verify", "Six plain-code checks run on every case, and a seventh on the practice levels. A case that fails is "
+                       "repaired or thrown away, never shipped."),
             ("Cite", "Students answer and click the line that proves it. The grader names the line behind every point."),
         ],
         "try_label": "Try it",
@@ -42,9 +43,9 @@ S = {
         "verified": "VERIFIED",
         "numbers_label": "What we measured",
         "numbers": [
-            ("20 / 20", "planted defects caught by the check meant for them"),
-            ("20 / 20", "hybrid cases shipped, against 8 of 19 when the LLM writes the whole chat"),
-            ("30 / 30", "answers a second model got right from the files alone"),
+            ("20 / 20", "planted defects caught by the check meant for them. We planted them ourselves."),
+            ("20 / 20", "hybrid cases shipped, against 8 of 19 when the LLM writes the whole chat. One model."),
+            ("30 / 30", "answers a second model got right from the files alone. 10 cases, unscored."),
         ],
         "limits": "Synthetic cases, one case family, small samples. Hashes show a file has not changed; they do not show "
                   "it is genuine. Not court-validated.",
@@ -56,7 +57,8 @@ S = {
                 "कि हर केस सिर्फ़ फ़ाइलों से हल हो सकता है, और छात्रों को उसी पंक्ति पर अंक देता है जिसका वे हवाला देते हैं।",
         "steps": [
             ("बनाइए", "कोड केस बनाता है और सुराग रखता है। LLM सिर्फ़ उनके आसपास की आम बातचीत लिखता है।"),
-            ("जाँचिए", "हर केस पर छह जाँचें चलती हैं। जो केस फ़ेल हो, वह ठीक किया जाता है या हटा दिया जाता है, कभी जारी नहीं होता।"),
+            ("जाँचिए", "हर केस पर छह जाँचें चलती हैं, अभ्यास स्तरों पर एक सातवीं भी। जो केस फ़ेल हो, वह ठीक किया जाता है या हटा "
+                        "दिया जाता है, कभी जारी नहीं होता।"),
             ("हवाला दीजिए", "छात्र उत्तर देते हैं और उसे साबित करने वाली पंक्ति पर क्लिक करते हैं। हर अंक के पीछे की पंक्ति बताई जाती है।"),
         ],
         "try_label": "आज़माइए",
@@ -84,9 +86,9 @@ S = {
         "verified": "सत्यापित",
         "numbers_label": "हमने क्या मापा",
         "numbers": [
-            ("20 / 20", "डाले गए दोष, जिन्हें उनके लिए बनी जाँच ने पकड़ा"),
-            ("20 / 20", "हाइब्रिड केस जारी हुए; जब LLM पूरी चैट लिखता है तो 19 में से 8"),
-            ("30 / 30", "उत्तर, जो दूसरे मॉडल ने सिर्फ़ फ़ाइलों से सही दिए"),
+            ("20 / 20", "डाले गए दोष, जिन्हें उनके लिए बनी जाँच ने पकड़ा। दोष हमने ख़ुद डाले थे।"),
+            ("20 / 20", "हाइब्रिड केस जारी हुए; जब LLM पूरी चैट लिखता है तो 19 में से 8। एक ही मॉडल।"),
+            ("30 / 30", "उत्तर, जो दूसरे मॉडल ने सिर्फ़ फ़ाइलों से सही दिए। 10 केस, अंक नहीं दिए गए।"),
         ],
         "limits": "काल्पनिक केस, एक ही तरह के केस, छोटे नमूने। हैश बताता है कि फ़ाइल बदली नहीं; यह नहीं कि वह असली है। "
                   "अदालत में जाँचा नहीं गया।",

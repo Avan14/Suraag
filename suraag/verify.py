@@ -226,7 +226,28 @@ def check_depth(case: Case, arts: Artifacts) -> list[Failure]:
     return out
 
 
+def check_insufficient_alone(case: Case, arts: Artifacts) -> list[Failure]:
+    """Rule L-05: the answer must rest on the anchored lines. Remove every chat line and call row that a who/when
+    answer is anchored in, keep everything else (distractors, decoys, filler), and the solver must no longer
+    reach the key. Photo questions rest on single EXIF tags, so there is no "everything else" to test them on."""
+    from suraag.solver import solve
+    out = []
+    for q in case.questions:
+        if question_about(q) == "photo":
+            continue
+        anchors = [a for fid in q.answer_facts for a in case.fact(fid).anchors]
+        lines = {a.line for a in anchors if a.artifact == "chat"}
+        rows = {str(a.row) for a in anchors if a.artifact == "calls"}
+        chat = "".join(ln for n, ln in enumerate(arts.chat.splitlines(True), start=1) if n not in lines)
+        calls = "".join(ln for ln in arts.calls.splitlines(True) if ln.split(",", 1)[0] not in rows)
+        got = solve(Artifacts(chat, calls, arts.photo), case.brief, case.lang).get(q.id)
+        if got == q.answer:
+            out.append(Failure("distractor", "chat", "anchors_not_needed", {"question": q.id, "key": q.answer},
+                               f"{q.id}: the solver still answers {q.answer} with every anchored line removed"))
+    return out
+
+
 def verify(case: Case, arts: Artifacts, mode: Mode = "hybrid") -> list[Failure]:
     return (check_anchors(case, arts, mode) + check_traceability(case) + check_chat_consistency(case, arts, mode)
             + check_cross_time(case, arts) + check_causality(case) + check_solvability(case, arts)
-            + check_distractor(case, arts) + check_depth(case, arts))
+            + check_distractor(case, arts) + check_insufficient_alone(case, arts) + check_depth(case, arts))

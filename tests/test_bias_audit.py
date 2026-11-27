@@ -1,6 +1,9 @@
 """Rule R-03: guilt is assigned at random, never from the name pool's region. No LLM involved."""
 from collections import Counter
 
+import pytest
+
+from suraag.levels import build_level_case
 from suraag.names import load_names
 from suraag.skeleton import build_case
 
@@ -36,3 +39,22 @@ def test_every_role_is_equally_likely_for_each_gender():
     n, total = sum(boss.values()), sum(people.values())
     chi2 = sum((boss[g] - n * people[g] / total) ** 2 / (n * people[g] / total) for g in people)
     assert chi2 < 6.635  # one degree of freedom, p < 0.01
+
+
+@pytest.mark.parametrize("level", [1, 2, 3, 4])
+def test_culprit_region_is_not_tied_to_guilt_on_every_level(level):
+    """Same audit on every practice level, by surname region: from level 2 the decoy shares the boss's first name,
+    and level 2 and 4 add a fifth suspect, so first names would double-count."""
+    region = {s: r for r, v in load_names()["regions"].items() for s, *_ in v["surname"]}
+    draws, culprits = Counter(), Counter()
+    for seed in range(400):
+        case = build_level_case(seed, "en", level)
+        culprit = next(q.answer for q in case.questions if q.kind == "who")
+        for p in case.people:
+            r = region[p.name.split()[-1]]
+            draws[r] += 1
+            culprits[r] += p.id == culprit
+    n, total = sum(culprits.values()), sum(draws.values())
+    assert n == 400
+    chi2 = sum((culprits[r] - n * draws[r] / total) ** 2 / (n * draws[r] / total) for r in draws)
+    assert chi2 < CHI2_CRITICAL_DF3_P001, (level, chi2, dict(culprits), dict(draws))

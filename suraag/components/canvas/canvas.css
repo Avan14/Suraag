@@ -31,6 +31,8 @@ html, body { margin: 0; background: transparent; font-family: var(--font-ui); co
 .row { min-height: var(--row); display: flex; align-items: baseline; gap: 8px; padding: 6px 12px; border-bottom: 1px dashed var(--rule);
   font: 400 13px/1.5 var(--font-evidence); cursor: pointer; transition: background-color 120ms var(--ease-out); position: relative; }
 @media (hover: hover) and (pointer: fine) { .row:hover { background: var(--paper); } }  /* no sticky hover on touch */
+.row:focus-visible { outline: 3px solid var(--ink-1); outline-offset: -3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .row.head { cursor: default; color: var(--ink-3); background: var(--paper); }
 .row .n { color: var(--ink-3); min-width: 28px; text-align: right; flex: none; }
 .row .n:empty { display: none; }

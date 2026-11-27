@@ -1,12 +1,42 @@
 # Suraag (सुराग)
 
+[![tests](https://github.com/Avan14/Suraag/actions/workflows/tests.yml/badge.svg)](https://github.com/Avan14/Suraag/actions/workflows/tests.yml)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+
 Fictional Indian forensic practice cases, **proved solvable by plain code**, with a grader that scores a
 student on the answer **and on the exact evidence line they cite for it**.
 
+**Live demo: https://suraag-1.streamlit.app** (no login; it sleeps when idle, so the first load can take
+about 30 seconds). Open **Student**, pick a level and a case, click the lines that prove each answer, then
+press **Submit answers**.
+
 > **All data is synthetic and for teaching only.** Names, phone numbers (`+91-5xxxx-xxxxx`, a range that
-> is never a valid Indian mobile number), UPI handles and accounts are invented. Nothing here is
+> is never a valid Indian mobile number, though it can match some fixed lines and short codes), UPI handles
+> and accounts are invented. Nothing here is
 > court-validated or legal advice. SHA-256 hashes show a file is unchanged since generation; they do **not**
 > prove it is authentic.
+
+## Who it is for, and the problem
+
+Suraag is for lecturers who teach digital forensics or cyber law in India, and for their students. Writing a
+practice case by hand is slow, and a case an LLM writes on its own can contradict itself or have an answer the
+files do not support. Grading usually checks only the final answer, not whether the student can point to the
+line that proves it. Suraag generates cases whose answers are checked by code before anyone sees them, and
+grades the evidence a student cites as well as the answer.
+
+```mermaid
+flowchart LR
+  seed["Seed and level"] --> world["World model (code)"]
+  world --> anchors["Evidence lines, written by code"]
+  world --> filler["Small talk, written by the LLM"]
+  anchors --> files["chat.txt, calls.csv, photo.jpg"]
+  filler --> files
+  files --> checks{"Checks, plain code"}
+  checks -- "fails: rewrite the small talk, up to 3 times" --> filler
+  checks -- "passes" --> seal["Sealed with SHA-256 hashes"]
+  seal --> student["Student cites lines"]
+  student --> grader["Grader: answer point and evidence point"]
+```
 
 ## What it does
 
@@ -22,7 +52,9 @@ student on the answer **and on the exact evidence line they cite for it**.
   contains every string the claim needs (it need not be the designated anchor), *partial* if it has some,
   *wrong* if none. Explanations come from the verifier's own data, e.g.
   `chat.txt:3 contains neither "9:14 pm" nor "Raju bhai". A supporting line is chat.txt:12.` The same input
-  always gives the same score. An LLM "overclaim" check is **advisory only** and never changes a score.
+  always gives the same score. A student's free-text reasoning is never scored: it is flagged for the
+  instructor. The grader has a hook for an LLM "overclaim" check, but no classifier is wired in yet, so every
+  reason is flagged "could not verify".
 - **Teaches in two languages:** the interface and every grader/verifier message in English and हिन्दी;
   case content in English and Hinglish. Hints are tiered (file → rows → exact lines), built in code from the
   case model, never by the LLM, and never contain the culprit or the evidence text.
@@ -92,12 +124,14 @@ those files. `solution.md` in each case folder holds the same for the instructor
 | Experiment | Result | n | Notes |
 |---|---|---|---|
 | Defect detection | 20 of 20 planted defects caught by the check meant for them | 20 (5 per type) | The defects are planted by our own code, so this shows the checks work, not how often real generators err. 0 of 5 clean cases flagged. |
-| Raw LLM vs hybrid + verifier | **Hybrid + verifier: 20 of 20 cases shipped** (English 7/10 on the first try, Hinglish 10/10; the 3 English first-try failures were filler-content rule violations, repaired). **Raw (LLM writes the whole chat): 2 of 19 passed on the first try, 8 of 19 after up to 3 repairs.** Most common raw failure: chat and call-log times disagreeing (17 of 19 cases) | English 10+10, Hinglish 10+9 (1 raw case excluded: API quota) | One case family, synthetic data, one model (`gemini-3.5-flash`). Raw mode is judged on chat checks only, so it should look better than a plain chat. Excluded cases are reported, never counted as failures. The `seconds_per_case` field is not a speed result: three runs replayed cached LLM replies (about 0.02 s a case), and only Hinglish raw made live calls (about 75 s). `eval/results.json`. |
+| Raw LLM vs hybrid + verifier | **Hybrid + verifier: 20 of 20 cases shipped** (English 7/10 on the first try, Hinglish 10/10; the 3 English first-try failures were filler-content rule violations, repaired). **Raw (LLM writes the whole chat): 2 of 19 passed on the first try, 8 of 19 after up to 3 repairs.** First try,
+17 of 20 (95% Wilson interval 0.64 to 0.95) against 2 of 19 (0.03 to 0.31), Fisher exact p = 3.4e-6; after
+repair, 20 of 20 (0.84 to 1.00) against 8 of 19 (0.23 to 0.64), p = 4.5e-5. Most common raw failure: chat and call-log times disagreeing (17 of 19 cases) | English 10+10, Hinglish 10+9 (1 raw case excluded: API quota) | One case family, synthetic data, one model (`gemini-3.5-flash`). Raw mode is judged on chat checks only, so it should look better than a plain chat. Excluded cases are reported, never counted as failures. The `seconds_per_case` field is not a speed result: three runs replayed cached LLM replies (about 0.02 s a case), and only Hinglish raw made live calls (about 75 s). `eval/results.json`. |
 | Plain-chat baseline | 8 of 10 flagged by a model first pass; **3 clear-cut** (wrong cited lines, a range instead of a time, a self-contradicting key); human confirmation pending | 10 | One chat app, one prompt, `eval/plain_baseline/`. The other 5 flags rest on a strict reading. Not yet a person's check. |
 | Grader agreement with manual grading | **not run yet** | 20 drafted | Needs human labels: `eval/grader_worksheet.md` |
 | Blind solve by a second model | `gemini-3.6-flash` agreed with the key on **30 of 30 questions** (who, when, where; 10 of 10 cases each) on stub filler, and again **30 of 30 on real LLM filler** | 10 + 10 | Shows the cases are solvable from the files alone; it does not show they are hard. Unscored, one model. |
 | Practice levels: generation | **9 of 9 level 2 to 4 cases sealed** with real LLM filler, 8 on the first try and 1 after one repair (a filler line used an instruction verb). Every trap passed the depth check | 3 per level | One model (`gemini-3.5-flash`), English and Hinglish mixed. `cases/L*`. |
-| Practice levels: blind solve | `gemini-3.6-flash` agreed with the key on level 1 **15 of 15**, level 2 **9 of 9**, level 3 **8 of 12**, level 4 **12 of 12**. All 4 level 3 misses were the code-word trap: in both Hinglish level 3 cases it named the author of the code rule and gave the rule's time | 5 + 3 + 3 + 3 cases | Unscored, one model, 3 cases per level. Level 4 was not harder than level 3 for this model: its order adds "as I said on the phone", which may make the order line easier to spot. `eval/results.json`. |
+| Practice levels: blind solve | `gemini-3.6-flash` agreed with the key on level 1 **15 of 15**, level 2 **9 of 9**, level 3 **8 of 12**, level 4 **12 of 12**. All 4 level 3 misses came from the code-word trap: in both Hinglish level 3 cases it named the author of the code rule (who) and gave the rule's time (when). `results.json` scores each trap on one question, so it records these as 2 trap answers | 5 + 3 + 3 + 3 cases | Unscored, one model, 3 cases per level. Level 4 was not harder than level 3 for this model: its order adds "as I said on the phone", which may make the order line easier to spot. `eval/results.json`. |
 
 ## Limits (please read)
 
@@ -116,22 +150,45 @@ those files. `solution.md` in each case folder holds the same for the instructor
 
 ## Prior art we build on
 
-Synthetic forensic scenarios with ground truth already exist: **EvidenceForge** (Cisco Talos), the
-**DFRWS EU 2026** work on LLM-driven scenario generation (Plankl et al.), **hystck / ForTrace**, and
-**EviPlant**, mostly for tool testing and DFIR practice. Solver-checked generation is established for LLM
+Synthetic forensic scenarios with ground truth already exist:
+[**EvidenceForge**](https://github.com/Cisco-Talos/EvidenceForge) (Cisco Talos), the **DFRWS EU 2026** work on
+LLM-driven scenario generation (Plankl et al.), **hystck / ForTrace**, and
+[**EviPlant**](https://arxiv.org/abs/1704.08990), mostly for tool testing and DFIR practice. Like EvidenceForge's
+ground-truth file and generation manifest, every Suraag case ships a machine-readable key (`case.json`) and a
+manifest with the seed, model, prompt hashes, a SHA-256 per file and a seal time. Solver-checked generation is established for LLM
 logic puzzles. We claim only the *combination*, aimed at teaching: a verifier that checks a case's answer key
 is derivable from its evidence, grading by the evidence a student cites, and Hindi/Hinglish Indian-context
 artifacts. We do not claim to be first.
 
-## Responsible use
+## Responsible use and AI
 
-Fictional data only; educational use only; a human instructor has the last word (free-text reasoning the
-grader cannot match is marked *could not verify* and flagged for the instructor, never silently scored);
-nothing here gives legal advice.
+- **What the LLM does.** It writes only the small talk between the evidence lines. Code writes every evidence
+  line, hint, worked solution and score, and checks the small talk for digits, amounts, dates, web addresses,
+  real brands and instruction verbs. Models: `gemini-3.5-flash` writes the small talk; `gemini-3.6-flash` is
+  used only for the blind-solve experiment. The raw-mode baseline above shows what happens when the LLM writes
+  the evidence too.
+- **What is sent to Gemini.** Only generation prompts built from synthetic data: the chat members' made-up
+  names, the time gaps to fill, and, on a repair, the checker's error messages. The blind-solve experiment sends
+  a synthetic case's brief and files. No student answer or personal data is ever sent.
+- **What is stored.** A student's answers live only in their browser session and are gone when it ends. The
+  app writes to disk only when a live generation fails: one line with the case id, mode, language and failing
+  checks. Live generation is capped at 20 cases a day per running copy of the app (the count resets on a restart).
+- **Misuse.** Cases show the evidence a fraud leaves on a phone, not how to run one: the orders are short
+  template lines ("delete the transfer record"), with no persuasion scripts.
+- **Answer keys are public.** Every case folder holds its key (`case.json`) and worked solution
+  (`solution.md`), so the public demo is for practice, not assessment. Set `SURAAG_LECTURER_CODE` in the app's
+  secrets to put the key download behind a code, and generate fresh seeds for real assessment.
+- **Names and fairness.** Names come from four regional pools (north, west, south, east), 7 first names and
+  6 surnames each. They do not yet include Muslim, Christian, Sikh or North-East names; adding names changes
+  every seed's draws, and so every shipped case, so it is planned with the next regeneration. Guilt is
+  assigned at random: chi-square tests over 1,000 seeds (level 1) and 400 seeds per level (levels 1 to 4) find
+  no link between a suspect's region or gender and guilt.
+- **People decide.** A human instructor has the last word. Nothing here is legal advice, and every page
+  points real victims to the 1930 helpline and cybercrime.gov.in.
 
 ## Layout
 
 `suraag/` the engine (`model`, `skeleton`, `levels`, `render`, `verify`, `repair`, `solver`, `grade`,
 `explain`, `hints`, `i18n`, `pipeline`) · `suraag/components/` the evidence board and read-aloud · `app.py` the Streamlit app ·
-`docs/RULES.md` the rules register (each rule traced to a source, a test and a status; 13 Implemented, 18 Partial) · `docs/research/` the research it rests on · `eval/` the experiments · `cases/` pre-generated cases (each folder includes `case.json`, the instructor's
+`docs/RULES.md` the rules register (each rule traced to a source, a test and a status; 15 Implemented, 16 Partial) · `docs/research/` the research it rests on · `eval/` the experiments · `cases/` pre-generated cases (each folder includes `case.json`, the instructor's
 answer key, and `solution.md`, the worked solution; `L2-`, `L3-` and `L4-` folders are the practice levels) · `tests/`.

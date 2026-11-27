@@ -12,7 +12,7 @@ This file is a rules register. Each rule says what it checks, why it exists, whe
 
 Every case, file and screen produced by Suraag is labelled SYNTHETIC. Hashes show that a file is unchanged; they do not by themselves prove the file is authentic.
 
-**Status as of 24 November 2026.** Statuses reflect the repository. *Implemented* means the named tests in `tests/` pass (13 rules); *Partial* means part of the rule is built and tested and the Status line says what is not (18 rules); every other rule is still Planned, Open or awaiting expert review. Module and test names in rules not yet built are proposals.
+**Status as of 28 November 2026.** Statuses reflect the repository. *Implemented* means the named tests in `tests/` pass (15 rules); *Partial* means part of the rule is built and tested and the Status line says what is not (16 rules); every other rule is still Planned, Open or awaiting expert review. Module and test names in rules not yet built are proposals.
 
 ## 2. How to read this file
 
@@ -60,8 +60,8 @@ Every case, file and screen produced by Suraag is labelled SYNTHETIC. Hashes sho
 | L-02 | Traceability check | GOOD PRACTICE | Partial |
 | L-03 | Contradiction check (time, entity, numeric) | GOOD PRACTICE | Partial |
 | L-04 | Solvability check | PROJECT CONVENTION | Implemented |
-| L-05 | Distractor check | GOOD PRACTICE | Partial |
-| L-06 | Integrity (sealing) check | GOOD PRACTICE | Partial |
+| L-05 | Distractor check | GOOD PRACTICE | Implemented |
+| L-06 | Integrity (sealing) check | GOOD PRACTICE | Implemented |
 | L-07 | Repair loop and failure log | PROJECT CONVENTION | Implemented |
 | L-08 | Code writes every concrete value; symbolic ground truth first | GOOD PRACTICE | Implemented |
 | L-09 | Filler adds no facts | GOOD PRACTICE | Partial |
@@ -162,7 +162,7 @@ The six verifier checks (L-01 to L-06), the repair loop (L-07) and the generatio
 - **Source:** [S97] PRIMARY (over-specific clues make a case trivial); [S90] PRIMARY (a rule-based baseline at chance level shows the narrative does not leak the answer).
 - **Strength:** GOOD PRACTICE
 - **Checked by:** `suraag/verify.py::check_distractor`; `tests/test_verify.py::test_distractor_checks`.
-- **Status:** Partial. Not built yet: the 'insufficient alone' test (solver given every line except the anchors returns no unique answer).
+- **Status:** Implemented. The 'insufficient alone' test is `suraag/verify.py::check_insufficient_alone`: with every chat line and call row a who/when answer is anchored in removed, the solver must not reach the key (`tests/test_insufficient_alone.py`, all 14 shipped cases pass). Photo questions rest on single EXIF tags and are not part of this test.
 - **Caveat:** The notes found no educator source that discusses distractors in forensic cases specifically; the minimum distractor count per difficulty is a project setting.
 
 ### L-06. Integrity (sealing) check
@@ -171,7 +171,7 @@ The six verifier checks (L-01 to L-06), the repair loop (L-07) and the generatio
 - **Source:** [S24] PRIMARY (hash at acquisition, verification hash before analysis, rehash at the end); [S2] SECONDARY (a hash report is enclosed with the certificate).
 - **Strength:** GOOD PRACTICE
 - **Checked by:** `suraag/repair.py::seal`; `tests/test_repair.py::test_clean_case_seals_with_matching_hashes`.
-- **Status:** Partial. Not built yet: an integrity check that re-verifies a loaded case against its manifest (sealing is built; the five demo cases were checked once by script and all 15 hashes matched the committed bytes).
+- **Status:** Implemented. A loaded case is re-verified and its hashes compared with its manifest before the lecturer view shows it as verified (`app.py`, `lecturer_view`); `tests/test_levels.py::test_every_shipped_case_verifies_and_matches_its_hashes` does the same for every shipped case.
 
 ### L-07. Repair loop and failure log
 - **Rule:** A case that fails a check is repaired at most 3 times (regenerate the LLM filler, or re-render the CSV or EXIF from the clean model), all six checks run again from scratch after each repair, every failure is appended to logs/failures.jsonl with the failing check's name, and a case still failing after the third repair is rejected and not shipped.
@@ -197,7 +197,7 @@ The six verifier checks (L-01 to L-06), the repair loop (L-07) and the generatio
 - **Strength:** GOOD PRACTICE
 - **Checked by:** `suraag/fillerrules.py`; `suraag/verify.py::check_chat_consistency`; `tests/test_filler_rules.py::test_each_rule_catches_its_case`, `::test_a_bad_filler_line_fails_the_hybrid_check_with_a_clear_message`.
 - **Status:** Partial. Not built yet: named persons inside filler text (only senders are checked), language and length limits, and a longer brand list.
-- **Caveat:** Items (c) to (g) are project choices; only the principle "check in code, not just in the prompt" comes from the source. A word list for Hinglish instruction claims cannot be complete; the advisory LLM overclaim check (G-01) may flag more but never changes a score.
+- **Caveat:** Items (c) to (g) are project choices; only the principle "check in code, not just in the prompt" comes from the source. A word list for Hinglish instruction claims cannot be complete; an LLM overclaim check (G-01) could flag more, but none is wired in yet, and it could never change a score.
 
 ### L-10. Causal prerequisites in timelines
 - **Rule:** Each world-model event lists the events that must come before it (for example the photo is taken before the chat line that sends it, a payment alert follows the debit, a call precedes any message saying "I called you"), and the rendered times satisfy every prerequisite.
@@ -398,7 +398,7 @@ All example lines are synthetic. There is no official WhatsApp export specificat
 - **Why:** The notes confirm a leading 5 is not a mobile range (mobile numbers are levels 6 to 9). They do not confirm it is unreachable: level 5 is used for some fixed lines and five-digit short codes, and STD codes beginning with 5 exist (0522, 0542), so a number could match a real landline.
 - **Source:** PROJECT CONVENTION for the pattern. Context: [S46] PRIMARY; [S47] PRIMARY; [S48] SECONDARY; [S49] WEAK.
 - **Strength:** PROJECT CONVENTION
-- **Checked by:** `numbers.py::fictional_number`; `tests/test_numbers.py::test_pattern`, `::test_no_mobile_prefix`, `::test_no_special_service_numbers`, `::test_ui_has_no_tel_links`.
+- **Checked by:** Proposed, not built yet: `numbers.py::fictional_number`; `tests/test_numbers.py::test_pattern`, `::test_no_mobile_prefix`, `::test_no_special_service_numbers`, `::test_ui_has_no_tel_links`.
 - **Status:** Open
 - **Caveat:** No official reserved range for fictional or drama numbers was found (not proven not to exist). The 5xxxx convention means "clearly not a mobile", not "guaranteed unassigned". Recommended mitigation: the visible SYNTHETIC marker plus no clickable numbers, and a decision by the forensic lecturer on whether to keep the convention. Current numbering allocations after 2025 were not checked.
 
@@ -522,7 +522,7 @@ The notes found no India-specific teaching guideline on portraying fraud scenari
 - **Why:** Stereotyping and victim-blaming are the main harms in how scams are talked about, and training material must not double as a manual. The offender's deliberate action is named with active verbs.
 - **Source:** [S79] SECONDARY (avoid victim-blaming words, shame, stereotypes and sensationalism); [S64] SECONDARY (no community attribution). The ban on how-to content is PROJECT CONVENTION: no external source.
 - **Strength:** GOOD PRACTICE
-- **Checked by:** `tests/test_portrayal.py::test_no_blame_lexicon_in_english_or_hinglish`, `::test_no_place_names_in_case_text`, `::test_learner_page_links_1930_and_cybercrime_portal`, `::test_no_urls_in_case_files`, `::test_known_scam_script_phrases_rejected`.
+- **Checked by:** Built: `tests/test_portrayal.py::test_learner_page_links_1930_and_cybercrime_portal` (the footer on every page). Proposed, not built yet: `::test_no_blame_lexicon_in_english_or_hinglish`, `::test_no_place_names_in_case_text`, `::test_no_urls_in_case_files`, `::test_known_scam_script_phrases_rejected`.
 - **Status:** Needs expert review
 - **Caveat:** The only guidance found is an Australian communications guide whose publisher and date could not be confirmed on the page; no Indian guideline was found. The word lists are project-made and incomplete, and the lecturer should review them. The one-line pointer to 1930 and cybercrime.gov.in follows the guide's advice to include support options and is an inference. The notes make the how-to ban an inference, not a cited guideline.
 
@@ -536,7 +536,7 @@ The notes found no India-specific teaching guideline on portraying fraud scenari
 
 ## 4.6 Family G: Grading and assessment
 
-Grading is deterministic. The LLM overclaim check is advisory only.
+Grading is deterministic. The LLM overclaim check is advisory only, and no classifier is wired in yet.
 
 ### G-01. Deterministic grading; the overclaim check is advisory
 - **Rule:** The grade is a pure function of the submitted structured answer (culprit id, mechanism code, key fact values, cited lines) and the case answer key, the same input gives the same score on every run, grading makes no LLM or network call, and the LLM overclaim check writes only to an advisory field shown to a teacher and can never change a score, a hint tier or pass or fail.
@@ -545,7 +545,7 @@ Grading is deterministic. The LLM overclaim check is advisory only.
 - **Strength:** PROJECT CONVENTION
 - **Checked by:** `suraag/grade.py`; `tests/test_grade.py::test_same_input_always_gives_the_same_score`, `::test_rationale_is_advisory_and_never_changes_the_score`, `::test_overclaim_classifier_is_optional_and_failures_fall_back_safely`.
 - **Status:** Implemented
-- **Caveat:** No source was found that describes grading students on cited evidence references. The closest are grading of reports and documentation ([S97] PRIMARY), generator ground-truth files that help instructors grade ([S85] PRIMARY) and per-student solution sheets for marking ([S99] SECONDARY, abstract only).
+- **Caveat:** No source was found that describes grading students on cited evidence references. The closest are grading of reports and documentation ([S97] PRIMARY), generator ground-truth files that help instructors grade ([S85] PRIMARY) and per-student solution sheets for marking ([S99] SECONDARY, abstract only). No overclaim classifier is wired in yet: `grade_all` is called without one, so every free-text reason is flagged "could not verify" for the instructor.
 
 ### G-02. Citation validity
 - **Rule:** A citation (file and line) is valid if and only if the cited line contains every must_contain value of the fact it supports; extra supporting lines are allowed and not penalised; a cited line that contains none of the fact's values is wrong; a line with some but not all values is neither valid nor wrong.
@@ -616,7 +616,7 @@ Grading is deterministic. The LLM overclaim check is advisory only.
 - **Why:** Judges and a lecturer will audit the claims; an unmeasured number is the quickest way to lose trust.
 - **Source:** PROJECT CONVENTION: no external source.
 - **Strength:** PROJECT CONVENTION
-- **Checked by:** `scripts/check_claims.py`; `tests/test_claims.py::test_every_readme_number_is_in_ledger`, `::test_every_rate_has_sample_size`.
+- **Checked by:** Proposed, not built yet: `scripts/check_claims.py`; `tests/test_claims.py::test_every_readme_number_is_in_ledger`, `::test_every_rate_has_sample_size`.
 - **Status:** Planned
 
 ### E-04. The claims table is binding
@@ -624,7 +624,7 @@ Grading is deterministic. The LLM overclaim check is advisory only.
 - **Why:** Several figures and names in earlier drafts were wrong; the table records the corrections so they do not return.
 - **Source:** [S90] PRIMARY; [S91] PRIMARY; [S83] PRIMARY; [S80] SECONDARY; [S100] PRIMARY; [S101] PRIMARY.
 - **Strength:** GOOD PRACTICE
-- **Checked by:** `scripts/check_claims.py`; `tests/test_claims.py::test_no_banned_phrases_in_docs` (banned: "62%" near GPT-4 or MuSR, "13-36%", "Re-Imagen" or "Re-imagen" as a source, "EvidenceForge (SANS)", "first ever", "world's first").
+- **Checked by:** Proposed, not built yet: `scripts/check_claims.py`; `tests/test_claims.py::test_no_banned_phrases_in_docs` (banned: "62%" near GPT-4 or MuSR, "13-36%", "Re-Imagen" or "Re-imagen" as a source, "EvidenceForge (SANS)", "first ever", "world's first").
 - **Status:** Planned
 
 ## 5. Claims you may and may not make

@@ -125,9 +125,9 @@ def test_prompt_hash_is_short_and_stable():
 
 
 @pytest.mark.live
-def test_model_id_works():
+def test_model_id_works(monkeypatch):
     llm._load_dotenv()
     if not os.environ.get("GEMINI_API_KEY"):
         pytest.skip("no GEMINI_API_KEY")
-    os.environ["SURAAG_OFFLINE"] = "0"
+    monkeypatch.setenv("SURAAG_OFFLINE", "0")  # undone after the test, unlike a plain os.environ write
     assert llm.complete("Reply with the single word OK.", max_tokens=2000).strip()

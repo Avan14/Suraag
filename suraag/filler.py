@@ -5,6 +5,7 @@ It never raises: bad JSON or an unavailable LLM falls back to the offline stub f
 repair bad senders, times or counts; the verifier and FillerShortError surface those.
 """
 import json
+import threading
 from datetime import timedelta
 
 from suraag.lang import get_pack
@@ -13,7 +14,17 @@ from suraag.model import Case, ChatMessage
 from suraag.render import filler_gaps, stub_filler
 from suraag.timefmt import chat_time, parse_chat_ts
 
-last_source: str = "stub"  # "llm" or "stub": what the most recent llm_filler call returned
+# "llm" or "stub": what the most recent llm_filler call returned *in this thread*. Streamlit runs each visitor's
+# session in its own thread, so a shared global would let two visitors overwrite each other's manifest label.
+_local = threading.local()
+
+
+def __getattr__(name: str):  # keeps `filler.last_source` working for every caller
+    if name == "last_source":
+        return getattr(_local, "source", "stub")
+    raise AttributeError(name)
+
+
 FILLER_PROMPT_VERSION = prompt_hash(get_pack("hinglish").filler_prompt + get_pack("en").filler_prompt)
 
 
@@ -36,7 +47,6 @@ def _parse(raw: str, case: Case) -> list[ChatMessage] | None:
 
 
 def llm_filler(case: Case, errors: list[str] | None = None) -> list[ChatMessage]:
-    global last_source
     pack = get_pack(case.lang)
     senders = ", ".join(case.person(p).saved_as for p in case.chat_members)
     gaps = "\n".join(f"- between {chat_time(t0)} and {chat_time(t1)}: {len(lines)} messages"
@@ -50,7 +60,7 @@ def llm_filler(case: Case, errors: list[str] | None = None) -> list[ChatMessage]
             break
         msgs = _parse(raw, case)
         if msgs is not None:
-            last_source = "llm"
+            _local.source = "llm"
             return msgs
-    last_source = "stub"
+    _local.source = "stub"
     return stub_filler(case)

@@ -6,4 +6,5 @@ requires-python = ">=3.12"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-markers = ["live: calls the real Gemini API (needs GEMINI_API_KEY)"]
+markers = ["live: calls the real Gemini API (needs GEMINI_API_KEY); run with: pytest -m live"]
+addopts = "-m 'not live'"  # a plain `pytest` never calls the API

@@ -201,6 +201,9 @@ table.lab { border-collapse: separate; border-spacing: 0; width: auto; min-width
 .score { font: 400 56px/1 var(--font-display); color: var(--ink); margin-top: 18px; }
 .pt { font-size: 14px; } .expl { font-size: 14px; color: var(--ink-2); margin: 2px 0; }
 
+.foot { margin-top: 48px; padding-top: 14px; border-top: 1px dashed var(--rule); font-size: 13px; color: var(--ink-2); }
+.foot a { color: var(--ink); }
+
 /* ---- student bench ------------------------------------------------------------------------------------------- */
 .st-key-bench > [data-testid="stHorizontalBlock"] { gap: 24px; }
 @media (max-width: 1100px) {
