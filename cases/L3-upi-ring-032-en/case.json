@@ -1,0 +1,517 @@
+{
+  "case_id": "upi-ring-032-l3",
+  "lang": "en",
+  "seed": 32,
+  "level": 3,
+  "twists": [
+    "code_word",
+    "decoy",
+    "camera_clock"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Rina Das",
+      "name_deva": "रीना दास",
+      "role": "associate",
+      "aliases": [
+        "Rina ji",
+        "Rina D"
+      ],
+      "phone": "+91-56077-78802"
+    },
+    {
+      "id": "P2",
+      "name": "Revathi Iyer",
+      "name_deva": "रेवती अय्यर",
+      "role": "mule",
+      "aliases": [
+        "Revathi ji",
+        "Revathi I"
+      ],
+      "phone": "+91-50012-71094"
+    },
+    {
+      "id": "P3",
+      "name": "Sanjay Mehta",
+      "name_deva": "संजय मेहता",
+      "role": "boss",
+      "aliases": [
+        "Sanjay ji",
+        "Sanjay M"
+      ],
+      "phone": "+91-52071-68768"
+    },
+    {
+      "id": "P4",
+      "name": "Sanjay Ghosh",
+      "name_deva": "संजय घोष",
+      "role": "distractor",
+      "aliases": [
+        "Sanjay G.",
+        "Sanjay G"
+      ],
+      "phone": "+91-50154-63631"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Kothrud",
+      "lat": 18.5074,
+      "lon": 73.8077
+    },
+    {
+      "id": "PL2",
+      "name": "Shivajinagar",
+      "lat": 18.5308,
+      "lon": 73.8475
+    },
+    {
+      "id": "PL3",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-16T18:50:00+05:30",
+      "kind": "transfer",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-16T19:23:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-16T19:24:00+05:30",
+      "kind": "instruction",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-16T19:49:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-16T19:15:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": "P2",
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-04-16T18:46:00+05:30",
+      "kind": "code_definition",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-04-16T19:26:00+05:30",
+      "kind": "confirmation",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E3"
+      ]
+    },
+    {
+      "id": "E7",
+      "t": "2026-04-16T19:33:00+05:30",
+      "kind": "decoy_message",
+      "actor": "P4",
+      "target": "P2",
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P3 told P2 to delete the transfer record at 7:24 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 16,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:24 pm",
+            "Sanjay ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-52071-68768",
+            "19:23"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "claim": "P1 set the code 'the mangoes are ripe' for deleting the entry",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 6,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "6:46 pm",
+            "the mangoes are ripe"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P2 confirmed the deletion at 7:26 pm",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:26 pm",
+            "Done, it's gone. Nobody will see it now."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P4 asked P2 to remove an unrelated list entry",
+      "event": "E7",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:33 pm",
+            "Sanjay G."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P2 took the payment screenshot photo near Kothrud",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5072"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.8077"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the photo was taken at 7:49 pm IST",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:04:16 14:19:00"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "OffsetTimeOriginal",
+          "must_contain": [
+            "+00:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called P2 at 7:15 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-50154-63631",
+            "19:15"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "P3"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "2026-04-16T19:24:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "At what time (IST) was the payment screenshot photo taken?",
+      "about": "photo",
+      "answer_facts": [
+        "F4"
+      ],
+      "answer": "2026-04-16T19:49:00+05:30"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-16T18:30:00+05:30",
+    "2026-04-16T20:30:00+05:30"
+  ],
+  "chat_length": 34,
+  "chat_anchors": [
+    {
+      "line": 6,
+      "message": {
+        "t": "2026-04-16T18:46:00+05:30",
+        "sender": "Rina ji",
+        "text": "From today, if anyone says \"the mangoes are ripe\", wipe that transfer record immediately."
+      }
+    },
+    {
+      "line": 16,
+      "message": {
+        "t": "2026-04-16T19:24:00+05:30",
+        "sender": "Sanjay ji",
+        "text": "Revathi ji, the mangoes are ripe."
+      }
+    },
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-04-16T19:26:00+05:30",
+        "sender": "Revathi ji",
+        "text": "Done, it's gone. Nobody will see it now."
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-04-16T19:33:00+05:30",
+        "sender": "Sanjay G.",
+        "text": "Revathi ji, please remove my entry from the cricket pool list, I can't play this week"
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-16T18:36:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-56077-78802",
+      "contact_name": "Rina ji",
+      "duration_s": 153
+    },
+    {
+      "row": 2,
+      "t": "2026-04-16T19:12:00+05:30",
+      "direction": "missed",
+      "number": "+91-50154-63631",
+      "contact_name": "Sanjay G.",
+      "duration_s": 0
+    },
+    {
+      "row": 3,
+      "t": "2026-04-16T19:15:00+05:30",
+      "direction": "incoming",
+      "number": "+91-50154-63631",
+      "contact_name": "Sanjay G.",
+      "duration_s": 76
+    },
+    {
+      "row": 4,
+      "t": "2026-04-16T19:23:00+05:30",
+      "direction": "incoming",
+      "number": "+91-52071-68768",
+      "contact_name": "Sanjay ji",
+      "duration_s": 80
+    },
+    {
+      "row": 5,
+      "t": "2026-04-16T20:08:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56077-78802",
+      "contact_name": "Rina ji",
+      "duration_s": 81
+    }
+  ],
+  "photo": {
+    "t": "2026-04-16T19:49:00+05:30",
+    "lat": 18.5072,
+    "lon": 73.8077,
+    "make": "Vivo",
+    "model": "Y22",
+    "offset": "+00:00"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 56,500 reached the mule's account on the evening of 16 April 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P2",
+    "mule": "P2",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Rina Das",
+        "phone": "+91-56077-78802"
+      },
+      {
+        "id": "P3",
+        "name": "Sanjay Mehta",
+        "phone": "+91-52071-68768"
+      },
+      {
+        "id": "P4",
+        "name": "Sanjay Ghosh",
+        "phone": "+91-50154-63631"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Kothrud",
+        "lat": 18.5074,
+        "lon": 73.8077
+      },
+      {
+        "id": "PL2",
+        "name": "Shivajinagar",
+        "lat": 18.5308,
+        "lon": 73.8475
+      },
+      {
+        "id": "PL3",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?",
+        "about": null
+      },
+      {
+        "id": "Q4",
+        "kind": "when",
+        "text": "At what time (IST) was the payment screenshot photo taken?",
+        "about": "photo"
+      }
+    ]
+  }
+}

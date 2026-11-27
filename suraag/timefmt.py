@@ -1,6 +1,6 @@
 """The only place times are formatted or parsed (chat, CSV, EXIF; always IST)."""
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 from suraag.model import IST
 
@@ -28,8 +28,15 @@ def csv_hm(t: datetime) -> str:
     return f"{_ist(t):%H:%M}"
 
 
-def exif_ts(t: datetime) -> str:
-    return f"{_ist(t):%Y:%m:%d %H:%M:%S}"
+def tz_of(offset: str) -> timezone:
+    """'+05:30' -> a fixed-offset timezone."""
+    sign = -1 if offset[0] == "-" else 1
+    return timezone(sign * timedelta(hours=int(offset[1:3]), minutes=int(offset[4:6])))
+
+
+def exif_ts(t: datetime, offset: str = "+05:30") -> str:
+    """EXIF writes local clock time with no zone; the offset is the camera clock's zone (rule: OffsetTime* says which)."""
+    return f"{t.astimezone(tz_of(offset)):%Y:%m:%d %H:%M:%S}"
 
 
 _CHAT = re.compile(r"^(\d{2})/(\d{2})/(\d{2}),\s*(\d{1,2}):(\d{2})\s*(am|pm)$", re.I)

@@ -16,6 +16,15 @@ class LangPack:
     filler_prompt: str                    # str.format fields: see suraag/filler.py
     raw_prompt: str                       # str.format fields: see suraag/rawmode.py
     brief_summary: str                    # str.format fields: {amount}, {date}
+    # Practice levels (suraag/levels.py). Every line below is written verbatim by code, never by the LLM.
+    call_ref: str = ""                    # "as I said on the phone, ": must match triggers["call_ref"]
+    go_templates: tuple[str, ...] = ()    # the order with {owner} and {call}; with call="" they equal instruction_templates
+    code_words: tuple[str, ...] = ()      # innocent-looking phrases that stand for the order
+    code_def_templates: tuple[str, ...] = ()  # {code}; matches triggers["code_def"] AND triggers["instruction"] (the trap)
+    code_go_templates: tuple[str, ...] = ()   # {owner}, {call}, {code}; never matches triggers["instruction"]
+    confirm_templates: tuple[str, ...] = ()   # the mule's "done"; matches triggers["confirm"]
+    decoy_templates: tuple[str, ...] = ()     # {owner}; a harmless request that still matches triggers["instruction"]
+    alibi_templates: tuple[str, ...] = ()     # {place}; the mule's claim about where they are
 
 
 def get_pack(lang: str) -> LangPack:

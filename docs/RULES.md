@@ -152,7 +152,7 @@ The six verifier checks (L-01 to L-06), the repair loop (L-07) and the generatio
 - **Why:** This shows the case is solvable from the evidence given, not just claimed to be. An LLM blind solve on about 10 cases is run for information only and never enters a score or a pass/fail.
 - **Source:** PROJECT CONVENTION: no external source.
 - **Strength:** PROJECT CONVENTION
-- **Checked by:** `suraag/solver.py`; `suraag/verify.py::check_solvability`; `tests/test_solver.py::test_fixture_is_solved_from_the_artifacts_alone`, `::test_blank_contact_name_makes_who_unsolvable`, `::test_two_instruction_lines_make_who_and_when_unsolvable`; `tests/test_defects.py` (unsolvable_question). The blind solve script exists (`eval/run_blind_solve.py`) and has not been run.
+- **Checked by:** `suraag/solver.py`; `suraag/verify.py::check_solvability`; `tests/test_solver.py::test_fixture_is_solved_from_the_artifacts_alone`, `::test_blank_contact_name_makes_who_unsolvable`, `::test_two_instruction_lines_make_who_and_when_unsolvable`; `tests/test_defects.py` (unsolvable_question); `tests/test_levels.py` (every practice level). The blind solve (`eval/run_blind_solve.py`, `gemini-3.6-flash`, unscored) has been run three times: 30 of 30 answers on 10 stub-filler cases, 30 of 30 on 10 real-filler cases, and on the 14 shipped cases per level 15 of 15, 9 of 9, 8 of 12 and 12 of 12 (`eval/results.json`).
 - **Status:** Implemented
 - **Caveat:** The notes found no tool that checks solvability formally; implicit solvability comes from planting artefacts. A generator-side check that each ground-truth item is derivable from the output is, by the notes' own inference, a novel contribution and not established practice. It proves solvability for this project's solver, not that a student finds it easy.
 
@@ -646,7 +646,7 @@ Corrections carried over from the research notes. Rule E-04 enforces this table.
 | Part B signatory | The Supreme Court left open who may sign Part B and said it is possible that a person with special expertise could, if the court is satisfied on unimpeachable material | "Only s.79A examiners may sign" or "any cyber expert may sign" | Admission-stage order; question kept open [S4] |
 | Phone numbers | Numbers starting with 5 are not in any mobile series | That +91-5xxxx-xxxxx numbers cannot reach a real phone | Level 5 includes some fixed lines and short codes; STD codes starting with 5 exist [S47] [S49] |
 | Fraud statistics | A named statistic with its date and source | One headline cyber-fraud count without its source and date | ThePrint (28.15 lakh cases) and the Free Press Journal (over 24 lakh complaints) differ for the same year [S59] [S60] |
-| LLM blind solve | It was run on about 10 cases and is reported as unscored context | That it measures solvability or accuracy | It is unscored by design (L-04) |
+| LLM blind solve | It was run on 10 + 10 generated cases and the 14 shipped cases, one model, and is reported as unscored context | That it measures solvability or accuracy, or how a person would do | It is unscored by design (L-04); one model, small n |
 
 ## 6. Open issues and questions for a forensic lecturer
 

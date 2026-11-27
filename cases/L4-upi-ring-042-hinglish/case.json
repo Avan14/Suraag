@@ -1,0 +1,576 @@
+{
+  "case_id": "upi-ring-042-l4",
+  "lang": "hinglish",
+  "seed": 42,
+  "level": 4,
+  "twists": [
+    "unsaved_caller",
+    "alibi",
+    "code_word",
+    "decoy",
+    "camera_clock"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Subhash Roy",
+      "name_deva": "सुभाष रॉय",
+      "role": "mule",
+      "aliases": [
+        "Subhash bhai",
+        "Subhash R"
+      ],
+      "phone": "+91-53582-30495"
+    },
+    {
+      "id": "P2",
+      "name": "Tanuja Iyer",
+      "name_deva": "तनुजा अय्यर",
+      "role": "distractor",
+      "aliases": [
+        "Tanuja I.",
+        "Tanuja I"
+      ],
+      "phone": "+91-58279-78907"
+    },
+    {
+      "id": "P3",
+      "name": "Pooja Verma",
+      "name_deva": "पूजा वर्मा",
+      "role": "associate",
+      "aliases": [
+        "Pooja didi",
+        "Pooja V"
+      ],
+      "phone": "+91-50434-73563"
+    },
+    {
+      "id": "P4",
+      "name": "Tanuja Sen",
+      "name_deva": "तनुजा सेन",
+      "role": "boss",
+      "aliases": [
+        "Tanuja didi",
+        "Tanuja S"
+      ],
+      "phone": "+91-53257-93850"
+    },
+    {
+      "id": "P5",
+      "name": "Abhijit Bose",
+      "name_deva": "अभिजीत बोस",
+      "role": "witness",
+      "aliases": [
+        "Abhijit bhai",
+        "Abhijit B"
+      ],
+      "phone": "+91-56731-41490"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Borivali West",
+      "lat": 19.2307,
+      "lon": 72.8567
+    },
+    {
+      "id": "PL2",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL3",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-11T21:06:00+05:30",
+      "kind": "transfer",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-11T21:38:00+05:30",
+      "kind": "call",
+      "actor": "P4",
+      "target": "P1",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-11T21:40:00+05:30",
+      "kind": "instruction",
+      "actor": "P4",
+      "target": "P1",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-11T22:20:00+05:30",
+      "kind": "photo",
+      "actor": "P1",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-11T21:27:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P2",
+      "target": "P1",
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-04-11T20:59:00+05:30",
+      "kind": "code_definition",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-04-11T21:42:00+05:30",
+      "kind": "confirmation",
+      "actor": "P1",
+      "target": null,
+      "depends_on": [
+        "E3"
+      ]
+    },
+    {
+      "id": "E7",
+      "t": "2026-04-11T21:49:00+05:30",
+      "kind": "decoy_message",
+      "actor": "P2",
+      "target": "P1",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-04-11T22:15:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P4 told P1 to delete the transfer record at 9:40 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:40 pm",
+            "Tanuja didi"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-53257-93850",
+            "21:38"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "claim": "P3 set the code 'doodh ubal gaya' for deleting the entry",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 6,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "8:59 pm",
+            "doodh ubal gaya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P1 confirmed the deletion at 9:42 pm",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 20,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:42 pm",
+            "Ho gaya, sab uda diya."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P2 asked P1 to remove an unrelated list entry",
+      "event": "E7",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 22,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:49 pm",
+            "Tanuja I."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P1 claimed to be at Andheri East",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 30,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "10:15 pm",
+            "Andheri East"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P1 took the payment screenshot photo near Borivali West",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.2304"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8570"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the photo was taken at 10:20 pm IST",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:04:11 16:50:00"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "OffsetTimeOriginal",
+          "must_contain": [
+            "+00:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P2 called P1 at 9:27 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58279-78907",
+            "21:27"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "P4"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "2026-04-11T21:40:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "Payment screenshot wali photo IST mein kitne baje li gayi?",
+      "about": "photo",
+      "answer_facts": [
+        "F4"
+      ],
+      "answer": "2026-04-11T22:20:00+05:30"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-11T20:45:00+05:30",
+    "2026-04-11T22:45:00+05:30"
+  ],
+  "chat_length": 39,
+  "chat_anchors": [
+    {
+      "line": 6,
+      "message": {
+        "t": "2026-04-11T20:59:00+05:30",
+        "sender": "Pooja didi",
+        "text": "Aaj se agar koi \"doodh ubal gaya\" bole, to wo transfer ka record fauran mita dena."
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-04-11T21:40:00+05:30",
+        "sender": "Tanuja didi",
+        "text": "Subhash bhai, jaise abhi phone pe bola, doodh ubal gaya, samjhe?"
+      }
+    },
+    {
+      "line": 20,
+      "message": {
+        "t": "2026-04-11T21:42:00+05:30",
+        "sender": "Subhash bhai",
+        "text": "Ho gaya, sab uda diya."
+      }
+    },
+    {
+      "line": 22,
+      "message": {
+        "t": "2026-04-11T21:49:00+05:30",
+        "sender": "Tanuja I.",
+        "text": "Subhash bhai, society picnic ki list se meri entry hata dena, main bahar hoon"
+      }
+    },
+    {
+      "line": 30,
+      "message": {
+        "t": "2026-04-11T22:15:00+05:30",
+        "sender": "Subhash bhai",
+        "text": "Abhi Andheri East mein hoon, baad mein baat karte hain."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-11T20:55:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-50434-73563",
+      "contact_name": "Pooja didi",
+      "duration_s": 95
+    },
+    {
+      "row": 2,
+      "t": "2026-04-11T21:10:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56731-41490",
+      "contact_name": "",
+      "duration_s": 61
+    },
+    {
+      "row": 3,
+      "t": "2026-04-11T21:27:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58279-78907",
+      "contact_name": "Tanuja I.",
+      "duration_s": 47
+    },
+    {
+      "row": 4,
+      "t": "2026-04-11T21:29:00+05:30",
+      "direction": "missed",
+      "number": "+91-58279-78907",
+      "contact_name": "Tanuja I.",
+      "duration_s": 0
+    },
+    {
+      "row": 5,
+      "t": "2026-04-11T21:38:00+05:30",
+      "direction": "incoming",
+      "number": "+91-53257-93850",
+      "contact_name": "",
+      "duration_s": 79
+    },
+    {
+      "row": 6,
+      "t": "2026-04-11T22:25:00+05:30",
+      "direction": "incoming",
+      "number": "+91-50434-73563",
+      "contact_name": "Pooja didi",
+      "duration_s": 159
+    }
+  ],
+  "photo": {
+    "t": "2026-04-11T22:20:00+05:30",
+    "lat": 19.2304,
+    "lon": 72.857,
+    "make": "Realme",
+    "model": "C55",
+    "offset": "+00:00"
+  },
+  "brief": {
+    "summary": "11 April 2026 ki shaam ko mule ke account mein Rs 72,000 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Tanuja Iyer",
+        "phone": "+91-58279-78907"
+      },
+      {
+        "id": "P3",
+        "name": "Pooja Verma",
+        "phone": "+91-50434-73563"
+      },
+      {
+        "id": "P4",
+        "name": "Tanuja Sen",
+        "phone": "+91-53257-93850"
+      },
+      {
+        "id": "P5",
+        "name": "Abhijit Bose",
+        "phone": "+91-56731-41490"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Borivali West",
+        "lat": 19.2307,
+        "lon": 72.8567
+      },
+      {
+        "id": "PL2",
+        "name": "Dadar",
+        "lat": 19.0178,
+        "lon": 72.8478
+      },
+      {
+        "id": "PL3",
+        "name": "Andheri East",
+        "lat": 19.1136,
+        "lon": 72.8697
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Mule ko transfer record delete karne ko kisne kaha?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "Ye instruction kab diya gaya?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+        "about": null
+      },
+      {
+        "id": "Q4",
+        "kind": "when",
+        "text": "Payment screenshot wali photo IST mein kitne baje li gayi?",
+        "about": "photo"
+      }
+    ]
+  }
+}

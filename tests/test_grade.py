@@ -80,9 +80,10 @@ def test_citing_an_artifact_the_question_does_not_use_is_wrong():
 
 
 def test_when_answers_accept_several_formats_within_the_tolerance():
-    for ans in ("9:14 pm", "21:14", "9:15 pm", "21:13", "2026-03-04T21:14:00+05:30", "9:14 PM"):
+    for ans in ("9:14 pm", "21:14", "9:15 pm", "21:13", "2026-03-04T21:14:00+05:30", "9:14 PM",
+                "9:14 p.m.", "9.14 pm", "9:14pm", "9:14 P.M.", "21.14", " 9.14 p.m "):
         assert grade_claim(CASE, arts(), Claim("Q2", ans, (CHAT12, CALLS3))).answer_correct, ans
-    for ans in ("9:20 pm", "21:10", "garbage", ""):
+    for ans in ("9:20 pm", "21:10", "garbage", "", "9:14 a.m.", "9.14", "21.74"):
         assert not grade_claim(CASE, arts(), Claim("Q2", ans, (CHAT12, CALLS3))).answer_correct, ans
 
 

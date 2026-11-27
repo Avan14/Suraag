@@ -1,7 +1,7 @@
 """generate_case() and the command-line entry point.
 
     python -m suraag.pipeline --seed 7 --lang hinglish --mode hybrid --out cases/upi-ring-007 \
-        [--defect timestamp_clash] [--defect-target chat|calls] [--offline]
+        [--level 1-4] [--defect timestamp_clash] [--defect-target chat|calls] [--offline]
 """
 import argparse
 import os
@@ -10,12 +10,14 @@ from typing import Callable, Literal
 
 from suraag import filler as filler_module
 from suraag.defects import EXPECTED, DefectKind
+from suraag.explain import solution_markdown
 from suraag.filler import llm_filler
+from suraag.i18n import t
+from suraag.levels import LEVELS, build_level_case
 from suraag.lang import get_pack
 from suraag.llm import _load_dotenv, prompt_hash
 from suraag.model import Case, ChatMessage, Lang
 from suraag.repair import Attempt, GenMeta, RepairResult, run
-from suraag.skeleton import build_case
 
 FilledBy = Callable[[Case, list[str]], list[ChatMessage]]
 
@@ -32,6 +34,8 @@ def brief_markdown(case: Case) -> str:
 > SYNTHETIC CASE - fictional, for teaching only. Not real data.
 
 {b.summary}
+
+**{t(f"level.{case.level}.name")}.** {t(f"level.{case.level}.skills")}
 
 ## Files
 - chat.txt: the mule's WhatsApp-style chat export
@@ -59,11 +63,11 @@ SHA-256 hashes in manifest.json show the files are unchanged since generation, n
 
 
 def generate_case(seed: int, lang: Lang, mode: Literal["hybrid", "raw"], out_dir, *,
-                  defect: DefectKind | None = None, defect_target: Literal["chat", "calls"] = "chat",
+                  level: int = 1, defect: DefectKind | None = None, defect_target: Literal["chat", "calls"] = "chat",
                   filler_fn: FilledBy | None = None, on_attempt: Callable[[Attempt], None] | None = None,
                   log_path: Path = Path("logs/failures.jsonl")) -> RepairResult:
     _load_dotenv()
-    case = build_case(seed, lang)
+    case = build_level_case(seed, lang, level)
     pack = get_pack(lang)
     model = os.environ.get("SURAAG_MODEL_FILLER") or "stub"
     meta = GenMeta(seed=seed, model="stub", prompt_hashes={"filler": prompt_hash(pack.filler_prompt),
@@ -87,6 +91,7 @@ def generate_case(seed: int, lang: Lang, mode: Literal["hybrid", "raw"], out_dir
         (out / "case.json").write_text(case.model_dump_json(indent=2), "utf-8")  # the answer key
         (out / "brief.json").write_text(case.brief.model_dump_json(indent=2), "utf-8")
         (out / "brief.md").write_text(brief_markdown(case), "utf-8")
+        (out / "solution.md").write_text(solution_markdown(case, res.arts), "utf-8")  # instructor only, like case.json
     return res
 
 
@@ -95,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--lang", choices=["en", "hinglish"], default="hinglish")
     ap.add_argument("--mode", choices=["hybrid", "raw"], default="hybrid")
+    ap.add_argument("--level", type=int, choices=sorted(LEVELS), default=1, help="practice level (suraag/levels.py)")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--defect", choices=list(EXPECTED))
     ap.add_argument("--defect-target", choices=["chat", "calls"], default="chat")
@@ -107,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
         verdict = "pass" if not a.failures else "; ".join(f.message for f in a.failures)
         print(f"attempt {a.n} ({a.action}): {verdict}")
 
-    res = generate_case(args.seed, args.lang, args.mode, args.out, defect=args.defect,
+    res = generate_case(args.seed, args.lang, args.mode, args.out, level=args.level, defect=args.defect,
                         defect_target=args.defect_target, on_attempt=show)
     if res.ok:
         print(f"SEALED {args.out}")

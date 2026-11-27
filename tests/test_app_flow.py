@@ -64,3 +64,25 @@ def test_submit_grades_through_the_button_and_reset_clears_it():
     at.button(key=f"reset::{CASE}").click()
     at.run()
     assert not at.exception and f"graded::{CASE}" not in at.session_state
+
+
+LEVEL2 = "L2-upi-ring-021-en"
+
+
+def test_a_student_picks_a_level_and_opens_the_worked_solution_after_submitting():
+    at = start("student")
+    at.button(key="stulevel_2").click()
+    at.run()
+    assert at.selectbox(key="stu_pick").value == LEVEL2
+    at.button(key=f"submit::{LEVEL2}").click()
+    at.run()
+    assert not at.exception
+    assert [e.label for e in at.expander].count("How to solve it") == 3  # one per question
+
+
+def test_the_lecturer_sees_the_depth_check_for_a_practice_level():
+    at = start("lecturer")
+    at.selectbox(key="lec_pick").set_value(LEVEL2)
+    at.run()
+    assert not at.exception
+    assert any("Depth" in m.value for m in at.markdown)

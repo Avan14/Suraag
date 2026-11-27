@@ -1,0 +1,426 @@
+{
+  "case_id": "upi-ring-021-l2",
+  "lang": "en",
+  "seed": 21,
+  "level": 2,
+  "twists": [
+    "unsaved_caller",
+    "alibi"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Deepak Chauhan",
+      "name_deva": "दीपक चौहान",
+      "role": "associate",
+      "aliases": [
+        "Deepak ji",
+        "Deepak C"
+      ],
+      "phone": "+91-57157-96821"
+    },
+    {
+      "id": "P2",
+      "name": "Debashish Verma",
+      "name_deva": "देबाशीष वर्मा",
+      "role": "distractor",
+      "aliases": [
+        "Debashish V.",
+        "Debashish V"
+      ],
+      "phone": "+91-56664-80725"
+    },
+    {
+      "id": "P3",
+      "name": "Debashish Bose",
+      "name_deva": "देबाशीष बोस",
+      "role": "boss",
+      "aliases": [
+        "Debashish ji",
+        "Debashish B"
+      ],
+      "phone": "+91-57239-04465"
+    },
+    {
+      "id": "P4",
+      "name": "Sanjay Joshi",
+      "name_deva": "संजय जोशी",
+      "role": "mule",
+      "aliases": [
+        "Sanjay ji",
+        "Sanjay J"
+      ],
+      "phone": "+91-55389-70798"
+    },
+    {
+      "id": "P5",
+      "name": "Mamta Ghosh",
+      "name_deva": "ममता घोष",
+      "role": "witness",
+      "aliases": [
+        "Mamta ji",
+        "Mamta G"
+      ],
+      "phone": "+91-54363-42333"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Shivajinagar",
+      "lat": 18.5308,
+      "lon": 73.8475
+    },
+    {
+      "id": "PL2",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    },
+    {
+      "id": "PL3",
+      "name": "Hadapsar",
+      "lat": 18.5089,
+      "lon": 73.926
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-01T20:37:00+05:30",
+      "kind": "transfer",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-01T21:07:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-01T21:08:00+05:30",
+      "kind": "instruction",
+      "actor": "P3",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-01T21:27:00+05:30",
+      "kind": "photo",
+      "actor": "P4",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-01T20:57:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P2",
+      "target": "P4",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-04-01T21:23:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P3 told P4 to delete the transfer record at 9:08 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:08 pm",
+            "Debashish ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-57239-04465",
+            "21:07"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P4 claimed to be at Hadapsar",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 20,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:23 pm",
+            "Hadapsar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P4 took the payment screenshot photo near Shivajinagar",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5308"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.8478"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P2 called P4 at 8:57 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-56664-80725",
+            "20:57"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P3"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-04-01T21:08:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-01T20:00:00+05:30",
+    "2026-04-01T22:00:00+05:30"
+  ],
+  "chat_length": 28,
+  "chat_anchors": [
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-04-01T21:08:00+05:30",
+        "sender": "Debashish ji",
+        "text": "Sanjay ji, as I said on the phone just now, please delete that entry now and tell nobody"
+      }
+    },
+    {
+      "line": 20,
+      "message": {
+        "t": "2026-04-01T21:23:00+05:30",
+        "sender": "Sanjay ji",
+        "text": "Still stuck near Hadapsar, the traffic is terrible."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-01T20:12:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-57157-96821",
+      "contact_name": "Deepak ji",
+      "duration_s": 80
+    },
+    {
+      "row": 2,
+      "t": "2026-04-01T20:33:00+05:30",
+      "direction": "incoming",
+      "number": "+91-54363-42333",
+      "contact_name": "",
+      "duration_s": 55
+    },
+    {
+      "row": 3,
+      "t": "2026-04-01T20:57:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56664-80725",
+      "contact_name": "Debashish V.",
+      "duration_s": 63
+    },
+    {
+      "row": 4,
+      "t": "2026-04-01T21:00:00+05:30",
+      "direction": "missed",
+      "number": "+91-56664-80725",
+      "contact_name": "Debashish V.",
+      "duration_s": 0
+    },
+    {
+      "row": 5,
+      "t": "2026-04-01T21:07:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57239-04465",
+      "contact_name": "",
+      "duration_s": 181
+    },
+    {
+      "row": 6,
+      "t": "2026-04-01T21:47:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57157-96821",
+      "contact_name": "Deepak ji",
+      "duration_s": 32
+    }
+  ],
+  "photo": {
+    "t": "2026-04-01T21:27:00+05:30",
+    "lat": 18.5308,
+    "lon": 73.8478,
+    "make": "Redmi",
+    "model": "Note 12",
+    "offset": "+05:30"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 72,000 reached the mule's account on the evening of 1 April 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P4",
+    "mule": "P4",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Deepak Chauhan",
+        "phone": "+91-57157-96821"
+      },
+      {
+        "id": "P2",
+        "name": "Debashish Verma",
+        "phone": "+91-56664-80725"
+      },
+      {
+        "id": "P3",
+        "name": "Debashish Bose",
+        "phone": "+91-57239-04465"
+      },
+      {
+        "id": "P5",
+        "name": "Mamta Ghosh",
+        "phone": "+91-54363-42333"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Shivajinagar",
+        "lat": 18.5308,
+        "lon": 73.8475
+      },
+      {
+        "id": "PL2",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      },
+      {
+        "id": "PL3",
+        "name": "Hadapsar",
+        "lat": 18.5089,
+        "lon": 73.926
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?",
+        "about": null
+      }
+    ]
+  }
+}

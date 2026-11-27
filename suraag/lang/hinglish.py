@@ -9,6 +9,10 @@ from suraag.lang import LangPack
 INSTRUCTION = re.compile(
     r"\b(record|entry|transaction|txn)\b.{0,40}?\b(delete|del|hata|mita)\w*\b.{0,20}?"
     r"\b(kar|karo|kr|krdo|kardo|karna|do|dena)\b")
+# A rule that defines a code: jab/agar koi "<phrase>" likhe/bole. The quoted phrase is the code.
+CODE_DEF = re.compile(r'\b(jab|agar)\b[^"]{0,20}"[^"]+"\s*(likhe|bole)\b')
+CONFIRM = re.compile(r"\bho gaya\b.{0,30}?\b(saaf|uda)\w*")
+CALL_REF = re.compile(r"\bphone (pe|par)\b")
 
 FILLER_PROMPT = """Tum ek WhatsApp group chat ke liye chhote, natural Hinglish messages likh rahe ho (Roman script).
 Group members (sender ke roop mein sirf yehi naam use karo): {senders}.
@@ -33,7 +37,7 @@ Fill the other lines with ordinary conversation. Do not add a header or explanat
 
 PACK = LangPack(
     lang="hinglish",
-    triggers={"instruction": INSTRUCTION},
+    triggers={"instruction": INSTRUCTION, "code_def": CODE_DEF, "confirm": CONFIRM, "call_ref": CALL_REF},
     alias_patterns={"m": "{first} bhai", "f": "{first} didi"},
     places=[("Andheri East", 19.1136, 72.8697), ("Kurla West", 19.0726, 72.8845),
             ("Dadar", 19.0178, 72.8478), ("Bandra West", 19.0596, 72.8295),
@@ -54,9 +58,22 @@ PACK = LangPack(
         "who": "Mule ko transfer record delete karne ko kisne kaha?",
         "when": "Ye instruction kab diya gaya?",
         "where": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+        "photo_time": "Payment screenshot wali photo IST mein kitne baje li gayi?",
     },
     filler_prompt=FILLER_PROMPT,
     raw_prompt=RAW_PROMPT,
     brief_summary=("{date} ki shaam ko mule ke account mein Rs {amount} ka UPI payment aaya. Tumhare paas "
                    "mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai."),
+    call_ref="jaise abhi phone pe bola, ",
+    go_templates=("{owner}, {call}wo transfer ka record delete kar dena abhi",
+                  "{owner}, {call}ye entry abhi delete kar do, kisi ko mat batana"),
+    code_words=("aam pak gaye", "neeli patang udd gayi", "mehmaan chale gaye", "doodh ubal gaya"),
+    code_def_templates=('Naya rule: jab koi "{code}" likhe, tab payment ki entry turant delete kar dena.',
+                        'Aaj se agar koi "{code}" bole, to wo transfer ka record fauran mita dena.'),
+    code_go_templates=("{owner}, {call}{code}.", "{owner}, {call}{code}, samjhe?"),
+    confirm_templates=("Ho gaya bhai, saaf kar diya. Ab koi nahi dekhega.", "Ho gaya, sab uda diya."),
+    decoy_templates=("{owner}, cricket pool wali list se meri entry hata do yaar, is baar khelna nahi ho payega",
+                     "{owner}, society picnic ki list se meri entry hata dena, main bahar hoon"),
+    alibi_templates=("Abhi {place} mein hoon, baad mein baat karte hain.",
+                     "{place} ke paas traffic mein atke hain, late ho jayega."),
 )

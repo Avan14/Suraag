@@ -57,7 +57,7 @@ def main() -> None:
     from eval.results import RESULTS
     import json
     old = json.loads(RESULTS.read_text("utf-8")).get("generator_quality", {}) if RESULTS.exists() else {}
-    out = {**old, "note": "synthetic cases; one case family; LLM-unavailable cases excluded from the rates"}  # keep other languages
+    out = {**old, "note": "synthetic cases; one case family; LLM-unavailable cases excluded from the rates; seconds_per_case includes replaying cached LLM replies from .llm_cache, so it shows cache hits, not how fast a method is"}  # keep other languages
     for lang in args.langs:
         out[lang] = {m: run_mode(m, lang, args.n) for m in ("hybrid", "raw")}
         for m, r in out[lang].items():
