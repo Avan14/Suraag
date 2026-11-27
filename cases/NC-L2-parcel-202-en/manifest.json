@@ -1,0 +1,21 @@
+{
+  "case_id": "nc-parcel-202-l2",
+  "files": {
+    "chat.txt": "7966d8ef8111d33dd030a62e2334fcb225d653fcf7fefbc41a32a23c77c836cb",
+    "calls.csv": "ab67372e7bf36c991d6507ed4d34a76d04c94f1e195dd18ab9a17e3639a87838",
+    "photo.jpg": "b6ac3c8c156f464678f5563451b92f615101e03894c31db69fbb596b42310408"
+  },
+  "seed": 202,
+  "model": "stub",
+  "prompt_hashes": {
+    "filler": "efb7d6a7ab9e",
+    "raw": "db47b05b5d43"
+  },
+  "mode": "hybrid",
+  "lang": "en",
+  "synthetic": true,
+  "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
+  "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
+  "chat_date_order": "DMY",
+  "sealed_at": "2026-11-28T01:03:36+05:30"
+}

@@ -1,0 +1,21 @@
+{
+  "case_id": "da-arrest-101-l1",
+  "files": {
+    "chat.txt": "045920ec00a5366009e20200581222e8f69241f43e6d3991ed7168d57918057a",
+    "calls.csv": "db6add27a15f9be05166beb19fb59782494950d5de875db57a41ab0a8bf43805",
+    "photo.jpg": "602119b373847c7d3fc93e729f244966ea426441c528fcfe554e99f39af16d6b"
+  },
+  "seed": 101,
+  "model": "gemini-3.5-flash",
+  "prompt_hashes": {
+    "filler": "efb7d6a7ab9e",
+    "raw": "db47b05b5d43"
+  },
+  "mode": "hybrid",
+  "lang": "en",
+  "synthetic": true,
+  "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
+  "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
+  "chat_date_order": "DMY",
+  "sealed_at": "2026-11-28T01:01:21+05:30"
+}

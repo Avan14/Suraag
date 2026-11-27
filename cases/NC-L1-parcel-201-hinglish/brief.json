@@ -1,0 +1,68 @@
+{
+  "summary": "28 May 2026 ko victim ko ek anjaan number se parcel ke baare mein call aaya, aur baad mein family chat mein parcel scam ki chetavani dikhi. Unhe dar hai ki unke saath fraud hua. Sirf wahi batao jo files mein hai. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur caller ki bheji delivery photo hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P1",
+  "mule": "P1",
+  "suspects": [
+    {
+      "id": "P2",
+      "name": "Karthik Reddy",
+      "phone": "+91-52836-41216"
+    },
+    {
+      "id": "P3",
+      "name": "Debashish Banerjee",
+      "phone": "+91-55651-77994"
+    },
+    {
+      "id": "P4",
+      "name": "Sanjay Shinde",
+      "phone": "+91-59571-26467"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Bandra West",
+      "lat": 19.0596,
+      "lon": 72.8295
+    },
+    {
+      "id": "PL3",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "yesno",
+      "text": "Kya delivery wali photo li jaane ke baad edit ki gayi thi?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Delivery wali photo kahan li gayi thi?",
+      "about": null
+    }
+  ],
+  "family": "nc"
+}

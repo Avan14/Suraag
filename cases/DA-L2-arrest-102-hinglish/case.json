@@ -1,0 +1,414 @@
+{
+  "case_id": "da-arrest-102-l2",
+  "lang": "hinglish",
+  "seed": 102,
+  "family": "da",
+  "level": 2,
+  "twists": [
+    "handover",
+    "forwarded",
+    "software_tag"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Revathi Reddy",
+      "name_deva": "रेवती रेड्डी",
+      "role": "victim",
+      "aliases": [
+        "Revathi R"
+      ],
+      "phone": "+91-50347-70812"
+    },
+    {
+      "id": "P2",
+      "name": "Tanuja Bose",
+      "name_deva": "तनुजा बोस",
+      "role": "boss",
+      "aliases": [
+        "Bose Sir",
+        "Tanuja B"
+      ],
+      "phone": "+91-56703-70730"
+    },
+    {
+      "id": "P3",
+      "name": "Mahesh Patil",
+      "name_deva": "महेश पाटील",
+      "role": "associate",
+      "aliases": [
+        "+91-51726-57976",
+        "Mahesh P"
+      ],
+      "phone": "+91-51726-57976"
+    },
+    {
+      "id": "P4",
+      "name": "Raju Sharma",
+      "name_deva": "राजू शर्मा",
+      "role": "distractor",
+      "aliases": [
+        "Raju bhai",
+        "Raju S"
+      ],
+      "phone": "+91-51420-60738"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Vashi",
+      "lat": 19.0771,
+      "lon": 72.9986
+    },
+    {
+      "id": "PL2",
+      "name": "Thane West",
+      "lat": 19.2183,
+      "lon": 72.9781
+    },
+    {
+      "id": "PL3",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E3",
+      "t": "2026-07-22T12:01:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E4",
+      "t": "2026-06-26T15:18:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-07-22T11:15:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E1",
+      "t": "2026-07-22T10:52:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-07-22T11:36:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E10",
+      "t": "2026-07-22T11:51:00+05:30",
+      "kind": "forwarded_message",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 made the demand at 12:01 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "12:01 pm",
+            "Bose Sir"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-56703-70730",
+            "12:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "the photo was taken",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:06:26 15:18:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the file was last saved",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "ModifyDate",
+          "must_contain": [
+            "2026:07:22 11:15:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P3 made the first call",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-51726-57976",
+            "10:52"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-51420-60738",
+            "11:36"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P4 forwarded a warning, not a demand",
+      "event": "E10",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 15,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:51 am",
+            "Raju bhai"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye demand kab ki gayi?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-07-22T12:01:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "yesno",
+      "text": "Kya officer ke ID card ki photo li jaane ke baad edit ki gayi thi?",
+      "about": null,
+      "answer_facts": [
+        "F3",
+        "F4"
+      ],
+      "answer": "yes"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-07-22T10:45:00+05:30",
+    "2026-07-22T13:15:00+05:30"
+  ],
+  "chat_length": 32,
+  "chat_anchors": [
+    {
+      "line": 9,
+      "message": {
+        "t": "2026-07-22T11:22:00+05:30",
+        "sender": "Bose Sir",
+        "text": "Revathi ji, ye mera ID card hai. Aap digital arrest mein ho. Video call pe bane raho aur kisi ko mat batana."
+      }
+    },
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-07-22T11:51:00+05:30",
+        "sender": "Raju bhai",
+        "text": "Forwarded: Cyber crime helpline ki chetavani. Nakli \"parcel\" call wale kehte hain ki aapke courier mein drugs mile, phir safe account mein paisa transfer karne ko kehte hain. Koi officer aisa nahi karta. 1930 par report karo."
+      }
+    },
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-07-22T12:01:00+05:30",
+        "sender": "Bose Sir",
+        "text": "Revathi ji, apna poora balance abhi verification ke liye safe account mein transfer karo. Checking ke baad wapas mil jayega."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-07-22T10:52:00+05:30",
+      "direction": "incoming",
+      "number": "+91-51726-57976",
+      "contact_name": "",
+      "duration_s": 625
+    },
+    {
+      "row": 2,
+      "t": "2026-07-22T11:16:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56703-70730",
+      "contact_name": "Bose Sir",
+      "duration_s": 1384
+    },
+    {
+      "row": 3,
+      "t": "2026-07-22T11:36:00+05:30",
+      "direction": "missed",
+      "number": "+91-51420-60738",
+      "contact_name": "Raju bhai",
+      "duration_s": 0
+    },
+    {
+      "row": 4,
+      "t": "2026-07-22T12:00:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56703-70730",
+      "contact_name": "Bose Sir",
+      "duration_s": 314
+    }
+  ],
+  "photo": {
+    "t": "2026-06-26T15:18:00+05:30",
+    "lat": 19.2181,
+    "lon": 72.9784,
+    "make": "Vivo",
+    "model": "Y22",
+    "offset": "+05:30",
+    "image": "cafe-table.jpg",
+    "card": [
+      "IDENTITY CARD - SAMPLE",
+      "FICTIONAL, NOT A REAL ID",
+      "Name: Tanuja Bose",
+      "Rank: Inspector",
+      "Card no.: 8551-X",
+      "FOR TRAINING ONLY"
+    ],
+    "software": null,
+    "modified": "2026-07-22T11:15:00+05:30"
+  },
+  "brief": {
+    "summary": "22 July 2026 ko ek aadmi ne, jo khud ko police officer bata raha tha, victim ko ghanton video call pe rakha, aur phir victim ne apne account se paise nikaal diye. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur officer ke ID card ki photo, jaise victim ko mili hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Tanuja Bose",
+        "phone": "+91-56703-70730"
+      },
+      {
+        "id": "P3",
+        "name": "Mahesh Patil",
+        "phone": "+91-51726-57976"
+      },
+      {
+        "id": "P4",
+        "name": "Raju Sharma",
+        "phone": "+91-51420-60738"
+      }
+    ],
+    "places": [],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "Ye demand kab ki gayi?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "yesno",
+        "text": "Kya officer ke ID card ki photo li jaane ke baad edit ki gayi thi?",
+        "about": null
+      }
+    ],
+    "family": "da"
+  }
+}

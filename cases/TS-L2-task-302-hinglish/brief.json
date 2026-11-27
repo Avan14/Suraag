@@ -1,0 +1,68 @@
+{
+  "summary": "25 July 2026 ko victim ne anjaan logon ke liye online paid 'tasks' kiye aur paise gawaye. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur victim ke phone ki ek photo hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P1",
+  "mule": "P1",
+  "suspects": [
+    {
+      "id": "P2",
+      "name": "Prakash Kulkarni",
+      "phone": "+91-51891-20637"
+    },
+    {
+      "id": "P3",
+      "name": "Vikram Gupta",
+      "phone": "+91-55729-58517"
+    },
+    {
+      "id": "P4",
+      "name": "Anita Sharma",
+      "phone": "+91-58787-00444"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Vashi",
+      "lat": 19.0771,
+      "lon": 72.9986
+    },
+    {
+      "id": "PL2",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL3",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko deposit karne ko kisne kaha?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "amount",
+      "text": "Victim ne kul kitne rupaye deposit kiye?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Phone wali photo li gayi tab victim kahan tha?",
+      "about": null
+    }
+  ],
+  "family": "ts"
+}

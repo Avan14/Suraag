@@ -1,0 +1,21 @@
+{
+  "case_id": "cc-care-402-l2",
+  "files": {
+    "chat.txt": "09ee287c1d0f1b7ebdf04609c7775a552360102c78b5fc2b473f236604d269bd",
+    "calls.csv": "bcdb5daa5b80e017f2807f05a85ae7c4595a4b3f27addeb3e78d55b4450e79b3",
+    "photo.jpg": "184fb88c4a34397dd55ab6a577ca14f9511b5138f1833e6602d5dcae7b435cbe"
+  },
+  "seed": 402,
+  "model": "stub",
+  "prompt_hashes": {
+    "filler": "efb7d6a7ab9e",
+    "raw": "db47b05b5d43"
+  },
+  "mode": "hybrid",
+  "lang": "en",
+  "synthetic": true,
+  "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
+  "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
+  "chat_date_order": "DMY",
+  "sealed_at": "2026-11-28T01:03:39+05:30"
+}

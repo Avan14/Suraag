@@ -1,0 +1,21 @@
+{
+  "case_id": "ts-task-302-l2",
+  "files": {
+    "chat.txt": "3195df0112ab14769551242b09c57d43c05d362e00fa67111ace4b67eef12014",
+    "calls.csv": "987458d4a7bcca7983d4cf0918c9f7c2e5ca4dbb1c58919ee07e2872b8192727",
+    "photo.jpg": "80f6cfe795a224f03cd66cbef041e74c4262d109c6987bbe371ab3ece67f2484"
+  },
+  "seed": 302,
+  "model": "stub",
+  "prompt_hashes": {
+    "filler": "56a5efd33e2f",
+    "raw": "ad0aa1fd7acd"
+  },
+  "mode": "hybrid",
+  "lang": "hinglish",
+  "synthetic": true,
+  "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
+  "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
+  "chat_date_order": "DMY",
+  "sealed_at": "2026-11-28T01:03:37+05:30"
+}

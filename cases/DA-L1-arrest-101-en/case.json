@@ -1,0 +1,379 @@
+{
+  "case_id": "da-arrest-101-l1",
+  "lang": "en",
+  "seed": 101,
+  "family": "da",
+  "level": 1,
+  "twists": [
+    "handover",
+    "camera_original"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Hetal Patil",
+      "name_deva": "हेतल पाटील",
+      "role": "victim",
+      "aliases": [
+        "Hetal P"
+      ],
+      "phone": "+91-52722-57718"
+    },
+    {
+      "id": "P2",
+      "name": "Rina Ghosh",
+      "name_deva": "रीना घोष",
+      "role": "boss",
+      "aliases": [
+        "Officer Ghosh",
+        "Rina G"
+      ],
+      "phone": "+91-59083-50355"
+    },
+    {
+      "id": "P3",
+      "name": "Nilesh Kulkarni",
+      "name_deva": "नीलेश कुलकर्णी",
+      "role": "associate",
+      "aliases": [
+        "+91-58399-28704",
+        "Nilesh K"
+      ],
+      "phone": "+91-58399-28704"
+    },
+    {
+      "id": "P4",
+      "name": "Subhash Sen",
+      "name_deva": "सुभाष सेन",
+      "role": "distractor",
+      "aliases": [
+        "Subhash ji",
+        "Subhash S"
+      ],
+      "phone": "+91-56810-89914"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Shivajinagar",
+      "lat": 18.5308,
+      "lon": 73.8475
+    },
+    {
+      "id": "PL2",
+      "name": "Hadapsar",
+      "lat": 18.5089,
+      "lon": 73.926
+    },
+    {
+      "id": "PL3",
+      "name": "Kothrud",
+      "lat": 18.5074,
+      "lon": 73.8077
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E3",
+      "t": "2026-04-16T11:38:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E4",
+      "t": "2026-03-20T18:15:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-04-16T10:56:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E1",
+      "t": "2026-04-16T10:41:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-16T11:56:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 made the demand at 11:38 am",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 15,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:38 am",
+            "Officer Ghosh"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-59083-50355",
+            "11:36"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "the photo was taken",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:03:20 18:15:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the file was last saved",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "ModifyDate",
+          "must_contain": [
+            "2026:04:16 10:56:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P3 made the first call",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58399-28704",
+            "10:41"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-56810-89914",
+            "11:56"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the victim to transfer money to the 'safe account'?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was that demand made?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-04-16T11:38:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "yesno",
+      "text": "Was the officer's ID-card photo edited after it was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3",
+        "F4"
+      ],
+      "answer": "yes"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-16T10:30:00+05:30",
+    "2026-04-16T13:00:00+05:30"
+  ],
+  "chat_length": 30,
+  "chat_anchors": [
+    {
+      "line": 8,
+      "message": {
+        "t": "2026-04-16T11:04:00+05:30",
+        "sender": "Officer Ghosh",
+        "text": "Hetal, this is my ID card. You are under digital arrest. Stay on the video call and tell nobody."
+      }
+    },
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-04-16T11:38:00+05:30",
+        "sender": "Officer Ghosh",
+        "text": "Hetal, transfer your full balance to the safe account for verification now. It will be returned after checking."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-16T10:41:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58399-28704",
+      "contact_name": "",
+      "duration_s": 594
+    },
+    {
+      "row": 2,
+      "t": "2026-04-16T11:01:00+05:30",
+      "direction": "incoming",
+      "number": "+91-59083-50355",
+      "contact_name": "Officer Ghosh",
+      "duration_s": 1523
+    },
+    {
+      "row": 3,
+      "t": "2026-04-16T11:36:00+05:30",
+      "direction": "incoming",
+      "number": "+91-59083-50355",
+      "contact_name": "Officer Ghosh",
+      "duration_s": 477
+    },
+    {
+      "row": 4,
+      "t": "2026-04-16T11:56:00+05:30",
+      "direction": "missed",
+      "number": "+91-56810-89914",
+      "contact_name": "Subhash ji",
+      "duration_s": 0
+    }
+  ],
+  "photo": {
+    "t": "2026-03-20T18:15:00+05:30",
+    "lat": 18.5087,
+    "lon": 73.9263,
+    "make": "Vivo",
+    "model": "Y22",
+    "offset": "+05:30",
+    "image": "cafe-table.jpg",
+    "card": [
+      "IDENTITY CARD - SAMPLE",
+      "FICTIONAL, NOT A REAL ID",
+      "Name: Rina Ghosh",
+      "Rank: Inspector",
+      "Card no.: 9669-X",
+      "FOR TRAINING ONLY"
+    ],
+    "software": "Generic Photo Editor 2.1",
+    "modified": "2026-04-16T10:56:00+05:30"
+  },
+  "brief": {
+    "summary": "On 16 April 2026 someone who said he was a police officer kept the victim on a video call for hours, and the victim then moved money out of their account. You have the victim's WhatsApp messages of that day (all chats in one file, in time order), the call log, and the officer's ID-card photo as the victim received it. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Rina Ghosh",
+        "phone": "+91-59083-50355"
+      },
+      {
+        "id": "P3",
+        "name": "Nilesh Kulkarni",
+        "phone": "+91-58399-28704"
+      },
+      {
+        "id": "P4",
+        "name": "Subhash Sen",
+        "phone": "+91-56810-89914"
+      }
+    ],
+    "places": [],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the victim to transfer money to the 'safe account'?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was that demand made?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "yesno",
+        "text": "Was the officer's ID-card photo edited after it was taken?",
+        "about": null
+      }
+    ],
+    "family": "da"
+  }
+}

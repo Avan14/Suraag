@@ -1,0 +1,414 @@
+{
+  "case_id": "da-arrest-103-l2",
+  "lang": "en",
+  "seed": 103,
+  "family": "da",
+  "level": 2,
+  "twists": [
+    "handover",
+    "forwarded",
+    "software_tag"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Abhijit Ghosh",
+      "name_deva": "अभिजीत घोष",
+      "role": "victim",
+      "aliases": [
+        "Abhijit G"
+      ],
+      "phone": "+91-58970-86043"
+    },
+    {
+      "id": "P2",
+      "name": "Karthik Menon",
+      "name_deva": "कार्तिक मेनन",
+      "role": "boss",
+      "aliases": [
+        "Officer Menon",
+        "Karthik M"
+      ],
+      "phone": "+91-58438-90797"
+    },
+    {
+      "id": "P3",
+      "name": "Mahesh Shinde",
+      "name_deva": "महेश शिंदे",
+      "role": "associate",
+      "aliases": [
+        "+91-59893-41969",
+        "Mahesh S"
+      ],
+      "phone": "+91-59893-41969"
+    },
+    {
+      "id": "P4",
+      "name": "Prakash Desai",
+      "name_deva": "प्रकाश देसाई",
+      "role": "distractor",
+      "aliases": [
+        "Prakash ji",
+        "Prakash D"
+      ],
+      "phone": "+91-59651-22209"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL2",
+      "name": "Hadapsar",
+      "lat": 18.5089,
+      "lon": 73.926
+    },
+    {
+      "id": "PL3",
+      "name": "Viman Nagar",
+      "lat": 18.5679,
+      "lon": 73.9143
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E3",
+      "t": "2026-07-21T15:17:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E4",
+      "t": "2026-07-08T10:15:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-07-21T14:43:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E1",
+      "t": "2026-07-21T14:23:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-07-21T14:53:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E10",
+      "t": "2026-07-21T15:00:00+05:30",
+      "kind": "forwarded_message",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 made the demand at 3:17 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 14,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:17 pm",
+            "Officer Menon"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58438-90797",
+            "15:15"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "the photo was taken",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:07:08 10:15:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the file was last saved",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "ModifyDate",
+          "must_contain": [
+            "2026:07:21 14:43:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P3 made the first call",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-59893-41969",
+            "14:23"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-59651-22209",
+            "14:53"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P4 forwarded a warning, not a demand",
+      "event": "E10",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 10,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:00 pm",
+            "Prakash ji"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the victim to transfer money to the 'safe account'?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was that demand made?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-07-21T15:17:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "yesno",
+      "text": "Was the officer's ID-card photo edited after it was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3",
+        "F4"
+      ],
+      "answer": "yes"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-07-21T14:15:00+05:30",
+    "2026-07-21T16:45:00+05:30"
+  ],
+  "chat_length": 30,
+  "chat_anchors": [
+    {
+      "line": 9,
+      "message": {
+        "t": "2026-07-21T14:52:00+05:30",
+        "sender": "Officer Menon",
+        "text": "Abhijit, this is my ID card. You are under digital arrest. Stay on the video call and tell nobody."
+      }
+    },
+    {
+      "line": 10,
+      "message": {
+        "t": "2026-07-21T15:00:00+05:30",
+        "sender": "Prakash ji",
+        "text": "Forwarded: Cyber crime helpline alert. Fake \"parcel\" callers say drugs were found in your courier, then ask you to transfer money to a safe account. No officer does this. Report such calls on 1930."
+      }
+    },
+    {
+      "line": 14,
+      "message": {
+        "t": "2026-07-21T15:17:00+05:30",
+        "sender": "Officer Menon",
+        "text": "Abhijit, transfer your full balance to the safe account for verification now. It will be returned after checking."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-07-21T14:23:00+05:30",
+      "direction": "incoming",
+      "number": "+91-59893-41969",
+      "contact_name": "",
+      "duration_s": 337
+    },
+    {
+      "row": 2,
+      "t": "2026-07-21T14:48:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58438-90797",
+      "contact_name": "Officer Menon",
+      "duration_s": 1277
+    },
+    {
+      "row": 3,
+      "t": "2026-07-21T14:53:00+05:30",
+      "direction": "missed",
+      "number": "+91-59651-22209",
+      "contact_name": "Prakash ji",
+      "duration_s": 0
+    },
+    {
+      "row": 4,
+      "t": "2026-07-21T15:15:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58438-90797",
+      "contact_name": "Officer Menon",
+      "duration_s": 376
+    }
+  ],
+  "photo": {
+    "t": "2026-07-08T10:15:00+05:30",
+    "lat": 18.5678,
+    "lon": 73.9139,
+    "make": "Vivo",
+    "model": "Y22",
+    "offset": "+05:30",
+    "image": "desk-office.jpg",
+    "card": [
+      "IDENTITY CARD - SAMPLE",
+      "FICTIONAL, NOT A REAL ID",
+      "Name: Karthik Menon",
+      "Rank: Inspector",
+      "Card no.: 6574-X",
+      "FOR TRAINING ONLY"
+    ],
+    "software": null,
+    "modified": "2026-07-21T14:43:00+05:30"
+  },
+  "brief": {
+    "summary": "On 21 July 2026 someone who said he was a police officer kept the victim on a video call for hours, and the victim then moved money out of their account. You have the victim's WhatsApp messages of that day (all chats in one file, in time order), the call log, and the officer's ID-card photo as the victim received it. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Karthik Menon",
+        "phone": "+91-58438-90797"
+      },
+      {
+        "id": "P3",
+        "name": "Mahesh Shinde",
+        "phone": "+91-59893-41969"
+      },
+      {
+        "id": "P4",
+        "name": "Prakash Desai",
+        "phone": "+91-59651-22209"
+      }
+    ],
+    "places": [],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the victim to transfer money to the 'safe account'?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was that demand made?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "yesno",
+        "text": "Was the officer's ID-card photo edited after it was taken?",
+        "about": null
+      }
+    ],
+    "family": "da"
+  }
+}
