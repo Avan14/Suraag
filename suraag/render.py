@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 import piexif
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from suraag.lang import get_pack
 from suraag.model import Case, ChatMessage
@@ -86,18 +86,49 @@ def _dms(x: float):
     return ((deg, 1), (mins, 1), (int(round(sec * 10000)), 10000))
 
 
+PHOTOS = Path(__file__).parent / "data" / "photos"
+
+
+def _stock_image(p) -> Image.Image:
+    """A stock scene (suraag/data/photos, see CREDITS.md), an optional fictional ID card, and a SYNTHETIC mark."""
+    image = Image.open(PHOTOS / p.image).convert("RGB")
+    draw = ImageDraw.Draw(image)
+    if p.card:  # clearly fictional: plain shapes and text, no emblem, logo or seal
+        w, h = image.size
+        x0, y0, x1, y1 = w // 2 - 230, h // 2 - 130, w // 2 + 230, h // 2 + 130
+        draw.rounded_rectangle((x0 + 8, y0 + 8, x1 + 8, y1 + 8), 18, fill=(40, 40, 40))
+        draw.rounded_rectangle((x0, y0, x1, y1), 18, fill=(236, 240, 233), outline=(30, 60, 110), width=4)
+        draw.rectangle((x0 + 4, y0 + 4, x1 - 4, y0 + 54), fill=(30, 60, 110))
+        draw.rectangle((x0 + 24, y0 + 74, x0 + 134, y0 + 214), fill=(170, 176, 186))  # a blank photo box
+        big, small = ImageFont.load_default(26), ImageFont.load_default(20)
+        draw.text((x0 + 24, y0 + 14), p.card[0], font=big, fill=(255, 255, 255))
+        for i, line in enumerate(p.card[1:]):
+            draw.text((x0 + 152, y0 + 76 + 34 * i), line, font=small, fill=(20, 20, 20))
+    mark = ImageFont.load_default(34)
+    draw.rectangle((12, 12, 250, 62), fill=(0, 0, 0))
+    draw.text((24, 18), "SYNTHETIC", font=mark, fill=(255, 255, 255))
+    return image
+
+
 def render_photo(case: Case) -> bytes:
     if case.photo is None:
         raise ValueError("this case has no photo")
     p = case.photo
     ts, off = exif_ts(p.t, p.offset).encode("ascii"), p.offset.encode("ascii")
-    rng = random.Random(case.seed)
-    image = Image.new("RGB", (640, 480), (rng.randint(60, 200), rng.randint(60, 200), rng.randint(60, 200)))
-    ImageDraw.Draw(image).text((24, 24), "SYNTHETIC", fill=(255, 255, 255))
+    if p.image:
+        image = _stock_image(p)
+    else:
+        rng = random.Random(case.seed)
+        image = Image.new("RGB", (640, 480), (rng.randint(60, 200), rng.randint(60, 200), rng.randint(60, 200)))
+        ImageDraw.Draw(image).text((24, 24), "SYNTHETIC", fill=(255, 255, 255))
+    zeroth = {piexif.ImageIFD.ImageDescription: HEADER.encode("ascii"),
+              piexif.ImageIFD.Make: p.make.encode("ascii"), piexif.ImageIFD.Model: p.model.encode("ascii"),
+              # ModifyDate equals capture time for a clean original; a later one means the file was saved again
+              piexif.ImageIFD.DateTime: exif_ts(p.modified, p.offset).encode("ascii") if p.modified else ts}
+    if p.software:
+        zeroth[piexif.ImageIFD.Software] = p.software.encode("ascii")
     exif = piexif.dump({
-        "0th": {piexif.ImageIFD.ImageDescription: HEADER.encode("ascii"),
-                piexif.ImageIFD.Make: p.make.encode("ascii"), piexif.ImageIFD.Model: p.model.encode("ascii"),
-                piexif.ImageIFD.DateTime: ts},  # ModifyDate equals capture time: a clean original
+        "0th": zeroth,
         "Exif": {piexif.ExifIFD.DateTimeOriginal: ts,
                  piexif.ExifIFD.DateTimeDigitized: ts,  # CreateDate
                  piexif.ExifIFD.OffsetTime: off, piexif.ExifIFD.OffsetTimeOriginal: off,

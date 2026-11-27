@@ -33,6 +33,9 @@ def _shift(d: timedelta) -> str:
 
 
 def walkthrough(case: Case, arts: Artifacts, lang: str = "en") -> list[Walk]:
+    if case.family != "upi":
+        from suraag.families import walkthrough_family
+        return walkthrough_family(case, arts, lang)
     w = lambda key, **kw: t(f"walk.{key}", lang, **kw)  # noqa: E731
     role = {p.role: p for p in case.people}
     boss, distr = role["boss"], role["distractor"]
@@ -114,12 +117,17 @@ def walkthrough(case: Case, arts: Artifacts, lang: str = "en") -> list[Walk]:
     return out
 
 
+def skills_text(case: Case, lang: str = "en") -> str:
+    """What the case's level practises; a case family has its own list per tier."""
+    return t(f"level.{case.level}.skills" if case.family == "upi" else f"fam.{case.family}.{case.level}.skills", lang)
+
+
 def solution_markdown(case: Case, arts: Artifacts, lang: str = "en") -> str:
     """The instructor's worked solution for one case. Contains the answers: never hand it to students."""
     texts = {q.id: q.text for q in case.questions}
     parts = [f"# Case {case.case_id}: worked solution (instructor copy)", "",
              "> SYNTHETIC CASE - fictional, for teaching only. Not real data. This file contains the answers.", "",
-             f"{t(f'level.{case.level}.name', lang)}. {t(f'level.{case.level}.skills', lang)}"]
+             f"{t(f'level.{case.level}.name', lang)}. {skills_text(case, lang)}"]
     for wk in walkthrough(case, arts, lang):
         parts += ["", f"## {wk.question_id}. {texts[wk.question_id]}", ""]
         parts += [f"{i}. {s}" for i, s in enumerate(wk.steps, 1)]

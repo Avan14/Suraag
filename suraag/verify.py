@@ -6,7 +6,7 @@ from typing import Literal
 from suraag.fillerrules import filler_violation
 from suraag.i18n import t
 from suraag.lang import get_pack
-from suraag.model import Anchor, Case, question_about
+from suraag.model import NO_ONE, Anchor, Case, question_about
 from suraag.norm import norm
 from suraag.parse import Artifacts, load_calls, load_chat, load_exif, text_at
 from suraag.timefmt import chat_time
@@ -110,6 +110,9 @@ def check_chat_consistency(case: Case, arts: Artifacts, mode: Mode = "hybrid") -
     said = [ln for ln in lines if ln.sender is not None]
     orders = {ln.line for ln in instruction_candidates(said, pack)}  # the instruction phrase, or a defined code phrase
     cues = {ln.line for ln in said if any(pack.triggers[k].search(norm(ln.text)) for k in ("code_def", "confirm"))}
+    if case.family != "upi":  # a family's own evidence phrases (a demand, a payment, a forwarded warning)
+        from suraag.families import trigger_keys
+        orders |= {ln.line for ln in said if any(pack.triggers[k].search(norm(ln.text)) for k in trigger_keys(case.family))}
     for ln in said:
         if is_allowed(ln):
             continue
@@ -170,7 +173,7 @@ def check_causality(case: Case) -> list[Failure]:
 def check_solvability(case: Case, arts: Artifacts) -> list[Failure]:
     from suraag.solver import solve
     solved = solve(arts, case.brief, case.lang)
-    artifact = lambda q: "photo" if question_about(q) == "photo" else {"who": "calls", "when": "chat"}[q.kind]  # noqa: E731
+    artifact = lambda q: "photo" if question_about(q) == "photo" else {"who": "calls"}.get(q.kind, "chat")  # noqa: E731
     return [Failure("solvability", artifact(q), "solver_mismatch", {"question": q.id, "got": solved.get(q.id), "key": q.answer},
                     f"{q.id}: solver answered {solved.get(q.id)}, key is {q.answer}")
             for q in case.questions if solved.get(q.id) != q.answer]
@@ -185,9 +188,10 @@ def check_distractor(case: Case, arts: Artifacts) -> list[Failure]:
         return [Failure("distractor", "model", "no_distractor", {}, "the case has no distractor fact")]
     from suraag.solver import solve
     out = []
-    key = next((e for e in case.timeline if e.kind == "instruction"), None)
+    # the key event; a control case has no instruction, so its distractor is judged against the first call
+    key = next((e for e in case.timeline if e.kind == "instruction"), None) or         next((e for e in case.timeline if e.kind == "call"), None)
     who = next((q for q in case.questions if q.kind == "who"), None)
-    answer_person = case.person(who.answer) if who else None
+    answer_person = case.person(who.answer) if who and who.answer != NO_ONE else None
     solved = solve(arts, case.brief, case.lang)
     for fid in case.distractors:
         event = next(e for e in case.timeline if e.id == case.fact(fid).event)
@@ -204,7 +208,11 @@ def check_distractor(case: Case, arts: Artifacts) -> list[Failure]:
 
 
 # The file a broken trap is repaired in: chat traps by regenerating the filler, the others are rendered from the model.
-TWIST_ARTIFACT = {"unsaved_caller": "calls", "alibi": "chat", "code_word": "chat", "decoy": "chat", "camera_clock": "photo"}
+TWIST_ARTIFACT = {"unsaved_caller": "calls", "alibi": "chat", "code_word": "chat", "decoy": "chat", "camera_clock": "photo",
+                  # case families (suraag/families.py)
+                  "handover": "calls", "stranger_call": "calls", "callback": "calls", "forwarded": "chat",
+                  "camera_original": "photo", "software_tag": "photo", "payout": "chat", "escalation": "chat",
+                  "install_vs_control": "chat"}
 
 
 def check_depth(case: Case, arts: Artifacts) -> list[Failure]:

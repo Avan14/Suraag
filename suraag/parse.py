@@ -120,6 +120,7 @@ def load_exif(data: bytes) -> dict[str, str]:
     for name, ifd, tag in (("ImageDescription", "0th", piexif.ImageIFD.ImageDescription),
                            ("Make", "0th", piexif.ImageIFD.Make), ("Model", "0th", piexif.ImageIFD.Model),
                            ("ModifyDate", "0th", piexif.ImageIFD.DateTime),
+                           ("Software", "0th", piexif.ImageIFD.Software),
                            ("DateTimeOriginal", "Exif", piexif.ExifIFD.DateTimeOriginal),
                            ("CreateDate", "Exif", piexif.ExifIFD.DateTimeDigitized),
                            ("OffsetTime", "Exif", piexif.ExifIFD.OffsetTime),

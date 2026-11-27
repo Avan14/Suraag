@@ -97,7 +97,24 @@ def _parse_time(answer: str, ref: datetime) -> datetime | None:
         return None
 
 
+_YES = {"yes", "y", "haan", "han", "हाँ", "हां"}
+_NO = {"no", "n", "nahi", "nahin", "नहीं"}
+
+
+def _rupees(answer: str) -> float | None:
+    """ "Rs 17,000", "₹17000", "17000.00" -> 17000.0 """
+    s = re.sub(r"^(rs\.?|inr|₹)\s*", "", norm(answer)).replace(",", "").removesuffix("/-").strip()
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
 def answer_matches(case: Case, q: Question, answer: str) -> bool:
+    if q.kind == "yesno":
+        return norm(answer) in (_YES if q.answer == "yes" else _NO)
+    if q.kind == "amount":
+        return _rupees(answer) == int(q.answer)
     if q.kind == "when":
         key = datetime.fromisoformat(q.answer)
         given = _parse_time(answer, key)
