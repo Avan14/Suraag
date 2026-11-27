@@ -1,7 +1,7 @@
 """generate_case() and the command-line entry point.
 
     python -m suraag.pipeline --seed 7 --lang hinglish --mode hybrid --out cases/upi-ring-007 \
-        [--level 1-4] [--defect timestamp_clash] [--defect-target chat|calls] [--offline]
+        [--family upi|da|nc|ts|cc] [--level 1-4] [--defect timestamp_clash] [--defect-target chat|calls] [--offline]
 """
 import argparse
 import os
@@ -10,10 +10,11 @@ from typing import Callable, Literal
 
 from suraag import filler as filler_module
 from suraag.defects import EXPECTED, DefectKind
-from suraag.explain import solution_markdown
+from suraag.explain import skills_text, solution_markdown
+from suraag.families import FAMILIES, build_any
 from suraag.filler import llm_filler
 from suraag.i18n import t
-from suraag.levels import LEVELS, build_level_case
+from suraag.levels import LEVELS
 from suraag.lang import get_pack
 from suraag.llm import _load_dotenv, prompt_hash
 from suraag.model import Case, ChatMessage, Lang
@@ -29,17 +30,18 @@ def brief_markdown(case: Case) -> str:
     places = "\n".join(f"| {p.name} | {p.lat:.4f} | {p.lon:.4f} |" for p in b.places)
     qs = "\n\n".join(f"**{q.id}. {q.text}**\n\nAnswer: ____\n\nCite (chat.txt:line, calls.csv:row or photo.jpg:tag): ____"
                      for q in b.questions)
+    owner = "mule" if case.family == "upi" else "victim"
     return f"""# Case {case.case_id}: student brief
 
 > SYNTHETIC CASE - fictional, for teaching only. Not real data.
 
 {b.summary}
 
-**{t(f"level.{case.level}.name")}.** {t(f"level.{case.level}.skills")}
+**{t(f"level.{case.level}.name")}.** {skills_text(case)}
 
 ## Files
-- chat.txt: the mule's WhatsApp-style chat export
-- calls.csv: the mule's call log
+- chat.txt: the {owner}'s WhatsApp-style chat export
+- calls.csv: the {owner}'s call log
 - photo.jpg: one photo from the same phone
 
 ## Suspects
@@ -63,11 +65,11 @@ SHA-256 hashes in manifest.json show the files are unchanged since generation, n
 
 
 def generate_case(seed: int, lang: Lang, mode: Literal["hybrid", "raw"], out_dir, *,
-                  level: int = 1, defect: DefectKind | None = None, defect_target: Literal["chat", "calls"] = "chat",
+                  family: str = "upi", level: int = 1, defect: DefectKind | None = None, defect_target: Literal["chat", "calls"] = "chat",
                   filler_fn: FilledBy | None = None, on_attempt: Callable[[Attempt], None] | None = None,
                   log_path: Path = Path("logs/failures.jsonl")) -> RepairResult:
     _load_dotenv()
-    case = build_level_case(seed, lang, level)
+    case = build_any(family, seed, lang, level)
     pack = get_pack(lang)
     model = os.environ.get("SURAAG_MODEL_FILLER") or "stub"
     meta = GenMeta(seed=seed, model="stub", prompt_hashes={"filler": prompt_hash(pack.filler_prompt),
@@ -100,7 +102,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--lang", choices=["en", "hinglish"], default="hinglish")
     ap.add_argument("--mode", choices=["hybrid", "raw"], default="hybrid")
-    ap.add_argument("--level", type=int, choices=sorted(LEVELS), default=1, help="practice level (suraag/levels.py)")
+    ap.add_argument("--family", choices=["upi", *FAMILIES], default="upi", help="case family (suraag/families.py)")
+    ap.add_argument("--level", type=int, choices=sorted(LEVELS), default=1,
+                    help="practice level (suraag/levels.py); case families have tiers 1 and 2")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--defect", choices=list(EXPECTED))
     ap.add_argument("--defect-target", choices=["chat", "calls"], default="chat")
@@ -113,7 +117,7 @@ def main(argv: list[str] | None = None) -> int:
         verdict = "pass" if not a.failures else "; ".join(f.message for f in a.failures)
         print(f"attempt {a.n} ({a.action}): {verdict}")
 
-    res = generate_case(args.seed, args.lang, args.mode, args.out, level=args.level, defect=args.defect,
+    res = generate_case(args.seed, args.lang, args.mode, args.out, family=args.family, level=args.level, defect=args.defect,
                         defect_target=args.defect_target, on_attempt=show)
     if res.ok:
         print(f"SEALED {args.out}")
