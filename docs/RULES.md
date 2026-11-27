@@ -547,6 +547,8 @@ Grading is deterministic. The LLM overclaim check is advisory only, and no class
 - **Status:** Implemented
 - **Caveat:** No source was found that describes grading students on cited evidence references. The closest are grading of reports and documentation ([S97] PRIMARY), generator ground-truth files that help instructors grade ([S85] PRIMARY) and per-student solution sheets for marking ([S99] SECONDARY, abstract only). No overclaim classifier is wired in yet: `grade_all` is called without one, so every free-text reason is flagged "could not verify" for the instructor.
 
+- **Case families:** a "who" question may have the answer "no one" when the files hold no such instruction, and the option is offered on every case. A yes/no photo-edit answer is decided only by EXIF ModifyDate later than DateTimeOriginal; the Software tag is supporting evidence, never proof. Amount answers are whole rupees, and the grader accepts "Rs 17,000", "₹17000" or "17000".
+
 ### G-02. Citation validity
 - **Rule:** A citation (file and line) is valid if and only if the cited line contains every must_contain value of the fact it supports; extra supporting lines are allowed and not penalised; a cited line that contains none of the fact's values is wrong; a line with some but not all values is neither valid nor wrong.
 - **Why:** The same test the verifier uses for traceability (L-02) makes citations auto-checkable, and allowing extra lines avoids punishing a student for citing context.

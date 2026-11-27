@@ -16,6 +16,10 @@ press **Submit answers**.
 > court-validated or legal advice. SHA-256 hashes show a file is unchanged since generation; they do **not**
 > prove it is authentic.
 
+| Home | Citing evidence | Digital-arrest case, graded |
+|---|---|---|
+| ![Landing page](docs/images/home.png) | ![Evidence board with a cited line marked "does not support"](docs/images/student-board.png) | ![Stock photo with a fictional ID card, its EXIF and the graded result](docs/images/digital-arrest.png) |
+
 ## Who it is for, and the problem
 
 Suraag is for lecturers who teach digital forensics or cyber law in India, and for their students. Writing a
@@ -70,7 +74,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Fourteen pre-generated cases in four levels are in `cases/`, so the app works with no API key. To generate with a live LLM,
+Twenty-three pre-generated cases are in `cases/` (the UPI ring at four levels, plus four new case families), so the app works with no API key. To generate with a live LLM,
 put `GEMINI_API_KEY`, `SURAAG_MODEL_FILLER` and `SURAAG_MODEL_SOLVER` in `.env` (see `.env.example`); on
 Streamlit Community Cloud put them in the app's secrets. With no key, or when the LLM is unavailable, the
 pipeline falls back to deterministic stub filler and the manifest says `"model": "stub"`.
@@ -81,8 +85,26 @@ the same text, on the live site too, and the demo works offline. A new seed, or 
 ```bash
 python -m suraag.pipeline --seed 7 --lang hinglish --out out/demo --defect timestamp_clash   # watch it catch and repair
 python -m suraag.pipeline --seed 41 --lang en --level 4 --out out/expert                     # a level 4 case
-python -m pytest                                                                             # 225 offline tests
+python -m suraag.pipeline --family da --level 2 --seed 102 --lang en --out out/arrest       # a family case (da|nc|ts|cc)
+python -m pytest                                                                             # 286 offline tests
 ```
+
+## Case families
+
+Besides the UPI ring, four families are seen from the victim's phone, each with two tiers of traps checked by the
+same verifier, including the depth check. Research and sources are in `docs/CASE_FAMILIES.md`.
+
+| Family | What students answer | Example trap |
+|---|---|---|
+| Digital arrest | Who demanded the "safe account" transfer, when, and was the fake officer's ID-card photo edited | The ID photo's EXIF: a ModifyDate later than DateTimeOriginal shows editing, even with no Software tag |
+| Job / task scam | Who ran it, the total the victim deposited | Commission credits and the unpaid final demand are not deposits |
+| Fake customer care | Who asked for the screen-sharing install, and when control passed | The install and the handover of control happen at different times |
+| Nothing happened (control) | The honest answer is "no one" | A stranger's call and a forwarded message look suspicious but prove nothing |
+
+The answer "no one" is offered on every case, so it never gives the control case away. Photo evidence in these
+families uses CC0 stock scenes from Wikimedia Commons (credits in `suraag/data/photos/CREDITS.md`) carrying the
+case's own synthetic EXIF, and the digital-arrest ID card is drawn by code, marked SAMPLE / FICTIONAL, with no
+real emblem or seal.
 
 ## Practice levels
 
@@ -135,7 +157,8 @@ repair, 20 of 20 (0.84 to 1.00) against 8 of 19 (0.23 to 0.64), p = 4.5e-5. Most
 
 ## Limits (please read)
 
-- Synthetic data, small samples, **one case family** (a UPI-fraud ring), not court-validated.
+- Synthetic data, small samples, not court-validated. The UPI ring has four levels; the four newer families have two tiers each and 2 or 3 cases apiece.
+- 7 of the 9 family cases use offline stub filler (their manifests say `"model": "stub"`): the Gemini free-tier daily quota ran out while generating them. They verify like the others, but their small talk is repetitive. The family cases also reuse the UPI small-talk prompt, so their chat reads like friends' small talk.
 - In hybrid mode the anchored lines are written by code, so the anchor check passes *by construction*; the
   planted-defect experiment shows the checks fire, not that real LLM filler needs them. The raw-vs-hybrid
   experiment is the one that measures that.

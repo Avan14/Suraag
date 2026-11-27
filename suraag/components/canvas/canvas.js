@@ -50,6 +50,7 @@
       return `<div class="sticky ${cls}" id="t-${esc(k.replace(/[^\w]/g, "_"))}"><span class="q">${esc(a.active.label)}</span><span class="loc">${esc(pretty(k))}</span></div>`;
     }).join("") || `<div class="empty">${esc(L.empty)}</div>`;
 
+    const focused = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.key : null;
     document.getElementById("root").innerHTML =
       `<div class="board" id="board">
         <div class="stack">
@@ -68,6 +69,8 @@
       });
     });
     document.querySelectorAll(".rows").forEach((el) => el.addEventListener("scroll", drawStrings));
+    /* Every redraw (ours, or Streamlit's after the citation goes back) replaces the rows: keep keyboard focus. */
+    if (focused) { const el = document.getElementById(idOf(focused)); if (el) el.focus(); }
     /* The board sizes to its content and lines wrap, so its height changes after web fonts load, on resize and on
        rotation: report it whenever it changes, not once. */
     const board = document.getElementById("board");
@@ -84,8 +87,6 @@
     cites[q] = removing ? list.filter((k) => k !== key) : [...list, key];
     send({ cites });
     render();
-    const el = document.getElementById(idOf(key));
-    if (el) el.focus();  // the redraw replaced the row; keep the keyboard user where they were
     const L = args.labels;
     say((removing ? L.removed : L.added).replace("{loc}", pretty(key)).replace("{q}", args.active.label));
   }

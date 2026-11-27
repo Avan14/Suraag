@@ -337,7 +337,7 @@ def lecturer_view() -> None:
             fails = verify_dir(str(path))
             attempts = [SimpleNamespace(n=1, failures=fails, action="initial")]
             picked, arts, manifest, _ = load_dir(str(path))
-            sealed, key, deep = not fails and arts.sha256() == manifest["files"], "pick", picked.level > 1
+            sealed, key, deep = not fails and arts.sha256() == manifest["files"], "pick", bool(picked.twists)
         else:
             note(L("ui.no_cases"))
             return

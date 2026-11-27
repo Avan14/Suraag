@@ -241,7 +241,8 @@ def check_insufficient_alone(case: Case, arts: Artifacts) -> list[Failure]:
     from suraag.solver import solve
     out = []
     for q in case.questions:
-        if question_about(q) == "photo":
+        # "none" (the control family) says no such evidence exists: removing lines cannot make that less true.
+        if question_about(q) == "photo" or q.answer == "none":
             continue
         anchors = [a for fid in q.answer_facts for a in case.fact(fid).anchors]
         lines = {a.line for a in anchors if a.artifact == "chat"}

@@ -47,7 +47,7 @@ S = {
             ("20 / 20", "hybrid cases shipped, against 8 of 19 when the LLM writes the whole chat. One model."),
             ("30 / 30", "answers a second model got right from the files alone. 10 cases, unscored."),
         ],
-        "limits": "Synthetic cases, one case family, small samples. Hashes show a file has not changed; they do not show "
+        "limits": "Synthetic cases, small samples. Hashes show a file has not changed; they do not show "
                   "it is genuine. Not court-validated.",
     },
     "hi": {
@@ -90,7 +90,7 @@ S = {
             ("20 / 20", "हाइब्रिड केस जारी हुए; जब LLM पूरी चैट लिखता है तो 19 में से 8। एक ही मॉडल।"),
             ("30 / 30", "उत्तर, जो दूसरे मॉडल ने सिर्फ़ फ़ाइलों से सही दिए। 10 केस, अंक नहीं दिए गए।"),
         ],
-        "limits": "काल्पनिक केस, एक ही तरह के केस, छोटे नमूने। हैश बताता है कि फ़ाइल बदली नहीं; यह नहीं कि वह असली है। "
+        "limits": "काल्पनिक केस, छोटे नमूने। हैश बताता है कि फ़ाइल बदली नहीं; यह नहीं कि वह असली है। "
                   "अदालत में जाँचा नहीं गया।",
     },
 }
