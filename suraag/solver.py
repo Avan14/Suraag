@@ -88,6 +88,9 @@ def _read(arts: Artifacts) -> tuple[list[ChatLine], list[CallRow], dict[str, str
 
 
 def solve(arts: Artifacts, brief: Brief, lang: Lang) -> dict[str, str]:
+    if brief.family != "upi":
+        from suraag.families import solve_family
+        return solve_family(arts, brief, lang)
     pack = get_pack(lang)
     lines, calls, exif = _read(arts)
     order = instruction_line(lines, pack)
@@ -106,6 +109,9 @@ def solve(arts: Artifacts, brief: Brief, lang: Lang) -> dict[str, str]:
 
 def shortcut_answers(arts: Artifacts, brief: Brief, lang: Lang) -> dict[str, tuple[str | None, str]]:
     """twist -> (question id, the answer a hurried reader gives). Each shortcut skips exactly one rule above."""
+    if brief.family != "upi":
+        from suraag.families import shortcut_family
+        return shortcut_family(arts, brief, lang)
     pack = get_pack(lang)
     lines, calls, exif = _read(arts)
     qid = {f"{question_about(q)}:{q.kind}": q.id for q in brief.questions}

@@ -1,0 +1,21 @@
+{
+  "case_id": "da-arrest-103-l2",
+  "files": {
+    "chat.txt": "2f2f4aea1c1940c1818b554dff0736ca4e83f0ad02d6e6f819d8ba297ca2564b",
+    "calls.csv": "21474b8ee1c774e00c9a808fb249c03746691b50fb5281e437945d0ce553a048",
+    "photo.jpg": "6c0ddcfdcf09b3875c0a72da98db0c72d916e78ca862ba0dd2e15c1237372a97"
+  },
+  "seed": 103,
+  "model": "stub",
+  "prompt_hashes": {
+    "filler": "efb7d6a7ab9e",
+    "raw": "db47b05b5d43"
+  },
+  "mode": "hybrid",
+  "lang": "en",
+  "synthetic": true,
+  "label": "SYNTHETIC CASE - fictional, for teaching only. Not real data.",
+  "hash_note": "A matching hash shows this file has not changed since the hash was computed; it does not show who made the file or that its content is genuine.",
+  "chat_date_order": "DMY",
+  "sealed_at": "2026-11-28T01:03:34+05:30"
+}

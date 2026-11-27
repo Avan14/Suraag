@@ -1,0 +1,383 @@
+{
+  "case_id": "nc-parcel-201-l1",
+  "lang": "hinglish",
+  "seed": 201,
+  "family": "nc",
+  "level": 1,
+  "twists": [
+    "stranger_call"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Prakash Joshi",
+      "name_deva": "प्रकाश जोशी",
+      "role": "victim",
+      "aliases": [
+        "Prakash J"
+      ],
+      "phone": "+91-58180-89469"
+    },
+    {
+      "id": "P2",
+      "name": "Karthik Reddy",
+      "name_deva": "कार्तिक रेड्डी",
+      "role": "witness",
+      "aliases": [
+        "Karthik bhai",
+        "Karthik R"
+      ],
+      "phone": "+91-52836-41216"
+    },
+    {
+      "id": "P3",
+      "name": "Debashish Banerjee",
+      "name_deva": "देबाशीष बनर्जी",
+      "role": "associate",
+      "aliases": [
+        "+91-55651-77994",
+        "Debashish B"
+      ],
+      "phone": "+91-55651-77994"
+    },
+    {
+      "id": "P4",
+      "name": "Sanjay Shinde",
+      "name_deva": "संजय शिंदे",
+      "role": "distractor",
+      "aliases": [
+        "Sanjay bhai",
+        "Sanjay S"
+      ],
+      "phone": "+91-59571-26467"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Bandra West",
+      "lat": 19.0596,
+      "lon": 72.8295
+    },
+    {
+      "id": "PL3",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-05-28T14:36:00+05:30",
+      "kind": "call",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E4",
+      "t": "2026-05-28T14:37:00+05:30",
+      "kind": "photo",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-05-28T14:37:00+05:30",
+      "kind": "photo",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-05-28T14:37:00+05:30",
+      "kind": "photo",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-05-28T14:51:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P3 called and only delivered a parcel",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 10,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "2:38 pm",
+            "+91-55651-77994"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-55651-77994",
+            "14:36"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "the photo was taken",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:05:28 14:37:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the file was last saved",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "ModifyDate",
+          "must_contain": [
+            "2026:05:28 14:37:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "claim": "the photo was taken near Dadar",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.0175"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8475"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-59571-26467",
+            "14:51"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "none"
+    },
+    {
+      "id": "Q2",
+      "kind": "yesno",
+      "text": "Kya delivery wali photo li jaane ke baad edit ki gayi thi?",
+      "about": null,
+      "answer_facts": [
+        "F3",
+        "F4"
+      ],
+      "answer": "no"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Delivery wali photo kahan li gayi thi?",
+      "about": null,
+      "answer_facts": [
+        "F6"
+      ],
+      "answer": "PL1"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P4",
+    "P2"
+  ],
+  "chat_window": [
+    "2026-05-28T13:45:00+05:30",
+    "2026-05-28T16:15:00+05:30"
+  ],
+  "chat_length": 25,
+  "chat_anchors": [
+    {
+      "line": 10,
+      "message": {
+        "t": "2026-05-28T14:38:00+05:30",
+        "sender": "+91-55651-77994",
+        "text": "Namaste, aapka parcel gate pe deliver ho gaya hai. Delivery ke proof ke liye photo lagayi hai."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-05-28T14:36:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55651-77994",
+      "contact_name": "",
+      "duration_s": 89
+    },
+    {
+      "row": 2,
+      "t": "2026-05-28T14:51:00+05:30",
+      "direction": "incoming",
+      "number": "+91-59571-26467",
+      "contact_name": "Sanjay bhai",
+      "duration_s": 80
+    },
+    {
+      "row": 3,
+      "t": "2026-05-28T15:46:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-52836-41216",
+      "contact_name": "Karthik bhai",
+      "duration_s": 93
+    }
+  ],
+  "photo": {
+    "t": "2026-05-28T14:37:00+05:30",
+    "lat": 19.0175,
+    "lon": 72.8475,
+    "make": "Redmi",
+    "model": "Note 12",
+    "offset": "+05:30",
+    "image": "foggy-road.jpg",
+    "card": null,
+    "software": null,
+    "modified": null
+  },
+  "brief": {
+    "summary": "28 May 2026 ko victim ko ek anjaan number se parcel ke baare mein call aaya, aur baad mein family chat mein parcel scam ki chetavani dikhi. Unhe dar hai ki unke saath fraud hua. Sirf wahi batao jo files mein hai. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur caller ki bheji delivery photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Karthik Reddy",
+        "phone": "+91-52836-41216"
+      },
+      {
+        "id": "P3",
+        "name": "Debashish Banerjee",
+        "phone": "+91-55651-77994"
+      },
+      {
+        "id": "P4",
+        "name": "Sanjay Shinde",
+        "phone": "+91-59571-26467"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Dadar",
+        "lat": 19.0178,
+        "lon": 72.8478
+      },
+      {
+        "id": "PL2",
+        "name": "Bandra West",
+        "lat": 19.0596,
+        "lon": 72.8295
+      },
+      {
+        "id": "PL3",
+        "name": "Andheri East",
+        "lat": 19.1136,
+        "lon": 72.8697
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "yesno",
+        "text": "Kya delivery wali photo li jaane ke baad edit ki gayi thi?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Delivery wali photo kahan li gayi thi?",
+        "about": null
+      }
+    ],
+    "family": "nc"
+  }
+}

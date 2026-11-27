@@ -1,7 +1,7 @@
 """Language packs: get_pack(lang). Each pack holds what differs by language: trigger phrases,
 alias patterns, places, stub lines, instruction templates and LLM prompts."""
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -25,6 +25,8 @@ class LangPack:
     confirm_templates: tuple[str, ...] = ()   # the mule's "done"; matches triggers["confirm"]
     decoy_templates: tuple[str, ...] = ()     # {owner}; a harmless request that still matches triggers["instruction"]
     alibi_templates: tuple[str, ...] = ()     # {place}; the mule's claim about where they are
+    # Case families (suraag/families.py): family -> template name -> text, all written verbatim by code.
+    families: dict = field(default_factory=dict)
 
 
 def get_pack(lang: str) -> LangPack:

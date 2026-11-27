@@ -86,3 +86,22 @@ def test_the_lecturer_sees_the_depth_check_for_a_practice_level():
     at.run()
     assert not at.exception
     assert any("Depth" in m.value for m in at.markdown)
+
+
+def test_a_family_case_offers_no_one_yes_no_and_grades():
+    nc = "NC-L1-parcel-201-hinglish"
+    at = AppTest.from_file(os.path.join(os.path.dirname(__file__), "..", "app.py"), default_timeout=60)
+    at.session_state["view"], at.session_state["lang"] = "student", "en"
+    at.session_state["stu_family"], at.session_state["stu_level"] = "nc", 1
+    at.run()
+    assert not at.exception and at.selectbox(key="stu_pick").value == nc
+    who, yesno = at.selectbox(key=f"a::{nc}::Q1"), at.selectbox(key=f"a::{nc}::Q2")
+    assert "none" in who.options or "No one: there is no such instruction" in who.options
+    who.set_value("none")
+    yesno.set_value("no")
+    at.run()
+    at.button(key=f"submit::{nc}").click()
+    at.run()
+    assert not at.exception
+    graded = {r.question_id: r for r in at.session_state[f"graded::{nc}"]}
+    assert graded["Q1"].answer_correct and graded["Q2"].answer_correct

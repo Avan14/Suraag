@@ -1,0 +1,49 @@
+{
+  "summary": "22 July 2026 ko ek aadmi ne, jo khud ko police officer bata raha tha, victim ko ghanton video call pe rakha, aur phir victim ne apne account se paise nikaal diye. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur officer ke ID card ki photo, jaise victim ko mili hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P1",
+  "mule": "P1",
+  "suspects": [
+    {
+      "id": "P2",
+      "name": "Tanuja Bose",
+      "phone": "+91-56703-70730"
+    },
+    {
+      "id": "P3",
+      "name": "Mahesh Patil",
+      "phone": "+91-51726-57976"
+    },
+    {
+      "id": "P4",
+      "name": "Raju Sharma",
+      "phone": "+91-51420-60738"
+    }
+  ],
+  "places": [],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye demand kab ki gayi?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "yesno",
+      "text": "Kya officer ke ID card ki photo li jaane ke baad edit ki gayi thi?",
+      "about": null
+    }
+  ],
+  "family": "da"
+}

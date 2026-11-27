@@ -1,0 +1,68 @@
+{
+  "summary": "On 14 May 2026 the victim did paid online 'tasks' for strangers and lost money. You have the victim's WhatsApp messages of that day (all chats in one file, in time order), the call log, and a photo from the victim's phone. Everything here is synthetic.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P1",
+  "mule": "P1",
+  "suspects": [
+    {
+      "id": "P2",
+      "name": "Mamta Sen",
+      "phone": "+91-56160-29384"
+    },
+    {
+      "id": "P3",
+      "name": "Manoj Yadav",
+      "phone": "+91-59955-58282"
+    },
+    {
+      "id": "P4",
+      "name": "Venkat Iyer",
+      "phone": "+91-55179-83056"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Hadapsar",
+      "lat": 18.5089,
+      "lon": 73.926
+    },
+    {
+      "id": "PL2",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL3",
+      "name": "Viman Nagar",
+      "lat": 18.5679,
+      "lon": 73.9143
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who asked the victim to make the deposits?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "amount",
+      "text": "How much money did the victim deposit in total, in rupees?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the victim when the photo on their phone was taken?",
+      "about": null
+    }
+  ],
+  "family": "ts"
+}

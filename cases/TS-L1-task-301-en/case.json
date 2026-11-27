@@ -1,0 +1,608 @@
+{
+  "case_id": "ts-task-301-l1",
+  "lang": "en",
+  "seed": 301,
+  "family": "ts",
+  "level": 1,
+  "twists": [
+    "payout",
+    "escalation"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Kavita Patil",
+      "name_deva": "कविता पाटील",
+      "role": "victim",
+      "aliases": [
+        "Kavita P"
+      ],
+      "phone": "+91-52856-50313"
+    },
+    {
+      "id": "P2",
+      "name": "Mamta Sen",
+      "name_deva": "ममता सेन",
+      "role": "boss",
+      "aliases": [
+        "Mentor Mamta",
+        "Mamta S"
+      ],
+      "phone": "+91-56160-29384"
+    },
+    {
+      "id": "P3",
+      "name": "Manoj Yadav",
+      "name_deva": "मनोज यादव",
+      "role": "associate",
+      "aliases": [
+        "+91-59955-58282",
+        "Manoj Y"
+      ],
+      "phone": "+91-59955-58282"
+    },
+    {
+      "id": "P4",
+      "name": "Venkat Iyer",
+      "name_deva": "वेंकट अय्यर",
+      "role": "distractor",
+      "aliases": [
+        "Venkat ji",
+        "Venkat I"
+      ],
+      "phone": "+91-55179-83056"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Hadapsar",
+      "lat": 18.5089,
+      "lon": 73.926
+    },
+    {
+      "id": "PL2",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL3",
+      "name": "Viman Nagar",
+      "lat": 18.5679,
+      "lon": 73.9143
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E3",
+      "t": "2026-05-14T15:36:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E1",
+      "t": "2026-05-14T14:58:00+05:30",
+      "kind": "message",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-05-14T15:43:00+05:30",
+      "kind": "photo",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-05-14T15:58:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E11",
+      "t": "2026-05-14T15:41:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E12",
+      "t": "2026-05-14T15:52:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E13",
+      "t": "2026-05-14T16:04:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E21",
+      "t": "2026-05-14T15:15:00+05:30",
+      "kind": "payout",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E22",
+      "t": "2026-05-14T15:24:00+05:30",
+      "kind": "payout",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E30",
+      "t": "2026-05-14T16:10:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E31",
+      "t": "2026-05-14T16:13:00+05:30",
+      "kind": "message",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 made the demand at 3:36 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 10,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:36 pm",
+            "Mentor Mamta"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-56160-29384",
+            "15:35"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P3 sent the job offer",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 4,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "2:58 pm",
+            "+91-59955-58282"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "claim": "the photo was taken near Viman Nagar",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5679"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.9139"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-55179-83056",
+            "15:58"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P1 paid Paid Rs 2,000. Please release my earnings.",
+      "event": "E11",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 11,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:41 pm",
+            "Rs 2,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "claim": "P1 paid Paid Rs 5,000. Please release my earnings.",
+      "event": "E12",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 13,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:52 pm",
+            "Rs 5,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F13",
+      "claim": "P1 paid Paid Rs 8,000. Please release my earnings.",
+      "event": "E13",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 16,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "4:04 pm",
+            "Rs 8,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F21",
+      "claim": "P2 credited a small commission as bait",
+      "event": "E21",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 7,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:15 pm",
+            "Rs 150"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F22",
+      "claim": "P2 credited a small commission as bait",
+      "event": "E22",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 8,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "3:24 pm",
+            "Rs 210"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F30",
+      "claim": "the last, unpaid demand",
+      "event": "E30",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "4:10 pm",
+            "Rs 40,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F31",
+      "claim": "P1 refused to pay it",
+      "event": "E31",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 18,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "4:13 pm",
+            "Kavita P"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who asked the victim to make the deposits?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "amount",
+      "text": "How much money did the victim deposit in total, in rupees?",
+      "about": null,
+      "answer_facts": [
+        "F11",
+        "F12",
+        "F13"
+      ],
+      "answer": "15000"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the victim when the photo on their phone was taken?",
+      "about": null,
+      "answer_facts": [
+        "F6"
+      ],
+      "answer": "PL3"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-05-14T14:45:00+05:30",
+    "2026-05-14T17:15:00+05:30"
+  ],
+  "chat_length": 27,
+  "chat_anchors": [
+    {
+      "line": 4,
+      "message": {
+        "t": "2026-05-14T14:58:00+05:30",
+        "sender": "+91-59955-58282",
+        "text": "Hello! Part-time job from home: like videos and rate hotels online and earn a commission daily. Our mentor will contact you."
+      }
+    },
+    {
+      "line": 7,
+      "message": {
+        "t": "2026-05-14T15:15:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "Task 1 complete. Commission of Rs 150 credited to your account."
+      }
+    },
+    {
+      "line": 8,
+      "message": {
+        "t": "2026-05-14T15:24:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "Task 2 complete. Commission of Rs 210 credited to your account."
+      }
+    },
+    {
+      "line": 10,
+      "message": {
+        "t": "2026-05-14T15:36:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "Task 3 is a prepaid task: deposit Rs 2,000 to unlock it. You get it back with commission."
+      }
+    },
+    {
+      "line": 11,
+      "message": {
+        "t": "2026-05-14T15:41:00+05:30",
+        "sender": "Kavita P",
+        "text": "Paid Rs 2,000. Please release my earnings."
+      }
+    },
+    {
+      "line": 12,
+      "message": {
+        "t": "2026-05-14T15:47:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "Task 4 is a prepaid task: deposit Rs 5,000 to unlock it. You get it back with commission."
+      }
+    },
+    {
+      "line": 13,
+      "message": {
+        "t": "2026-05-14T15:52:00+05:30",
+        "sender": "Kavita P",
+        "text": "Paid Rs 5,000. Please release my earnings."
+      }
+    },
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-05-14T16:01:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "Task 5 is a prepaid task: deposit Rs 8,000 to unlock it. You get it back with commission."
+      }
+    },
+    {
+      "line": 16,
+      "message": {
+        "t": "2026-05-14T16:04:00+05:30",
+        "sender": "Kavita P",
+        "text": "Paid Rs 8,000. Please release my earnings."
+      }
+    },
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-05-14T16:10:00+05:30",
+        "sender": "Mentor Mamta",
+        "text": "To withdraw your earnings, deposit Rs 40,000 as tax first."
+      }
+    },
+    {
+      "line": 18,
+      "message": {
+        "t": "2026-05-14T16:13:00+05:30",
+        "sender": "Kavita P",
+        "text": "I cannot arrange that much. Please release what is already there."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-05-14T15:35:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56160-29384",
+      "contact_name": "Mentor Mamta",
+      "duration_s": 239
+    },
+    {
+      "row": 2,
+      "t": "2026-05-14T15:58:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55179-83056",
+      "contact_name": "Venkat ji",
+      "duration_s": 74
+    }
+  ],
+  "photo": {
+    "t": "2026-05-14T15:43:00+05:30",
+    "lat": 18.5679,
+    "lon": 73.9139,
+    "make": "Samsung",
+    "model": "Galaxy A14",
+    "offset": "+05:30",
+    "image": "bus-bay.jpg",
+    "card": null,
+    "software": null,
+    "modified": null
+  },
+  "brief": {
+    "summary": "On 14 May 2026 the victim did paid online 'tasks' for strangers and lost money. You have the victim's WhatsApp messages of that day (all chats in one file, in time order), the call log, and a photo from the victim's phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Mamta Sen",
+        "phone": "+91-56160-29384"
+      },
+      {
+        "id": "P3",
+        "name": "Manoj Yadav",
+        "phone": "+91-59955-58282"
+      },
+      {
+        "id": "P4",
+        "name": "Venkat Iyer",
+        "phone": "+91-55179-83056"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Hadapsar",
+        "lat": 18.5089,
+        "lon": 73.926
+      },
+      {
+        "id": "PL2",
+        "name": "Baner",
+        "lat": 18.559,
+        "lon": 73.7868
+      },
+      {
+        "id": "PL3",
+        "name": "Viman Nagar",
+        "lat": 18.5679,
+        "lon": 73.9143
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who asked the victim to make the deposits?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "amount",
+        "text": "How much money did the victim deposit in total, in rupees?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the victim when the photo on their phone was taken?",
+        "about": null
+      }
+    ],
+    "family": "ts"
+  }
+}

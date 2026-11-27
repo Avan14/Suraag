@@ -56,7 +56,8 @@ class Event(BaseModel):
     id: str
     t: AwareDatetime
     kind: Literal["transfer", "call", "instruction", "photo", "distractor_call",
-                  "code_definition", "confirmation", "decoy_message", "alibi_message", "unknown_call"]
+                  "code_definition", "confirmation", "decoy_message", "alibi_message", "unknown_call",
+                  "forwarded_message", "deposit", "payout", "control_handover", "message"]
     actor: str
     target: str | None = None
     depends_on: list[str] = []
@@ -84,20 +85,24 @@ class Fact(BaseModel):
 
 
 QuestionAbout = Literal["instruction", "photo"]
+# yesno: "yes"/"no" (was the photo edited); amount: whole rupees as digits. Both come from case families.
+QuestionKind = Literal["who", "when", "where", "yesno", "amount"]
+Family = Literal["upi", "da", "nc", "ts", "cc"]  # see suraag/families.py
+NO_ONE = "none"  # the honest answer to a "who" question when the files hold no such instruction
 
 
 def question_about(q) -> str:
-    """What a question asks about: 'where' is always the photo; other kinds default to the instruction."""
-    return q.about or ("photo" if q.kind == "where" else "instruction")
+    """What a question asks about: 'where' and 'yesno' are the photo; other kinds default to the instruction."""
+    return q.about or ("photo" if q.kind in ("where", "yesno") else "instruction")
 
 
 class Question(BaseModel):
     id: str
-    kind: Literal["who", "when", "where"]
+    kind: QuestionKind
     text: str
     about: QuestionAbout | None = None  # None: the default for the kind (see question_about)
     answer_facts: list[str]
-    answer: str  # who: person id | when: ISO time with offset | where: place id
+    answer: str  # who: person id or NO_ONE | when: ISO time with offset | where: place id | yesno | amount
 
 
 class ChatMessage(BaseModel):
@@ -127,11 +132,16 @@ class PhotoMeta(BaseModel):
     make: str
     model: str
     offset: Annotated[str, StringConstraints(pattern=r"^[+-]\d{2}:\d{2}$")] = "+05:30"  # the camera clock's zone
+    # Case families only; the defaults render today's plain image, so older cases stay byte-identical.
+    image: str | None = None          # a stock photo in suraag/data/photos/
+    card: list[str] | None = None     # text lines of a fictional ID card drawn onto the photo
+    software: str | None = None       # EXIF Software (an editor, or the phone's own firmware)
+    modified: AwareDatetime | None = None  # EXIF ModifyDate; None means it equals the capture time
 
 
 class BriefQuestion(BaseModel):
     id: str
-    kind: Literal["who", "when", "where"]
+    kind: QuestionKind
     text: str
     about: QuestionAbout | None = None
 
@@ -151,12 +161,14 @@ class Brief(BaseModel):
     suspects: list[Suspect]
     places: list[Place]
     questions: list[BriefQuestion]
+    family: Family = "upi"
 
 
 class Case(BaseModel):
     case_id: str
     lang: Lang
     seed: int
+    family: Family = "upi"   # the crime the case is about; see suraag/families.py
     level: int = 1           # practice level 1-4; see suraag/levels.py
     twists: list[str] = []   # the traps this level sets; each one is checked by verify.check_depth
     tolerance_minutes: int = 2
@@ -212,9 +224,15 @@ class Case(BaseModel):
         for q in self.questions:
             need(q.answer_facts, facts, "answer fact")
             if q.kind == "who":
-                need([q.answer], people, "who answer")
+                need([q.answer], people | {NO_ONE}, "who answer")
             elif q.kind == "where":
                 need([q.answer], places, "where answer")
+            elif q.kind == "yesno":
+                if q.answer not in ("yes", "no"):
+                    raise ValueError(f"{q.id}: a 'yesno' answer must be yes or no")
+            elif q.kind == "amount":
+                if not q.answer.isdigit():
+                    raise ValueError(f"{q.id}: an 'amount' answer must be whole rupees in digits")
             else:
                 try:
                     ok = datetime.fromisoformat(q.answer).tzinfo is not None

@@ -1,0 +1,669 @@
+{
+  "case_id": "ts-task-302-l2",
+  "lang": "hinglish",
+  "seed": 302,
+  "family": "ts",
+  "level": 2,
+  "twists": [
+    "payout",
+    "escalation",
+    "handover"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Deepak Yadav",
+      "name_deva": "दीपक यादव",
+      "role": "victim",
+      "aliases": [
+        "Deepak Y"
+      ],
+      "phone": "+91-50362-43810"
+    },
+    {
+      "id": "P2",
+      "name": "Prakash Kulkarni",
+      "name_deva": "प्रकाश कुलकर्णी",
+      "role": "boss",
+      "aliases": [
+        "Mentor Prakash",
+        "Prakash K"
+      ],
+      "phone": "+91-51891-20637"
+    },
+    {
+      "id": "P3",
+      "name": "Vikram Gupta",
+      "name_deva": "विक्रम गुप्ता",
+      "role": "associate",
+      "aliases": [
+        "+91-55729-58517",
+        "Vikram G"
+      ],
+      "phone": "+91-55729-58517"
+    },
+    {
+      "id": "P4",
+      "name": "Anita Sharma",
+      "name_deva": "अनीता शर्मा",
+      "role": "distractor",
+      "aliases": [
+        "Anita didi",
+        "Anita S"
+      ],
+      "phone": "+91-58787-00444"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Vashi",
+      "lat": 19.0771,
+      "lon": 72.9986
+    },
+    {
+      "id": "PL2",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL3",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E3",
+      "t": "2026-07-25T11:00:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E1",
+      "t": "2026-07-25T10:26:00+05:30",
+      "kind": "message",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-07-25T11:09:00+05:30",
+      "kind": "photo",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E9",
+      "t": "2026-07-25T10:43:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E11",
+      "t": "2026-07-25T11:05:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E12",
+      "t": "2026-07-25T11:17:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E13",
+      "t": "2026-07-25T11:28:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E14",
+      "t": "2026-07-25T11:40:00+05:30",
+      "kind": "deposit",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E21",
+      "t": "2026-07-25T10:41:00+05:30",
+      "kind": "payout",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E22",
+      "t": "2026-07-25T10:49:00+05:30",
+      "kind": "payout",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E30",
+      "t": "2026-07-25T11:48:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E31",
+      "t": "2026-07-25T11:51:00+05:30",
+      "kind": "message",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 made the demand at 11:00 am",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 11,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:00 am",
+            "Mentor Prakash"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 3,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-51891-20637",
+            "10:58"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P3 sent the job offer",
+      "event": "E1",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 4,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "10:26 am",
+            "+91-55729-58517"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 1,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-55729-58517",
+            "10:24"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "claim": "the photo was taken near Kurla West",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.0726"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8848"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P4 called (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58787-00444",
+            "10:43"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P1 paid Rs 1,500 bhej diye. Meri earning release karo.",
+      "event": "E11",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 12,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:05 am",
+            "Rs 1,500"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "claim": "P1 paid Rs 4,000 bhej diye. Meri earning release karo.",
+      "event": "E12",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 15,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:17 am",
+            "Rs 4,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F13",
+      "claim": "P1 paid Rs 12,000 bhej diye. Meri earning release karo.",
+      "event": "E13",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:28 am",
+            "Rs 12,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F14",
+      "claim": "P1 paid Rs 20,000 bhej diye. Meri earning release karo.",
+      "event": "E14",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:40 am",
+            "Rs 20,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F21",
+      "claim": "P2 credited a small commission as bait",
+      "event": "E21",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 7,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "10:41 am",
+            "Rs 300"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F22",
+      "claim": "P2 credited a small commission as bait",
+      "event": "E22",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 9,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "10:49 am",
+            "Rs 300"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F30",
+      "claim": "the last, unpaid demand",
+      "event": "E30",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 21,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:48 am",
+            "Rs 30,000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F31",
+      "claim": "P1 refused to pay it",
+      "event": "E31",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 22,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "11:51 am",
+            "Deepak Y"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Victim ko deposit karne ko kisne kaha?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "amount",
+      "text": "Victim ne kul kitne rupaye deposit kiye?",
+      "about": null,
+      "answer_facts": [
+        "F11",
+        "F12",
+        "F13",
+        "F14"
+      ],
+      "answer": "37500"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Phone wali photo li gayi tab victim kahan tha?",
+      "about": null,
+      "answer_facts": [
+        "F6"
+      ],
+      "answer": "PL3"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-07-25T10:15:00+05:30",
+    "2026-07-25T12:45:00+05:30"
+  ],
+  "chat_length": 32,
+  "chat_anchors": [
+    {
+      "line": 4,
+      "message": {
+        "t": "2026-07-25T10:26:00+05:30",
+        "sender": "+91-55729-58517",
+        "text": "Hello! Ghar baithe part-time job: videos like karo, hotels ko rating do, roz commission kamao. Hamare mentor aapse contact karenge."
+      }
+    },
+    {
+      "line": 7,
+      "message": {
+        "t": "2026-07-25T10:41:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 1 complete. Rs 300 commission aapke account mein credit ho gaya."
+      }
+    },
+    {
+      "line": 9,
+      "message": {
+        "t": "2026-07-25T10:49:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 2 complete. Rs 300 commission aapke account mein credit ho gaya."
+      }
+    },
+    {
+      "line": 11,
+      "message": {
+        "t": "2026-07-25T11:00:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 3 prepaid task hai: unlock karne ke liye Rs 1,500 deposit karo. Commission ke saath wapas milega."
+      }
+    },
+    {
+      "line": 12,
+      "message": {
+        "t": "2026-07-25T11:05:00+05:30",
+        "sender": "Deepak Y",
+        "text": "Rs 1,500 bhej diye. Meri earning release karo."
+      }
+    },
+    {
+      "line": 14,
+      "message": {
+        "t": "2026-07-25T11:14:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 4 prepaid task hai: unlock karne ke liye Rs 4,000 deposit karo. Commission ke saath wapas milega."
+      }
+    },
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-07-25T11:17:00+05:30",
+        "sender": "Deepak Y",
+        "text": "Rs 4,000 bhej diye. Meri earning release karo."
+      }
+    },
+    {
+      "line": 16,
+      "message": {
+        "t": "2026-07-25T11:25:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 5 prepaid task hai: unlock karne ke liye Rs 12,000 deposit karo. Commission ke saath wapas milega."
+      }
+    },
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-07-25T11:28:00+05:30",
+        "sender": "Deepak Y",
+        "text": "Rs 12,000 bhej diye. Meri earning release karo."
+      }
+    },
+    {
+      "line": 18,
+      "message": {
+        "t": "2026-07-25T11:35:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Task 6 prepaid task hai: unlock karne ke liye Rs 20,000 deposit karo. Commission ke saath wapas milega."
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-07-25T11:40:00+05:30",
+        "sender": "Deepak Y",
+        "text": "Rs 20,000 bhej diye. Meri earning release karo."
+      }
+    },
+    {
+      "line": 21,
+      "message": {
+        "t": "2026-07-25T11:48:00+05:30",
+        "sender": "Mentor Prakash",
+        "text": "Earning withdraw karne ke liye pehle Rs 30,000 tax deposit karo."
+      }
+    },
+    {
+      "line": 22,
+      "message": {
+        "t": "2026-07-25T11:51:00+05:30",
+        "sender": "Deepak Y",
+        "text": "Itna intezaam nahi ho payega. Jo pehle se hai wahi release karo."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-07-25T10:24:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55729-58517",
+      "contact_name": "",
+      "duration_s": 226
+    },
+    {
+      "row": 2,
+      "t": "2026-07-25T10:43:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58787-00444",
+      "contact_name": "Anita didi",
+      "duration_s": 128
+    },
+    {
+      "row": 3,
+      "t": "2026-07-25T10:58:00+05:30",
+      "direction": "incoming",
+      "number": "+91-51891-20637",
+      "contact_name": "Mentor Prakash",
+      "duration_s": 258
+    }
+  ],
+  "photo": {
+    "t": "2026-07-25T11:09:00+05:30",
+    "lat": 19.0726,
+    "lon": 72.8848,
+    "make": "Samsung",
+    "model": "Galaxy A14",
+    "offset": "+05:30",
+    "image": "platform.jpg",
+    "card": null,
+    "software": null,
+    "modified": null
+  },
+  "brief": {
+    "summary": "25 July 2026 ko victim ne anjaan logon ke liye online paid 'tasks' kiye aur paise gawaye. Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order mein), call log, aur victim ke phone ki ek photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Prakash Kulkarni",
+        "phone": "+91-51891-20637"
+      },
+      {
+        "id": "P3",
+        "name": "Vikram Gupta",
+        "phone": "+91-55729-58517"
+      },
+      {
+        "id": "P4",
+        "name": "Anita Sharma",
+        "phone": "+91-58787-00444"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Vashi",
+        "lat": 19.0771,
+        "lon": 72.9986
+      },
+      {
+        "id": "PL2",
+        "name": "Dadar",
+        "lat": 19.0178,
+        "lon": 72.8478
+      },
+      {
+        "id": "PL3",
+        "name": "Kurla West",
+        "lat": 19.0726,
+        "lon": 72.8845
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Victim ko deposit karne ko kisne kaha?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "amount",
+        "text": "Victim ne kul kitne rupaye deposit kiye?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Phone wali photo li gayi tab victim kahan tha?",
+        "about": null
+      }
+    ],
+    "family": "ts"
+  }
+}

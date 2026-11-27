@@ -13,6 +13,16 @@ INSTRUCTION = re.compile(
 CODE_DEF = re.compile(r'\b(jab|agar)\b[^"]{0,20}"[^"]+"\s*(likhe|bole)\b')
 CONFIRM = re.compile(r"\bho gaya\b.{0,30}?\b(saaf|uda)\w*")
 CALL_REF = re.compile(r"\bphone (pe|par)\b")
+# Case families (suraag/families.py). Each phrase below is written only by code; filler that matches one fails.
+FAMILY_TRIGGERS = {
+    "fwd": re.compile(r"^forwarded:"),
+    "da_demand": re.compile(r"\b(transfer\b.{0,60}?\bsafe account|safe account\b.{0,30}?\btransfer)\b"),
+    "ts_demand": re.compile(r"\brs [\d,]+ (tax )?deposit karo\b"),
+    "ts_deposit": re.compile(r"\brs [\d,]+ bhej diye\b"),
+    "ts_payout": re.compile(r"\brs [\d,]+ commission\b.{0,40}?\bcredit\b"),
+    "cc_demand": re.compile(r"\b(install\b.{0,40}?\bapp|app\b.{0,30}?\binstall)\b"),
+    "cc_control": re.compile(r"\bcode hai\b"),
+}
 
 FILLER_PROMPT = """Tum ek WhatsApp group chat ke liye chhote, natural Hinglish messages likh rahe ho (Roman script).
 Group members (sender ke roop mein sirf yehi naam use karo): {senders}.
@@ -37,7 +47,8 @@ Fill the other lines with ordinary conversation. Do not add a header or explanat
 
 PACK = LangPack(
     lang="hinglish",
-    triggers={"instruction": INSTRUCTION, "code_def": CODE_DEF, "confirm": CONFIRM, "call_ref": CALL_REF},
+    triggers={"instruction": INSTRUCTION, "code_def": CODE_DEF, "confirm": CONFIRM, "call_ref": CALL_REF,
+              **FAMILY_TRIGGERS},
     alias_patterns={"m": "{first} bhai", "f": "{first} didi"},
     places=[("Andheri East", 19.1136, 72.8697), ("Kurla West", 19.0726, 72.8845),
             ("Dadar", 19.0178, 72.8478), ("Bandra West", 19.0596, 72.8295),
@@ -76,4 +87,64 @@ PACK = LangPack(
                      "{owner}, society picnic ki list se meri entry hata dena, main bahar hoon"),
     alibi_templates=("Abhi {place} mein hoon, baad mein baat karte hain.",
                      "{place} ke paas traffic mein atke hain, late ho jayega."),
+    families={
+        "common": {
+            "fwd_parcel": ('Forwarded: Cyber crime helpline ki chetavani. Nakli "parcel" call wale kehte hain ki '
+                           'aapke courier mein drugs mile, phir safe account mein paisa transfer karne ko kehte hain. '
+                           'Koi officer aisa nahi karta. 1930 par report karo.'),
+            "fwd_care": ("Forwarded: Asli bank ya company helpline kabhi screen-sharing app install karne ya screen "
+                         "ka code batane ko nahi kehti. Fraud ki report 1930 par karo."),
+            "photo_where": "Phone wali photo li gayi tab victim kahan tha?",
+            "files": ("Tumhare paas victim ke us din ke WhatsApp messages (saari chats ek file mein, time ke order "
+                      "mein), call log, aur {photo} hai. Sab kuch synthetic hai."),
+        },
+        "da": {
+            "boss_alias": "{surname} Sir",
+            "id": ("{owner} ji, ye mera ID card hai. Aap digital arrest mein ho. Video call pe bane raho aur kisi "
+                   "ko mat batana."),
+            "demand": ("{owner} ji, apna poora balance abhi verification ke liye safe account mein transfer karo. "
+                       "Checking ke baad wapas mil jayega."),
+            "summary": ("{date} ko ek aadmi ne, jo khud ko police officer bata raha tha, victim ko ghanton video "
+                        "call pe rakha, aur phir victim ne apne account se paise nikaal diye."),
+            "photo": "officer ke ID card ki photo, jaise victim ko mili",
+            "q": {"who": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+                  "when": "Ye demand kab ki gayi?",
+                  "yesno": "Kya officer ke ID card ki photo li jaane ke baad edit ki gayi thi?"},
+        },
+        "nc": {
+            "courier": "Namaste, aapka parcel gate pe deliver ho gaya hai. Delivery ke proof ke liye photo lagayi hai.",
+            "summary": ("{date} ko victim ko ek anjaan number se parcel ke baare mein call aaya, aur baad mein family "
+                        "chat mein parcel scam ki chetavani dikhi. Unhe dar hai ki unke saath fraud hua. Sirf wahi "
+                        "batao jo files mein hai."),
+            "photo": "caller ki bheji delivery photo",
+            "q": {"who": "Victim ko 'safe account' mein paise transfer karne ko kisne kaha?",
+                  "yesno": "Kya delivery wali photo li jaane ke baad edit ki gayi thi?",
+                  "where": "Delivery wali photo kahan li gayi thi?"},
+        },
+        "ts": {
+            "boss_alias": "Mentor {first}",
+            "job": ("Hello! Ghar baithe part-time job: videos like karo, hotels ko rating do, roz commission kamao. "
+                    "Hamare mentor aapse contact karenge."),
+            "payout": "Task {i} complete. Rs {amount} commission aapke account mein credit ho gaya.",
+            "demand": ("Task {i} prepaid task hai: unlock karne ke liye Rs {amount} deposit karo. Commission ke saath "
+                       "wapas milega."),
+            "last": "Earning withdraw karne ke liye pehle Rs {amount} tax deposit karo.",
+            "deposit": "Rs {amount} bhej diye. Meri earning release karo.",
+            "refuse": "Itna intezaam nahi ho payega. Jo pehle se hai wahi release karo.",
+            "summary": "{date} ko victim ne anjaan logon ke liye online paid 'tasks' kiye aur paise gawaye.",
+            "photo": "victim ke phone ki ek photo",
+            "q": {"who": "Victim ko deposit karne ko kisne kaha?",
+                  "amount": "Victim ne kul kitne rupaye deposit kiye?"},
+        },
+        "cc": {
+            "desk": "Aapki complaint register ho gayi hai. Refund ke liye hamara technician aapko call karega.",
+            "demand": "{owner} ji, maine jo link bheja usse support app install karo aur screen pe jo code aaye wo batao.",
+            "control": "Install ho gaya. Code hai {code}.",
+            "summary": ("{date} ko victim ne refund ke liye online customer care ka number dhoondha. Thodi der baad "
+                        "unke account se paise nikal gaye."),
+            "photo": "victim ke phone ki ek photo",
+            "q": {"who": "Victim ko screen-sharing app install karne ko kisne kaha?",
+                  "when": "Victim ne phone ka control kab saunpa (screen ka code kab bataya)?"},
+        },
+    },
 )
