@@ -1,4 +1,5 @@
-# Pinned to the versions the tests ran on. Editing this file forces Streamlit Cloud to restart the app fully.
+# Pinned to the versions the tests ran on. Editing this file forces Streamlit Cloud to restart the app fully,
+# which it needs whenever suraag/ changes: a plain redeploy keeps the old modules loaded (2026-11-28).
 pydantic==2.14.4
 pillow==13.0.0
 piexif==1.1.3
