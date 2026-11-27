@@ -405,14 +405,21 @@ def student_bench(name: str, path: str) -> None:
         for i, q in enumerate(qs):
             tag = f'<span class="qtag">{esc(L("stu.citing"))}</span>' if i == active_i else ""
             st.markdown(f'<div class="qhead">{esc(L("stu.question", n=i + 1))}{tag}</div>', unsafe_allow_html=True)
-            if q.kind == "who":
-                ids = [s.id for s in brief.suspects]
+            if q.kind == "who":  # "no one" is always offered, so its presence never gives a control case away
+                from suraag.model import NO_ONE
+                ids = [s.id for s in brief.suspects] + [NO_ONE]
                 st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
-                                             format_func=lambda x: next(s.name for s in brief.suspects if s.id == x))
+                                             format_func=lambda x: L("stu.answer_none") if x == NO_ONE else
+                                             next(s.name for s in brief.suspects if s.id == x))
             elif q.kind == "where":
                 ids = [p.id for p in brief.places]
                 st.selectbox(L("stu.answer_place"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
                                              format_func=lambda x: next(p.name for p in brief.places if p.id == x))
+            elif q.kind == "yesno":
+                st.selectbox(L("stu.answer_yesno"), ["yes", "no"], key=f"a::{name}::{q.id}", index=None,
+                             placeholder=L("ui.choose"), format_func=lambda x: L(f"stu.{x}"))
+            elif q.kind == "amount":
+                st.text_input(L("stu.answer_amount"), key=f"a::{name}::{q.id}")
             else:
                 st.text_input(L("stu.answer_time"), key=f"a::{name}::{q.id}")
             st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
@@ -475,7 +482,10 @@ def student_view() -> None:
     if not cases_now:
         note(L("ui.no_cases"))
         return
-    level_of = {n: load_dir(str(p))[0].level for n, p in cases_now.items()}
+    family_of = {n: load_dir(str(p))[0].family for n, p in cases_now.items()}
+    families = [f for f in ("upi", "da", "nc", "ts", "cc") if f in family_of.values()]
+    fam = st.radio(L("stu.family"), families, key="stu_family", horizontal=True, format_func=lambda f: L(f"fam.{f}.name"))
+    level_of = {n: load_dir(str(p))[0].level for n, p in cases_now.items() if family_of[n] == fam}
     levels = sorted(set(level_of.values()))
     if st.session_state.get("stu_level") not in levels:
         st.session_state["stu_level"] = levels[0]
@@ -483,8 +493,8 @@ def student_view() -> None:
     with st.container(key="stulevel", horizontal=True, gap=None):  # plain buttons, like the case-language switch
         for n in levels:
             st.button(L(f"level.{n}.name"), key=f"stulevel_{n}", type="tertiary", on_click=_set, args=("stu_level", n))
-    st.caption(L(f"level.{lvl}.skills"))
-    name = st.selectbox(L("ui.case"), [n for n in cases_now if level_of[n] == lvl], key="stu_pick")
+    st.caption(L(f"level.{lvl}.skills") if fam == "upi" else L(f"fam.{fam}.{lvl}.skills"))
+    name = st.selectbox(L("ui.case"), [n for n in level_of if level_of[n] == lvl], key="stu_pick")
     case = load_dir(str(cases_now[name]))[0]
     brief = case.brief
     with st.expander(L("ui.case") + f": {case.case_id}", expanded=True):
