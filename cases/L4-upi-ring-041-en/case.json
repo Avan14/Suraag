@@ -1,0 +1,576 @@
+{
+  "case_id": "upi-ring-041-l4",
+  "lang": "en",
+  "seed": 41,
+  "level": 4,
+  "twists": [
+    "unsaved_caller",
+    "alibi",
+    "code_word",
+    "decoy",
+    "camera_clock"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Jignesh Joshi",
+      "name_deva": "जिग्नेश जोशी",
+      "role": "mule",
+      "aliases": [
+        "Jignesh ji",
+        "Jignesh J"
+      ],
+      "phone": "+91-57199-20322"
+    },
+    {
+      "id": "P2",
+      "name": "Prakash Chauhan",
+      "name_deva": "प्रकाश चौहान",
+      "role": "distractor",
+      "aliases": [
+        "Prakash C.",
+        "Prakash C"
+      ],
+      "phone": "+91-52454-94787"
+    },
+    {
+      "id": "P3",
+      "name": "Karthik Reddy",
+      "name_deva": "कार्तिक रेड्डी",
+      "role": "associate",
+      "aliases": [
+        "Karthik ji",
+        "Karthik R"
+      ],
+      "phone": "+91-55224-21955"
+    },
+    {
+      "id": "P4",
+      "name": "Prakash Mehta",
+      "name_deva": "प्रकाश मेहता",
+      "role": "boss",
+      "aliases": [
+        "Prakash ji",
+        "Prakash M"
+      ],
+      "phone": "+91-54219-85806"
+    },
+    {
+      "id": "P5",
+      "name": "Suresh Nair",
+      "name_deva": "सुरेश नायर",
+      "role": "witness",
+      "aliases": [
+        "Suresh ji",
+        "Suresh N"
+      ],
+      "phone": "+91-55666-26936"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    },
+    {
+      "id": "PL2",
+      "name": "Kothrud",
+      "lat": 18.5074,
+      "lon": 73.8077
+    },
+    {
+      "id": "PL3",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-14T20:13:00+05:30",
+      "kind": "transfer",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-14T20:50:00+05:30",
+      "kind": "call",
+      "actor": "P4",
+      "target": "P1",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-14T20:51:00+05:30",
+      "kind": "instruction",
+      "actor": "P4",
+      "target": "P1",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-14T21:19:00+05:30",
+      "kind": "photo",
+      "actor": "P1",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-14T21:05:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P2",
+      "target": "P1",
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-04-14T20:14:00+05:30",
+      "kind": "code_definition",
+      "actor": "P3",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-04-14T20:53:00+05:30",
+      "kind": "confirmation",
+      "actor": "P1",
+      "target": null,
+      "depends_on": [
+        "E3"
+      ]
+    },
+    {
+      "id": "E7",
+      "t": "2026-04-14T21:09:00+05:30",
+      "kind": "decoy_message",
+      "actor": "P2",
+      "target": "P1",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-04-14T21:16:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P1",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P4 told P1 to delete the transfer record at 8:51 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "8:51 pm",
+            "Prakash ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-54219-85806",
+            "20:50"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "claim": "P3 set the code 'the blue kite is up' for deleting the entry",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 7,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "8:14 pm",
+            "the blue kite is up"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P1 confirmed the deletion at 8:53 pm",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 20,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "8:53 pm",
+            "Done. All cleared from my side."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P2 asked P1 to remove an unrelated list entry",
+      "event": "E7",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 25,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:09 pm",
+            "Prakash C."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P1 claimed to be at Kharadi",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 27,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:16 pm",
+            "Kharadi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P1 took the payment screenshot photo near Baner",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5592"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.7872"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the photo was taken at 9:19 pm IST",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:04:14 15:49:00"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "OffsetTimeOriginal",
+          "must_contain": [
+            "+00:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P2 called P1 at 9:05 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-52454-94787",
+            "21:05"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "P4"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "2026-04-14T20:51:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "At what time (IST) was the payment screenshot photo taken?",
+      "about": "photo",
+      "answer_facts": [
+        "F4"
+      ],
+      "answer": "2026-04-14T21:19:00+05:30"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-14T20:00:00+05:30",
+    "2026-04-14T22:00:00+05:30"
+  ],
+  "chat_length": 42,
+  "chat_anchors": [
+    {
+      "line": 7,
+      "message": {
+        "t": "2026-04-14T20:14:00+05:30",
+        "sender": "Karthik ji",
+        "text": "From today, if anyone says \"the blue kite is up\", wipe that transfer record immediately."
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-04-14T20:51:00+05:30",
+        "sender": "Prakash ji",
+        "text": "Jignesh ji, as I said on the phone just now, the blue kite is up, understood?"
+      }
+    },
+    {
+      "line": 20,
+      "message": {
+        "t": "2026-04-14T20:53:00+05:30",
+        "sender": "Jignesh ji",
+        "text": "Done. All cleared from my side."
+      }
+    },
+    {
+      "line": 25,
+      "message": {
+        "t": "2026-04-14T21:09:00+05:30",
+        "sender": "Prakash C.",
+        "text": "Jignesh ji, wipe my entry from the society picnic list, I'm out of town"
+      }
+    },
+    {
+      "line": 27,
+      "message": {
+        "t": "2026-04-14T21:16:00+05:30",
+        "sender": "Jignesh ji",
+        "text": "Still stuck near Kharadi, the traffic is terrible."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-14T20:10:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-55224-21955",
+      "contact_name": "Karthik ji",
+      "duration_s": 153
+    },
+    {
+      "row": 2,
+      "t": "2026-04-14T20:32:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55666-26936",
+      "contact_name": "",
+      "duration_s": 59
+    },
+    {
+      "row": 3,
+      "t": "2026-04-14T20:43:00+05:30",
+      "direction": "missed",
+      "number": "+91-52454-94787",
+      "contact_name": "Prakash C.",
+      "duration_s": 0
+    },
+    {
+      "row": 4,
+      "t": "2026-04-14T20:50:00+05:30",
+      "direction": "incoming",
+      "number": "+91-54219-85806",
+      "contact_name": "",
+      "duration_s": 161
+    },
+    {
+      "row": 5,
+      "t": "2026-04-14T21:05:00+05:30",
+      "direction": "incoming",
+      "number": "+91-52454-94787",
+      "contact_name": "Prakash C.",
+      "duration_s": 36
+    },
+    {
+      "row": 6,
+      "t": "2026-04-14T21:34:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55224-21955",
+      "contact_name": "Karthik ji",
+      "duration_s": 149
+    }
+  ],
+  "photo": {
+    "t": "2026-04-14T21:19:00+05:30",
+    "lat": 18.5592,
+    "lon": 73.7872,
+    "make": "Samsung",
+    "model": "Galaxy A14",
+    "offset": "+00:00"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 24,000 reached the mule's account on the evening of 14 April 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P1",
+    "mule": "P1",
+    "suspects": [
+      {
+        "id": "P2",
+        "name": "Prakash Chauhan",
+        "phone": "+91-52454-94787"
+      },
+      {
+        "id": "P3",
+        "name": "Karthik Reddy",
+        "phone": "+91-55224-21955"
+      },
+      {
+        "id": "P4",
+        "name": "Prakash Mehta",
+        "phone": "+91-54219-85806"
+      },
+      {
+        "id": "P5",
+        "name": "Suresh Nair",
+        "phone": "+91-55666-26936"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Baner",
+        "lat": 18.559,
+        "lon": 73.7868
+      },
+      {
+        "id": "PL2",
+        "name": "Kothrud",
+        "lat": 18.5074,
+        "lon": 73.8077
+      },
+      {
+        "id": "PL3",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?",
+        "about": null
+      },
+      {
+        "id": "Q4",
+        "kind": "when",
+        "text": "At what time (IST) was the payment screenshot photo taken?",
+        "about": "photo"
+      }
+    ]
+  }
+}

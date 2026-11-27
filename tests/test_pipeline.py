@@ -18,7 +18,8 @@ def test_generate_case_writes_every_file(tmp_path, lang):
     res = pipeline.generate_case(3, lang, "hybrid", tmp_path / "c", filler_fn=stub_fn)
     assert res.ok
     names = {p.name for p in (tmp_path / "c").iterdir()}
-    assert names == {"chat.txt", "calls.csv", "photo.jpg", "manifest.json", "case.json", "brief.json", "brief.md"}
+    assert names == {"chat.txt", "calls.csv", "photo.jpg", "manifest.json", "case.json", "brief.json", "brief.md",
+                     "solution.md"}
     case = pipeline.Case.model_validate_json((tmp_path / "c" / "case.json").read_text("utf-8"))
     assert verify(case, Artifacts.from_dir(tmp_path / "c")) == []  # the files on disk verify, not just in memory
 

@@ -1,0 +1,8 @@
+﻿# SYNTHETIC CASE - fictional, for teaching only. Not real data.
+"row","datetime","direction","number","contact_name","duration_s"
+1,"2026-04-14T20:10:00+05:30","outgoing","+91-55224-21955","Karthik ji",153
+2,"2026-04-14T20:32:00+05:30","incoming","+91-55666-26936","",59
+3,"2026-04-14T20:43:00+05:30","missed","+91-52454-94787","Prakash C.",0
+4,"2026-04-14T20:50:00+05:30","incoming","+91-54219-85806","",161
+5,"2026-04-14T21:05:00+05:30","incoming","+91-52454-94787","Prakash C.",36
+6,"2026-04-14T21:34:00+05:30","incoming","+91-55224-21955","Karthik ji",149

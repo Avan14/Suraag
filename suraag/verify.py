@@ -1,11 +1,12 @@
-"""Six deterministic checks -> list of failures. Plain code only; an LLM never verifies."""
+"""Deterministic checks -> list of failures. Plain code only; an LLM never verifies.
+Six checks on every case, plus a depth check on practice levels 2-4 (each trap must really mislead)."""
 from dataclasses import dataclass
 from typing import Literal
 
 from suraag.fillerrules import filler_violation
 from suraag.i18n import t
 from suraag.lang import get_pack
-from suraag.model import Anchor, Case
+from suraag.model import Anchor, Case, question_about
 from suraag.norm import norm
 from suraag.parse import Artifacts, load_calls, load_chat, load_exif, text_at
 from suraag.timefmt import chat_time
@@ -16,7 +17,7 @@ FILES = {"chat": "chat.txt", "calls": "calls.csv", "photo": "photo.jpg"}
 
 @dataclass(frozen=True)
 class Failure:
-    check: Literal["anchor", "traceability", "contradiction", "solvability", "distractor", "filler_count"]
+    check: Literal["anchor", "traceability", "contradiction", "solvability", "distractor", "filler_count", "depth"]
     artifact: Literal["chat", "calls", "photo", "model"]
     code: str
     params: dict
@@ -105,10 +106,19 @@ def check_chat_consistency(case: Case, arts: Artifacts, mode: Mode = "hybrid") -
             if reason:
                 out.append(Failure("contradiction", "chat", "filler_content", {"line": ln.line, "reason": reason},
                                    f"chat.txt:{ln.line} filler contains {t('filler.reason.' + reason, 'en')}"))
-    for ln in lines:
-        if ln.sender is not None and pack.triggers["instruction"].search(norm(ln.text)) and not is_allowed(ln):
+    from suraag.solver import instruction_candidates
+    said = [ln for ln in lines if ln.sender is not None]
+    orders = {ln.line for ln in instruction_candidates(said, pack)}  # the instruction phrase, or a defined code phrase
+    cues = {ln.line for ln in said if any(pack.triggers[k].search(norm(ln.text)) for k in ("code_def", "confirm"))}
+    for ln in said:
+        if is_allowed(ln):
+            continue
+        if ln.line in orders:
             out.append(Failure("contradiction", "chat", "trigger_in_filler", {"line": ln.line},
                                f"chat.txt:{ln.line} matches the instruction phrase but is not the instruction line"))
+        elif ln.line in cues:
+            out.append(Failure("contradiction", "chat", "cue_in_filler", {"line": ln.line},
+                               f"chat.txt:{ln.line} reads like a code rule or a confirmation but is not one"))
     return out
 
 
@@ -160,8 +170,8 @@ def check_causality(case: Case) -> list[Failure]:
 def check_solvability(case: Case, arts: Artifacts) -> list[Failure]:
     from suraag.solver import solve
     solved = solve(arts, case.brief, case.lang)
-    artifact = {"who": "calls", "when": "chat", "where": "photo"}
-    return [Failure("solvability", artifact[q.kind], "solver_mismatch", {"question": q.id, "got": solved.get(q.id), "key": q.answer},
+    artifact = lambda q: "photo" if question_about(q) == "photo" else {"who": "calls", "when": "chat"}[q.kind]  # noqa: E731
+    return [Failure("solvability", artifact(q), "solver_mismatch", {"question": q.id, "got": solved.get(q.id), "key": q.answer},
                     f"{q.id}: solver answered {solved.get(q.id)}, key is {q.answer}")
             for q in case.questions if solved.get(q.id) != q.answer]
 
@@ -193,7 +203,30 @@ def check_distractor(case: Case, arts: Artifacts) -> list[Failure]:
     return out
 
 
+# The file a broken trap is repaired in: chat traps by regenerating the filler, the others are rendered from the model.
+TWIST_ARTIFACT = {"unsaved_caller": "calls", "alibi": "chat", "code_word": "chat", "decoy": "chat", "camera_clock": "photo"}
+
+
+def check_depth(case: Case, arts: Artifacts) -> list[Failure]:
+    """Each twist's shortcut must give a real, wrong answer (not the key, not 'unsolvable'): a trap that does
+    not mislead makes the level no deeper than level 1."""
+    if not case.twists:
+        return []
+    from suraag.grade import answer_matches
+    from suraag.solver import UNSOLVABLE, shortcut_answers
+    short = shortcut_answers(arts, case.brief, case.lang)
+    out = []
+    for tw in case.twists:
+        qid, got = short[tw]
+        q = next((x for x in case.questions if x.id == qid), None)
+        if q is None or got == UNSOLVABLE or answer_matches(case, q, got):
+            out.append(Failure("depth", TWIST_ARTIFACT[tw], "trap_not_set", {"twist": tw, "question": qid, "got": got},
+                               f"twist {tw}: a shortcut reader answers {got} for {qid}, which is not a plausible "
+                               f"wrong answer"))
+    return out
+
+
 def verify(case: Case, arts: Artifacts, mode: Mode = "hybrid") -> list[Failure]:
     return (check_anchors(case, arts, mode) + check_traceability(case) + check_chat_consistency(case, arts, mode)
             + check_cross_time(case, arts) + check_causality(case) + check_solvability(case, arts)
-            + check_distractor(case, arts))
+            + check_distractor(case, arts) + check_depth(case, arts))

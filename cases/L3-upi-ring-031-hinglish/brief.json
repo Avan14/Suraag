@@ -1,0 +1,73 @@
+{
+  "summary": "6 March 2026 ki shaam ko mule ke account mein Rs 72,000 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P4",
+  "mule": "P4",
+  "suspects": [
+    {
+      "id": "P1",
+      "name": "Lakshmi Sen",
+      "phone": "+91-50844-23578"
+    },
+    {
+      "id": "P2",
+      "name": "Lakshmi Iyer",
+      "phone": "+91-55824-17660"
+    },
+    {
+      "id": "P3",
+      "name": "Divya Reddy",
+      "phone": "+91-53340-19349"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Andheri East",
+      "lat": 19.1136,
+      "lon": 72.8697
+    },
+    {
+      "id": "PL2",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL3",
+      "name": "Vashi",
+      "lat": 19.0771,
+      "lon": 72.9986
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "about": null
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "Payment screenshot wali photo IST mein kitne baje li gayi?",
+      "about": "photo"
+    }
+  ]
+}

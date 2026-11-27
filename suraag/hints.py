@@ -35,9 +35,9 @@ def base_hint(case: Case, question_id: str, tier: int, lang: str = "en") -> str:
         pieces = []
         for art in dict.fromkeys(a.artifact for a in anchors):
             mine = [a for a in anchors if a.artifact == art]
-            if art == "chat":
-                line = mine[0].line
-                pieces.append(t("hint.where.chat", lang, a=max(2, line - 3), b=min(case.chat_length, line + 3)))
+            if art == "chat":  # one range per reasoning step, so a multi-step answer points at every step
+                pieces += [t("hint.where.chat", lang, a=max(2, a.line - 3), b=min(case.chat_length, a.line + 3))
+                           for a in mine]
             elif art == "calls":
                 rows = [r.row for r in case.calls]
                 pieces.append(t("hint.where.calls", lang, a=max(min(rows), mine[0].row - 1),

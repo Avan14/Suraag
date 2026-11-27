@@ -14,6 +14,7 @@ import html
 import io
 import json
 import os
+import re
 import tempfile
 from types import SimpleNamespace
 import zipfile
@@ -24,6 +25,7 @@ import streamlit.components.v1 as components
 
 from suraag import filler as filler_module  # noqa: F401  (kept: the filler records its source for the UI)
 from suraag.defects import EXPECTED
+from suraag.explain import walkthrough
 from suraag.grade import Citation, Claim, grade_all
 from suraag.hints import PERSONAS, SPEECH, TIERS, hint
 from suraag.i18n import EN, render_expl, render_failure, t
@@ -72,7 +74,7 @@ def _take_generation() -> bool:
 # ---------------------------------------------------------------------------------------- style
 def _css() -> str:  # read each run so CSS edits show up without a restart
     # One style-only st.html body (font @import first) takes no space in the layout.
-    fonts = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700"
+    fonts = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700"
              "&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap")
     return f'<style>@import url("{fonts}");\n{(UI / "app.css").read_text("utf-8")}</style>'
 
@@ -102,9 +104,15 @@ def note(text: str, kind: str = "") -> None:
     st.markdown(f'<div class="note {kind}">{glyph}{esc(text)}</div>', unsafe_allow_html=True)
 
 
+_COUNT = re.compile(r"\d+( of \d+)?")
+
+
 def html_table(header: list[str], rows: list[list]) -> str:
-    head = ("<tr>" + "".join(f"<th>{esc(h)}</th>" for h in header) + "</tr>") if header else ""
-    body = "".join("<tr>" + "".join(f"<td>{esc(c)}</td>" for c in r) + "</tr>" for r in rows)
+    # A column of counts ("5", "9 of 12") is right-aligned, header included, so the digits line up.
+    num = [bool(rows) and all(_COUNT.fullmatch(str(r[i])) for r in rows) for i in range(len(rows[0]) if rows else 0)]
+    cls = lambda i: ' class="num"' if num[i] else ""  # noqa: E731
+    head = ("<tr>" + "".join(f"<th{cls(i)}>{esc(h)}</th>" for i, h in enumerate(header)) + "</tr>") if header else ""
+    body = "".join("<tr>" + "".join(f"<td{cls(i)}>{esc(c)}</td>" for i, c in enumerate(r)) + "</tr>" for r in rows)
     return f'<table class="lab">{head}{body}</table>'
 
 
@@ -133,7 +141,7 @@ def verify_dir(path: str) -> list:
 def make_zip(path: str, student: bool) -> bytes:
     buf, p = io.BytesIO(), Path(path)
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
-        for name in (("chat.txt", "calls.csv", "photo.jpg", "manifest.json", "brief.md") if student else ("case.json",)):
+        for name in (("chat.txt", "calls.csv", "photo.jpg", "manifest.json", "brief.md") if student else ("case.json", "solution.md")):
             if (p / name).exists():
                 z.write(p / name, name)
     return buf.getvalue()
@@ -160,10 +168,11 @@ def action_text(action: str) -> str:
     return " + ".join(L(f"act.{p}") if f"act.{p}" in EN else p for p in action.split(" + "))
 
 
-def lab_sheet(attempts, sealed: bool) -> str:
-    """One row per check: how it ended (passed, failed then repaired, failed) and the first error it caught."""
+def lab_sheet(attempts, sealed: bool, deep: bool = False) -> str:
+    """One row per check: how it ended (passed, failed then repaired, failed) and the first error it caught.
+    deep: a practice level above 1, which adds the depth check."""
     first, last, lang = attempts[0], attempts[-1], st.session_state["lang"]
-    shown = CHECKS + [c for c in ("filler_count",) if any(f.check == c for a in attempts for f in a.failures)]
+    shown = CHECKS + (["depth"] if deep else []) + [c for c in ("filler_count",) if any(f.check == c for a in attempts for f in a.failures)]
     rows = []
     for i, c in enumerate(shown + ["integrity"], 1):
         name, _, desc = L("check." + c).partition(": ")
@@ -245,7 +254,8 @@ with st.container(key="topbar", horizontal=True, vertical_alignment="center"):
         st.button("EN", key="lang_en", type="tertiary", on_click=_set, args=("lang", "en"))
 # The active nav pill, language and case language are filled with ink (style-only, so it takes no space).
 st.html(f"<style>.st-key-nav_{view} button, .st-key-lang_{lang} button, "
-        f".st-key-genlang_{st.session_state.get('gen_lang', 'hinglish')} button "
+        f".st-key-genlang_{st.session_state.get('gen_lang', 'hinglish')} button, "
+        f".st-key-stulevel_{st.session_state.get('stu_level', 1)} button "
         f"{{ background: var(--ink) !important; color: var(--paper) !important; }}</style>")
 
 
@@ -261,6 +271,8 @@ def lecturer_view() -> None:
             for code, label in (("en", "English"), ("hinglish", "Hinglish")):
                 st.button(label, key=f"genlang_{code}", type="tertiary", on_click=_set, args=("gen_lang", code))
         seed = st.number_input(L("lec.seed"), 1, 9999, key="gen_seed")
+        level = st.selectbox(L("lec.level"), [1, 2, 3, 4], key="gen_level", format_func=lambda n: L(f"level.{n}.name"),
+                             help=L(f"level.{st.session_state.get('gen_level') or 1}.skills"))
         plant = st.toggle(L("lec.plant"), key="gen_plant", help=L("lec.defects_help"))
         defect = target = None
         if plant:
@@ -269,7 +281,7 @@ def lecturer_view() -> None:
                       else st.selectbox(L("lec.defect_target"), ["chat", "calls"], key="gen_target"))
         with st.container(horizontal=True, vertical_alignment="center"):
             go = st.button(L("lec.run"), type="primary", key="gen_go")
-            st.markdown(f'<span class="seedline">seed {int(seed):03d} · hybrid</span>', unsafe_allow_html=True)
+            st.markdown(f'<span class="seedline">seed {int(seed):03d} · L{level} · hybrid</span>', unsafe_allow_html=True)
         st.markdown(f'<div class="fine ruled">{esc(L("lec.cap_note", cap=DAILY_CAP))}</div>', unsafe_allow_html=True)
         if cases_now:
             st.selectbox(L("lec.open_case"), list(cases_now), key="lec_pick", on_change=_set, args=("show", "pick"))
@@ -280,7 +292,8 @@ def lecturer_view() -> None:
                 note(L("lec.cap", cap=DAILY_CAP), "bad")
             else:
                 case_lang = st.session_state["gen_lang"]
-                out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"upi-ring-{int(seed):03d}-{case_lang}-live"
+                tag = f"L{level}-" if level > 1 else ""
+                out = Path(tempfile.mkdtemp(prefix="suraag-")) / f"{tag}upi-ring-{int(seed):03d}-{case_lang}-live"
                 attempts = []
                 with st.status(L("lec.generating"), expanded=True) as status:
                     def on_attempt(a):
@@ -289,10 +302,12 @@ def lecturer_view() -> None:
                         lines += ["✕ " + esc(render_failure(f, st.session_state["lang"])) for f in a.failures] or ["✓ " + L("lec.pass")]
                         st.markdown("  \n".join(lines))
 
-                    res = generate_case(int(seed), case_lang, "hybrid", out, defect=defect, defect_target=target or "chat",
+                    res = generate_case(int(seed), case_lang, "hybrid", out, level=int(level), defect=defect,
+                                        defect_target=target or "chat",
                                         on_attempt=on_attempt, log_path=ROOT / "logs" / "failures.jsonl")
                     status.update(label=L("lec.log"), state="complete" if res.ok else "error")
-                st.session_state["last_run"] = {"attempts": attempts, "ok": res.ok, "path": str(out), "manifest": res.manifest}
+                st.session_state["last_run"] = {"attempts": attempts, "ok": res.ok, "path": str(out), "manifest": res.manifest,
+                                                "level": int(level)}
                 if res.ok:
                     st.session_state.setdefault("live_cases", {})[out.name] = out
                 st.session_state.update(show="run", fresh=True)
@@ -302,16 +317,17 @@ def lecturer_view() -> None:
         run = st.session_state.get("last_run")
         if run and st.session_state.get("show") == "run":
             attempts, sealed, path, manifest, key = run["attempts"], run["ok"], Path(run["path"]), run["manifest"], "run"
+            deep = run.get("level", 1) > 1
         elif cases_now:
             path = cases_now[st.session_state.get("lec_pick") or next(iter(cases_now))]
             fails = verify_dir(str(path))
             attempts = [SimpleNamespace(n=1, failures=fails, action="initial")]
-            _, arts, manifest, _ = load_dir(str(path))
-            sealed, key = not fails and arts.sha256() == manifest["files"], "pick"
+            picked, arts, manifest, _ = load_dir(str(path))
+            sealed, key, deep = not fails and arts.sha256() == manifest["files"], "pick", picked.level > 1
         else:
             note(L("ui.no_cases"))
             return
-        st.markdown(f'<div class="{"fresh" if fresh else ""}">{lab_sheet(attempts, sealed)}<div style="height:24px"></div>'
+        st.markdown(f'<div class="{"fresh" if fresh else ""}">{lab_sheet(attempts, sealed, deep)}<div style="height:24px"></div>'
                     f'{run_log(attempts, sealed)}</div>', unsafe_allow_html=True)
         certificate(manifest, path, key, sealed, fresh)
 
@@ -331,6 +347,7 @@ def _grade(name: str, path: str) -> None:
         answer = st.session_state.get(f"a::{name}::{q.id}") or ""
         claims.append(Claim(q.id, str(answer), tuple(cs), st.session_state.get(f"r::{name}::{q.id}") or ""))
     st.session_state[f"graded::{name}"] = grade_all(case, arts, claims)
+    st.session_state[f"fresh::{name}"] = True
 
 
 @st.fragment
@@ -378,7 +395,7 @@ def student_bench(name: str, path: str) -> None:
 
     with inspector_col, st.container(key="inspector"):
         # A fixed, hidden label: Streamlit resets a widget whose label changes, which would drop the choice on a language switch.
-        st.markdown(f'<div class="label">{esc(L("stu.question", n=""))}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="label">{esc(L("stu.citing_for"))}</div>', unsafe_allow_html=True)
         # Streamlit stores a radio's choice as its label text, so a language switch would leave nothing selected;
         # write the choice back from our own key before drawing it.
         st.session_state[f"active::{name}"] = active_i
@@ -386,7 +403,8 @@ def student_bench(name: str, path: str) -> None:
                  format_func=lambda i: f"{L('stu.question', n=i + 1)}: {qs[i].text}",
                  on_change=lambda: _set(f"q::{name}", st.session_state[f"active::{name}"]))
         for i, q in enumerate(qs):
-            st.markdown(f'<div class="label" style="margin-top:14px">{esc(L("stu.question", n=i + 1))}</div>', unsafe_allow_html=True)
+            tag = f'<span class="qtag">{esc(L("stu.citing"))}</span>' if i == active_i else ""
+            st.markdown(f'<div class="qhead">{esc(L("stu.question", n=i + 1))}{tag}</div>', unsafe_allow_html=True)
             if q.kind == "who":
                 ids = [s.id for s in brief.suspects]
                 st.selectbox(L("stu.answer_person"), ids, key=f"a::{name}::{q.id}", index=None, placeholder=L("ui.choose"),
@@ -400,7 +418,7 @@ def student_bench(name: str, path: str) -> None:
             st.text_input(L("stu.rationale"), key=f"r::{name}::{q.id}")
             st.caption(L("stu.cited", n=len(st.session_state[ck].get(q.id, []))))
 
-        st.markdown(f'<div class="label" style="margin-top:18px">{esc(L("hint.title"))}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="qhead">{esc(L("hint.title"))}</div>', unsafe_allow_html=True)
         persona = st.selectbox(L("hint.persona"), PERSONAS, key="persona", format_func=lambda p: L(f"persona.{p}"))
         hk = f"hints::{name}::{qs[active_i].id}"
         st.session_state.setdefault(hk, 0)
@@ -418,28 +436,38 @@ def student_bench(name: str, path: str) -> None:
                   labels={"read": L("speak.read"), "mute": L("speak.mute"), "no_voice": L("speak.no_voice")},
                   key=f"speak::{name}", default=None)
 
-        s1, s2 = st.columns(2)
-        s1.button(L("stu.submit"), type="primary", key=f"submit::{name}", on_click=_grade, args=(name, path))
+        total, possible = (sum(r.points for r in graded), 2 * len(graded)) if graded else (0, 0)
+        if graded:  # the score sits next to the button that produced it; the details are under the files
+            st.markdown(f'<div class="scoreline"><span class="score">{total}<span class="of"> / {possible}</span></span>'
+                        f'<span class="fine">{esc(L("stu.details_below"))}</span></div>', unsafe_allow_html=True)
+        st.button(L("stu.submit"), type="primary", key=f"submit::{name}", on_click=_grade, args=(name, path), width="stretch")
         if graded:
-            s2.button(L("stu.reset"), key=f"reset::{name}", on_click=lambda: st.session_state.pop(gk, None))
+            st.button(L("stu.reset"), key=f"reset::{name}", on_click=lambda: st.session_state.pop(gk, None), width="stretch")
 
     if graded:
-        total, possible = sum(r.points for r in graded), 2 * len(graded)
+        lang = st.session_state["lang"]
+        walks = {w.question_id: w for w in walkthrough(case, arts, lang)}
+        fresh = "fresh" if st.session_state.pop(f"fresh::{name}", False) else ""  # stamps land once, right after Submit
+        point = lambda ok, what: stamp("ok" if ok else "bad", f'{L(what)}: {L("stu.earned" if ok else "stu.lost")}')  # noqa: E731
         with board:
-            st.markdown(f'<div class="score">{total}<span class="dim" style="font-size:18px"> / {possible}</span></div>'
-                        f'<div class="dim">{esc(L("stu.score"))}: {esc(L("stu.points", n=total, m=possible))}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="score-block"><div class="label">{esc(L("stu.score"))}</div>'
+                        f'<div class="score">{total}<span class="of"> / {possible}</span></div></div>', unsafe_allow_html=True)
             for r in graded:
                 q = next(x for x in qs if x.id == r.question_id)
-                st.markdown(f"**{q.text}**")
-                a_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.answer_correct else f'<span class="bad">✕ {L("stu.lost")}</span>'
-                e_ok = f'<span class="ok">✓ {L("stu.earned")}</span>' if r.citation_valid else f'<span class="bad">✕ {L("stu.lost")}</span>'
-                st.markdown(f'<div class="pt">{L("stu.answer_point")}: {a_ok} &nbsp;|&nbsp; {L("stu.evidence_point")}: {e_ok}</div>',
-                            unsafe_allow_html=True)
-                for e in r.explanations:
-                    st.markdown(f'<div class="expl">{esc(render_expl(e, st.session_state["lang"]))}</div>', unsafe_allow_html=True)
-                if r.rationale_flag:
-                    st.caption({"could_not_verify": L("stu.flagged"), "overclaim": L("stu.flag_overclaim"),
-                                "ok": L("stu.flag_ok")}[r.rationale_flag])
+                with st.container(key=f"result_{r.question_id}"):
+                    expl = "".join(f"<li>{esc(render_expl(e, lang))}</li>" for e in r.explanations)
+                    st.markdown(f'<div class="res-head {fresh}"><div class="res-q">{esc(q.text)}</div><div class="res-stamps">'
+                                f'{point(r.answer_correct, "stu.answer_point")}{point(r.citation_valid, "stu.evidence_point")}'
+                                f'</div></div><ul class="res-expl">{expl}</ul>', unsafe_allow_html=True)
+                    if r.rationale_flag:
+                        st.caption({"could_not_verify": L("stu.flagged"), "overclaim": L("stu.flag_overclaim"),
+                                    "ok": L("stu.flag_ok")}[r.rationale_flag])
+                    wk = walks[r.question_id]
+                    with st.expander(L("walk.title")):  # opt-in, so "Answer again" still means something
+                        steps = "".join(f"<li>{esc(x)}</li>" for x in wk.steps)
+                        traps = "".join(f'<div class="trap">{esc(x)}</div>' for x in wk.traps)
+                        st.markdown(f'<ol class="walk">{steps}</ol><p class="walk-answer">{esc(L("walk.answer", answer=wk.answer))}</p>'
+                                    f'{traps}', unsafe_allow_html=True)
 
 
 def student_view() -> None:
@@ -447,7 +475,16 @@ def student_view() -> None:
     if not cases_now:
         note(L("ui.no_cases"))
         return
-    name = st.selectbox(L("ui.case"), list(cases_now), key="stu_pick")
+    level_of = {n: load_dir(str(p))[0].level for n, p in cases_now.items()}
+    levels = sorted(set(level_of.values()))
+    if st.session_state.get("stu_level") not in levels:
+        st.session_state["stu_level"] = levels[0]
+    lvl = st.session_state["stu_level"]
+    with st.container(key="stulevel", horizontal=True, gap=None):  # plain buttons, like the case-language switch
+        for n in levels:
+            st.button(L(f"level.{n}.name"), key=f"stulevel_{n}", type="tertiary", on_click=_set, args=("stu_level", n))
+    st.caption(L(f"level.{lvl}.skills"))
+    name = st.selectbox(L("ui.case"), [n for n in cases_now if level_of[n] == lvl], key="stu_pick")
     case = load_dir(str(cases_now[name]))[0]
     brief = case.brief
     with st.expander(L("ui.case") + f": {case.case_id}", expanded=True):
@@ -494,6 +531,12 @@ def eval_view() -> None:
             block(f"Blind solve by {bs['model']}, {label} ({L('eval.n', n=bs['completed'])}, unscored)",
                   ["question kind", "agrees with key"],
                   [[k, f"{v['agree']} of {v['of']}"] for k, v in bs["agreement_with_key"].items()])
+    bl = results.get("blind_solve_levels")
+    if bl:
+        block(f"Blind solve of the practice levels by {bl['model']} (unscored)",
+              ["level", "cases", "answers that agree with the key", "traps the model fell into"],
+              [[k, v["cases"], f"{v['agree']} of {v['questions']}", f"{v['fell_for']} of {v['traps']}"]
+               for k, v in bl["per_level"].items()], bl["note"][:1].upper() + bl["note"][1:] + ".")
     ga = results.get("grader_agreement")
     if ga:
         block(f"Grader agreement with manual grading ({L('eval.n', n=ga['n_labelled'])})",

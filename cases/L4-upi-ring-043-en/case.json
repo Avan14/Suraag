@@ -1,0 +1,576 @@
+{
+  "case_id": "upi-ring-043-l4",
+  "lang": "en",
+  "seed": 43,
+  "level": 4,
+  "twists": [
+    "unsaved_caller",
+    "alibi",
+    "code_word",
+    "decoy",
+    "camera_clock"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Debashish Roy",
+      "name_deva": "देबाशीष रॉय",
+      "role": "boss",
+      "aliases": [
+        "Debashish ji",
+        "Debashish R"
+      ],
+      "phone": "+91-58961-99000"
+    },
+    {
+      "id": "P2",
+      "name": "Anita Gupta",
+      "name_deva": "अनीता गुप्ता",
+      "role": "mule",
+      "aliases": [
+        "Anita ji",
+        "Anita G"
+      ],
+      "phone": "+91-57111-51633"
+    },
+    {
+      "id": "P3",
+      "name": "Debashish Bose",
+      "name_deva": "देबाशीष बोस",
+      "role": "distractor",
+      "aliases": [
+        "Debashish B.",
+        "Debashish B"
+      ],
+      "phone": "+91-52886-07565"
+    },
+    {
+      "id": "P4",
+      "name": "Nilesh Patil",
+      "name_deva": "नीलेश पाटील",
+      "role": "associate",
+      "aliases": [
+        "Nilesh ji",
+        "Nilesh P"
+      ],
+      "phone": "+91-51758-16325"
+    },
+    {
+      "id": "P5",
+      "name": "Karthik Nair",
+      "name_deva": "कार्तिक नायर",
+      "role": "witness",
+      "aliases": [
+        "Karthik ji",
+        "Karthik N"
+      ],
+      "phone": "+91-56223-60333"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Kothrud",
+      "lat": 18.5074,
+      "lon": 73.8077
+    },
+    {
+      "id": "PL2",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    },
+    {
+      "id": "PL3",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-03-25T18:17:00+05:30",
+      "kind": "transfer",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-03-25T18:51:00+05:30",
+      "kind": "call",
+      "actor": "P1",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-03-25T18:53:00+05:30",
+      "kind": "instruction",
+      "actor": "P1",
+      "target": "P2",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-03-25T19:12:00+05:30",
+      "kind": "photo",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-03-25T19:20:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": []
+    },
+    {
+      "id": "E5",
+      "t": "2026-03-25T18:15:00+05:30",
+      "kind": "code_definition",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E6",
+      "t": "2026-03-25T18:55:00+05:30",
+      "kind": "confirmation",
+      "actor": "P2",
+      "target": null,
+      "depends_on": [
+        "E3"
+      ]
+    },
+    {
+      "id": "E7",
+      "t": "2026-03-25T19:01:00+05:30",
+      "kind": "decoy_message",
+      "actor": "P3",
+      "target": "P2",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-03-25T19:08:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P2",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P1 told P2 to delete the transfer record at 6:53 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 17,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "6:53 pm",
+            "Debashish ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 4,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-58961-99000",
+            "18:51"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "claim": "P4 set the code 'the blue kite is up' for deleting the entry",
+      "event": "E5",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 6,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "6:15 pm",
+            "the blue kite is up"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "claim": "P2 confirmed the deletion at 6:55 pm",
+      "event": "E6",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 18,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "6:55 pm",
+            "Done. All cleared from my side."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "claim": "P3 asked P2 to remove an unrelated list entry",
+      "event": "E7",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:01 pm",
+            "Debashish B."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P2 claimed to be at Kharadi",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 21,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:08 pm",
+            "Kharadi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P2 took the payment screenshot photo near Kothrud",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5077"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.8075"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "claim": "the photo was taken at 7:12 pm IST",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "DateTimeOriginal",
+          "must_contain": [
+            "2026:03:25 13:42:00"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "OffsetTimeOriginal",
+          "must_contain": [
+            "+00:00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P3 called P2 at 7:20 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-52886-07565",
+            "19:20"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "P1"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null,
+      "answer_facts": [
+        "F2",
+        "F1",
+        "F5"
+      ],
+      "answer": "2026-03-25T18:53:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL1"
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "At what time (IST) was the payment screenshot photo taken?",
+      "about": "photo",
+      "answer_facts": [
+        "F4"
+      ],
+      "answer": "2026-03-25T19:12:00+05:30"
+    }
+  ],
+  "distractors": [
+    "F9",
+    "F10"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-03-25T18:00:00+05:30",
+    "2026-03-25T20:00:00+05:30"
+  ],
+  "chat_length": 36,
+  "chat_anchors": [
+    {
+      "line": 6,
+      "message": {
+        "t": "2026-03-25T18:15:00+05:30",
+        "sender": "Nilesh ji",
+        "text": "New rule: when anyone writes \"the blue kite is up\", delete the payment entry at once."
+      }
+    },
+    {
+      "line": 17,
+      "message": {
+        "t": "2026-03-25T18:53:00+05:30",
+        "sender": "Debashish ji",
+        "text": "Anita ji, as I said on the phone just now, the blue kite is up."
+      }
+    },
+    {
+      "line": 18,
+      "message": {
+        "t": "2026-03-25T18:55:00+05:30",
+        "sender": "Anita ji",
+        "text": "Done. All cleared from my side."
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-03-25T19:01:00+05:30",
+        "sender": "Debashish B.",
+        "text": "Anita ji, wipe my entry from the society picnic list, I'm out of town"
+      }
+    },
+    {
+      "line": 21,
+      "message": {
+        "t": "2026-03-25T19:08:00+05:30",
+        "sender": "Anita ji",
+        "text": "Still stuck near Kharadi, the traffic is terrible."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-03-25T18:09:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-51758-16325",
+      "contact_name": "Nilesh ji",
+      "duration_s": 133
+    },
+    {
+      "row": 2,
+      "t": "2026-03-25T18:23:00+05:30",
+      "direction": "incoming",
+      "number": "+91-56223-60333",
+      "contact_name": "",
+      "duration_s": 78
+    },
+    {
+      "row": 3,
+      "t": "2026-03-25T18:41:00+05:30",
+      "direction": "missed",
+      "number": "+91-52886-07565",
+      "contact_name": "Debashish B.",
+      "duration_s": 0
+    },
+    {
+      "row": 4,
+      "t": "2026-03-25T18:51:00+05:30",
+      "direction": "incoming",
+      "number": "+91-58961-99000",
+      "contact_name": "",
+      "duration_s": 86
+    },
+    {
+      "row": 5,
+      "t": "2026-03-25T19:20:00+05:30",
+      "direction": "incoming",
+      "number": "+91-52886-07565",
+      "contact_name": "Debashish B.",
+      "duration_s": 68
+    },
+    {
+      "row": 6,
+      "t": "2026-03-25T19:35:00+05:30",
+      "direction": "incoming",
+      "number": "+91-51758-16325",
+      "contact_name": "Nilesh ji",
+      "duration_s": 163
+    }
+  ],
+  "photo": {
+    "t": "2026-03-25T19:12:00+05:30",
+    "lat": 18.5077,
+    "lon": 73.8075,
+    "make": "Redmi",
+    "model": "Note 12",
+    "offset": "+00:00"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 56,500 reached the mule's account on the evening of 25 March 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P2",
+    "mule": "P2",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Debashish Roy",
+        "phone": "+91-58961-99000"
+      },
+      {
+        "id": "P3",
+        "name": "Debashish Bose",
+        "phone": "+91-52886-07565"
+      },
+      {
+        "id": "P4",
+        "name": "Nilesh Patil",
+        "phone": "+91-51758-16325"
+      },
+      {
+        "id": "P5",
+        "name": "Karthik Nair",
+        "phone": "+91-56223-60333"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Kothrud",
+        "lat": 18.5074,
+        "lon": 73.8077
+      },
+      {
+        "id": "PL2",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      },
+      {
+        "id": "PL3",
+        "name": "Baner",
+        "lat": 18.559,
+        "lon": 73.7868
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?",
+        "about": null
+      },
+      {
+        "id": "Q4",
+        "kind": "when",
+        "text": "At what time (IST) was the payment screenshot photo taken?",
+        "about": "photo"
+      }
+    ]
+  }
+}

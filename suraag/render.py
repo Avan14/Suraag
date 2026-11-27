@@ -90,17 +90,18 @@ def render_photo(case: Case) -> bytes:
     if case.photo is None:
         raise ValueError("this case has no photo")
     p = case.photo
+    ts, off = exif_ts(p.t, p.offset).encode("ascii"), p.offset.encode("ascii")
     rng = random.Random(case.seed)
     image = Image.new("RGB", (640, 480), (rng.randint(60, 200), rng.randint(60, 200), rng.randint(60, 200)))
     ImageDraw.Draw(image).text((24, 24), "SYNTHETIC", fill=(255, 255, 255))
     exif = piexif.dump({
         "0th": {piexif.ImageIFD.ImageDescription: HEADER.encode("ascii"),
                 piexif.ImageIFD.Make: p.make.encode("ascii"), piexif.ImageIFD.Model: p.model.encode("ascii"),
-                piexif.ImageIFD.DateTime: exif_ts(p.t).encode("ascii")},  # ModifyDate equals capture time: a clean original
-        "Exif": {piexif.ExifIFD.DateTimeOriginal: exif_ts(p.t).encode("ascii"),
-                 piexif.ExifIFD.DateTimeDigitized: exif_ts(p.t).encode("ascii"),  # CreateDate
-                 piexif.ExifIFD.OffsetTime: b"+05:30", piexif.ExifIFD.OffsetTimeOriginal: b"+05:30",
-                 piexif.ExifIFD.OffsetTimeDigitized: b"+05:30"},
+                piexif.ImageIFD.DateTime: ts},  # ModifyDate equals capture time: a clean original
+        "Exif": {piexif.ExifIFD.DateTimeOriginal: ts,
+                 piexif.ExifIFD.DateTimeDigitized: ts,  # CreateDate
+                 piexif.ExifIFD.OffsetTime: off, piexif.ExifIFD.OffsetTimeOriginal: off,
+                 piexif.ExifIFD.OffsetTimeDigitized: off},
         "GPS": {piexif.GPSIFD.GPSLatitudeRef: b"N" if p.lat >= 0 else b"S",
                 piexif.GPSIFD.GPSLatitude: _dms(p.lat),
                 piexif.GPSIFD.GPSLongitudeRef: b"E" if p.lon >= 0 else b"W",

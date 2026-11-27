@@ -62,9 +62,11 @@ def inject(case: Case, arts: Artifacts, kind: DefectKind, *,
         line = next(ln.line for ln in load_chat(arts.chat) if ln.line > 1 and ln.line not in anchor_lines and ln.sender)
         return replace(arts, chat=_rewrite_chat_line(arts.chat, line, sender=token))
     if kind == "missing_anchor":
-        line = case.chat_anchors[0].line
+        line = next(a.line for a in case.chat_anchors if a.message.sender == boss.saved_as)  # the order line
         other = next(case.person(p).saved_as for p in case.chat_members if case.person(p).id != boss.id)
         return replace(arts, chat=_rewrite_chat_line(arts.chat, line, sender=other))
     if kind == "unsolvable_question":
-        return replace(arts, calls=_edit_calls(arts.calls, lambda r: r[:4] + [""] + r[5:] if r[3] == boss.phone else r))
+        # No saved name and no answered call: nothing links the order to a number, on any level.
+        return replace(arts, calls=_edit_calls(
+            arts.calls, lambda r: [r[0], r[1], "missed", r[3], "", "0"] if r[3] == boss.phone else r))
     raise ValueError(f"unknown defect {kind!r}")

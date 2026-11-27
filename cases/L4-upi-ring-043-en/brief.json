@@ -1,0 +1,78 @@
+{
+  "summary": "A UPI payment of Rs 56,500 reached the mule's account on the evening of 25 March 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P2",
+  "mule": "P2",
+  "suspects": [
+    {
+      "id": "P1",
+      "name": "Debashish Roy",
+      "phone": "+91-58961-99000"
+    },
+    {
+      "id": "P3",
+      "name": "Debashish Bose",
+      "phone": "+91-52886-07565"
+    },
+    {
+      "id": "P4",
+      "name": "Nilesh Patil",
+      "phone": "+91-51758-16325"
+    },
+    {
+      "id": "P5",
+      "name": "Karthik Nair",
+      "phone": "+91-56223-60333"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Kothrud",
+      "lat": 18.5074,
+      "lon": 73.8077
+    },
+    {
+      "id": "PL2",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    },
+    {
+      "id": "PL3",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null
+    },
+    {
+      "id": "Q4",
+      "kind": "when",
+      "text": "At what time (IST) was the payment screenshot photo taken?",
+      "about": "photo"
+    }
+  ]
+}

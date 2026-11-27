@@ -1,0 +1,426 @@
+{
+  "case_id": "upi-ring-022-l2",
+  "lang": "hinglish",
+  "seed": 22,
+  "level": 2,
+  "twists": [
+    "unsaved_caller",
+    "alibi"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Kavita Verma",
+      "name_deva": "कविता वर्मा",
+      "role": "distractor",
+      "aliases": [
+        "Kavita V.",
+        "Kavita V"
+      ],
+      "phone": "+91-55233-78792"
+    },
+    {
+      "id": "P2",
+      "name": "Kavita Mehta",
+      "name_deva": "कविता मेहता",
+      "role": "boss",
+      "aliases": [
+        "Kavita didi",
+        "Kavita M"
+      ],
+      "phone": "+91-52934-72351"
+    },
+    {
+      "id": "P3",
+      "name": "Abhijit Roy",
+      "name_deva": "अभिजीत रॉय",
+      "role": "associate",
+      "aliases": [
+        "Abhijit bhai",
+        "Abhijit R"
+      ],
+      "phone": "+91-57045-92814"
+    },
+    {
+      "id": "P4",
+      "name": "Venkat Nair",
+      "name_deva": "वेंकट नायर",
+      "role": "mule",
+      "aliases": [
+        "Venkat bhai",
+        "Venkat N"
+      ],
+      "phone": "+91-50793-75647"
+    },
+    {
+      "id": "P5",
+      "name": "Lakshmi Iyer",
+      "name_deva": "लक्ष्मी अय्यर",
+      "role": "witness",
+      "aliases": [
+        "Lakshmi didi",
+        "Lakshmi I"
+      ],
+      "phone": "+91-57900-95056"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    },
+    {
+      "id": "PL3",
+      "name": "Bandra West",
+      "lat": 19.0596,
+      "lon": 72.8295
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-04-26T18:54:00+05:30",
+      "kind": "transfer",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-04-26T19:26:00+05:30",
+      "kind": "call",
+      "actor": "P2",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-04-26T19:27:00+05:30",
+      "kind": "instruction",
+      "actor": "P2",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-04-26T19:47:00+05:30",
+      "kind": "photo",
+      "actor": "P4",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-04-26T19:01:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P1",
+      "target": "P4",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-04-26T19:44:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P2 told P4 to delete the transfer record at 7:27 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 15,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:27 pm",
+            "Kavita didi"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-52934-72351",
+            "19:26"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P4 claimed to be at Dadar",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 19,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "7:44 pm",
+            "Dadar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P4 took the payment screenshot photo near Kurla West",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "19.0724"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "72.8843"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P1 called P4 at 7:01 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-55233-78792",
+            "19:01"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P2"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-04-26T19:27:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL2"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-04-26T18:30:00+05:30",
+    "2026-04-26T20:30:00+05:30"
+  ],
+  "chat_length": 30,
+  "chat_anchors": [
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-04-26T19:27:00+05:30",
+        "sender": "Kavita didi",
+        "text": "Venkat bhai, jaise abhi phone pe bola, ye entry abhi delete kar do, kisi ko mat batana"
+      }
+    },
+    {
+      "line": 19,
+      "message": {
+        "t": "2026-04-26T19:44:00+05:30",
+        "sender": "Venkat bhai",
+        "text": "Dadar ke paas traffic mein atke hain, late ho jayega."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-04-26T18:44:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-57045-92814",
+      "contact_name": "Abhijit bhai",
+      "duration_s": 67
+    },
+    {
+      "row": 2,
+      "t": "2026-04-26T19:01:00+05:30",
+      "direction": "incoming",
+      "number": "+91-55233-78792",
+      "contact_name": "Kavita V.",
+      "duration_s": 62
+    },
+    {
+      "row": 3,
+      "t": "2026-04-26T19:02:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57900-95056",
+      "contact_name": "",
+      "duration_s": 55
+    },
+    {
+      "row": 4,
+      "t": "2026-04-26T19:15:00+05:30",
+      "direction": "missed",
+      "number": "+91-55233-78792",
+      "contact_name": "Kavita V.",
+      "duration_s": 0
+    },
+    {
+      "row": 5,
+      "t": "2026-04-26T19:26:00+05:30",
+      "direction": "incoming",
+      "number": "+91-52934-72351",
+      "contact_name": "",
+      "duration_s": 123
+    },
+    {
+      "row": 6,
+      "t": "2026-04-26T20:10:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57045-92814",
+      "contact_name": "Abhijit bhai",
+      "duration_s": 112
+    }
+  ],
+  "photo": {
+    "t": "2026-04-26T19:47:00+05:30",
+    "lat": 19.0724,
+    "lon": 72.8843,
+    "make": "Samsung",
+    "model": "Galaxy A14",
+    "offset": "+05:30"
+  },
+  "brief": {
+    "summary": "26 April 2026 ki shaam ko mule ke account mein Rs 32,500 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P4",
+    "mule": "P4",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Kavita Verma",
+        "phone": "+91-55233-78792"
+      },
+      {
+        "id": "P2",
+        "name": "Kavita Mehta",
+        "phone": "+91-52934-72351"
+      },
+      {
+        "id": "P3",
+        "name": "Abhijit Roy",
+        "phone": "+91-57045-92814"
+      },
+      {
+        "id": "P5",
+        "name": "Lakshmi Iyer",
+        "phone": "+91-57900-95056"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Dadar",
+        "lat": 19.0178,
+        "lon": 72.8478
+      },
+      {
+        "id": "PL2",
+        "name": "Kurla West",
+        "lat": 19.0726,
+        "lon": 72.8845
+      },
+      {
+        "id": "PL3",
+        "name": "Bandra West",
+        "lat": 19.0596,
+        "lon": 72.8295
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Mule ko transfer record delete karne ko kisne kaha?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "Ye instruction kab diya gaya?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+        "about": null
+      }
+    ]
+  }
+}

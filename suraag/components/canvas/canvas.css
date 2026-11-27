@@ -1,12 +1,12 @@
 /* Suraag evidence table: paper, ink and dashed rules, matching the case-desk shell (suraag/ui/app.css). */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap');
 :root {
   --paper: #F4EDE0; --card: #FBF7EE; --fill: #EBE1CF; --tab: #D9B97A; --rule: #C9BBA0;
   --ink-1: #1B1A17; --ink-2: #4A4339; --ink-3: #7A7062; --ink-4: #9A8F7E;
   --success: #2E6B4F; --success-tint: #E3EEE6; --danger: #B3261E; --danger-tint: #F6E3DF;
   --cited: #F3E6C4; --highlighter: #F2D98A;
   --exhibit-chat: #B3261E; --exhibit-calls: #2E6B4F; --exhibit-photo: #5B4A8A;
-  --font-ui: 'Noto Sans Devanagari', system-ui, sans-serif;
+  --font-ui: 'Noto Sans', 'Noto Sans Devanagari', system-ui, sans-serif;
   --font-evidence: 'IBM Plex Mono', ui-monospace, monospace;
   --radius-card: 4px; --row: 32px; --header-exhibit: 42px;
   --ease-out: cubic-bezier(.23, 1, .32, 1);
@@ -30,9 +30,9 @@ html, body { margin: 0; background: transparent; font-family: var(--font-ui); co
 .rows { overflow-x: auto; flex: 1; min-width: 0; }
 .row { min-height: var(--row); display: flex; align-items: baseline; gap: 8px; padding: 6px 12px; border-bottom: 1px dashed var(--rule);
   font: 400 13px/1.5 var(--font-evidence); cursor: pointer; transition: background-color 120ms var(--ease-out); position: relative; }
-.row:hover { background: var(--paper); }
+@media (hover: hover) and (pointer: fine) { .row:hover { background: var(--paper); } }  /* no sticky hover on touch */
 .row.head { cursor: default; color: var(--ink-3); background: var(--paper); }
-.row .n { color: var(--ink-4); min-width: 28px; text-align: right; flex: none; }
+.row .n { color: var(--ink-3); min-width: 28px; text-align: right; flex: none; }
 .row .n:empty { display: none; }
 .row .t { flex: 1; min-width: 0; padding-right: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }  /* long lines wrap, never cut */
 .row .mark { flex: none; font: 600 11px var(--font-ui); letter-spacing: .02em; }

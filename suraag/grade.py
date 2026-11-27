@@ -2,8 +2,9 @@
 
 Scoring (decided with the user):
 - Answer point: the structured answer matches the key (a time within the case tolerance).
-- Citation point, all-or-nothing: every artifact the question's facts are anchored in has at least
-  one VALID cited line, and no cited line is WRONG. Extra lines that genuinely support the fact are
+- Citation point, all-or-nothing: every fact (reasoning step) behind the answer has a VALID cited line in
+  every artifact that fact is anchored in, and no cited line is WRONG. With one fact per question (level 1)
+  this is "every artifact has a valid line". Extra lines that genuinely support the fact are
   fine, even if they are not the designated anchor. A PARTIAL line (some but not all of the needed
   strings) neither earns nor costs, and the feedback names what is missing.
 Explanations come from the verifier's own data as (code, params) pairs; i18n renders them.
@@ -72,16 +73,20 @@ def _anchor_loc(a) -> str:
 
 
 _HM = re.compile(r"^(\d{1,2}):(\d{2})$")
+_MERIDIEM = re.compile(r"\s*([ap])\.?\s*m\.?$")   # "p.m.", "pm", "p.m" at the end
+_DOT = re.compile(r"^(\d{1,2})\.(\d{2})\b")       # "6.58" and "18.58": a dot between hours and minutes
 
 
 def _parse_time(answer: str, ref: datetime) -> datetime | None:
-    """Accept ISO with offset, 24-hour HH:MM, or h:mm am/pm; a bare time uses the key's date."""
+    """Accept ISO with offset, 24-hour HH:MM, or h:mm am/pm; a bare time uses the key's date.
+    Common Indian spellings are read the same way: "6:58 p.m.", "6.58 pm", "6:58pm", "18.58"."""
     s = answer.strip()
     try:
         t = datetime.fromisoformat(s)
         return t if t.tzinfo else None
     except ValueError:
         pass
+    s = _DOT.sub(r"\1:\2", _MERIDIEM.sub(r" \1m", s.lower()))
     m = _HM.match(s)
     if m and int(m[1]) < 24 and int(m[2]) < 60:
         return ref.replace(hour=int(m[1]), minute=int(m[2]), second=0, microsecond=0)
@@ -125,6 +130,7 @@ def grade_claim(case: Case, arts: Artifacts, claim: Claim, *,
     expls.append(Expl("answer_ok" if correct else "answer_wrong", {"question": q.id}))
 
     marks: list[CitationMark] = []
+    valid: list[tuple[Citation, str]] = []  # (citation, the normalised text it points at)
     wrong = False
     for c in claim.citations:
         same = [a for a in anchors if a.artifact == c.artifact]
@@ -141,6 +147,7 @@ def grade_claim(case: Case, arts: Artifacts, claim: Claim, *,
             continue
         have = norm(text)
         if any(all(norm(m) in have for m in a.must_contain) for a in same):
+            valid.append((c, have))
             marks.append(CitationMark(c, "valid"))
             expls.append(Expl("cite_valid", {"loc": c.label}))
             continue
@@ -157,14 +164,20 @@ def grade_claim(case: Case, arts: Artifacts, claim: Claim, *,
             expls.append(Expl("cite_wrong", {"loc": c.label, "needles": list(best.must_contain), "support": support}))
             wrong = True
 
-    covered = {m.citation.artifact for m in marks if m.label == "valid"}
-    missing_art = []
-    for art in dict.fromkeys(a.artifact for a in anchors):  # required artifacts, in anchor order
-        if art not in covered:
-            missing_art.append(art)
-            expls.append(Expl("cite_missing_artifact", {"artifact": FILES[art],
-                                                        "support": _anchor_loc(next(a for a in anchors if a.artifact == art))}))
-    cited = not wrong and not missing_art
+    covered = {c.artifact for c, _ in valid}
+    missing, told = [], set()
+    for fid in q.answer_facts:  # each step, in reasoning order
+        fact_anchors = case.fact(fid).anchors
+        for art in dict.fromkeys(a.artifact for a in fact_anchors):
+            mine = [a for a in fact_anchors if a.artifact == art]
+            if any(c.artifact == art and all(norm(m) in have for m in a.must_contain) for c, have in valid for a in mine):
+                continue
+            missing.append((fid, art))
+            # Name an uncited file once; any further uncited step in it is reported as a step.
+            code = "cite_missing_step" if art in covered or art in told else "cite_missing_artifact"
+            told.add(art)
+            expls.append(Expl(code, {"artifact": FILES[art], "support": _anchor_loc(mine[0])}))
+    cited = not wrong and not missing
     return ClaimResult(q.id, correct, cited, int(correct) + int(cited), tuple(marks), tuple(expls),
                        rationale_flag(claim.rationale, classify=classify))
 

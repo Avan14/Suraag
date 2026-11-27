@@ -55,7 +55,8 @@ class Place(BaseModel):
 class Event(BaseModel):
     id: str
     t: AwareDatetime
-    kind: Literal["transfer", "call", "instruction", "photo", "distractor_call"]
+    kind: Literal["transfer", "call", "instruction", "photo", "distractor_call",
+                  "code_definition", "confirmation", "decoy_message", "alibi_message", "unknown_call"]
     actor: str
     target: str | None = None
     depends_on: list[str] = []
@@ -82,10 +83,19 @@ class Fact(BaseModel):
     anchors: list[Anchor]  # may be empty here; the verifier's traceability check reports it
 
 
+QuestionAbout = Literal["instruction", "photo"]
+
+
+def question_about(q) -> str:
+    """What a question asks about: 'where' is always the photo; other kinds default to the instruction."""
+    return q.about or ("photo" if q.kind == "where" else "instruction")
+
+
 class Question(BaseModel):
     id: str
     kind: Literal["who", "when", "where"]
     text: str
+    about: QuestionAbout | None = None  # None: the default for the kind (see question_about)
     answer_facts: list[str]
     answer: str  # who: person id | when: ISO time with offset | where: place id
 
@@ -116,12 +126,14 @@ class PhotoMeta(BaseModel):
     lon: float
     make: str
     model: str
+    offset: Annotated[str, StringConstraints(pattern=r"^[+-]\d{2}:\d{2}$")] = "+05:30"  # the camera clock's zone
 
 
 class BriefQuestion(BaseModel):
     id: str
     kind: Literal["who", "when", "where"]
     text: str
+    about: QuestionAbout | None = None
 
 
 class Suspect(BaseModel):
@@ -145,6 +157,8 @@ class Case(BaseModel):
     case_id: str
     lang: Lang
     seed: int
+    level: int = 1           # practice level 1-4; see suraag/levels.py
+    twists: list[str] = []   # the traps this level sets; each one is checked by verify.check_depth
     tolerance_minutes: int = 2
     people: list[Person]
     places: list[Place]

@@ -1,0 +1,72 @@
+{
+  "summary": "26 April 2026 ki shaam ko mule ke account mein Rs 32,500 ka UPI payment aaya. Tumhare paas mule ke phone ka chat export, call log aur ek photo hai. Sab kuch synthetic hai.",
+  "lab_cast": [
+    "Inspector Meera Rao",
+    "Dr. Arvind Nair",
+    "Farhan Qureshi"
+  ],
+  "device_owner": "P4",
+  "mule": "P4",
+  "suspects": [
+    {
+      "id": "P1",
+      "name": "Kavita Verma",
+      "phone": "+91-55233-78792"
+    },
+    {
+      "id": "P2",
+      "name": "Kavita Mehta",
+      "phone": "+91-52934-72351"
+    },
+    {
+      "id": "P3",
+      "name": "Abhijit Roy",
+      "phone": "+91-57045-92814"
+    },
+    {
+      "id": "P5",
+      "name": "Lakshmi Iyer",
+      "phone": "+91-57900-95056"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Dadar",
+      "lat": 19.0178,
+      "lon": 72.8478
+    },
+    {
+      "id": "PL2",
+      "name": "Kurla West",
+      "lat": 19.0726,
+      "lon": 72.8845
+    },
+    {
+      "id": "PL3",
+      "name": "Bandra West",
+      "lat": 19.0596,
+      "lon": 72.8295
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Mule ko transfer record delete karne ko kisne kaha?",
+      "about": null
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "Ye instruction kab diya gaya?",
+      "about": null
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Payment screenshot wali photo li gayi tab mule kahan tha?",
+      "about": null
+    }
+  ]
+}

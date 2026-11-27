@@ -1,0 +1,426 @@
+{
+  "case_id": "upi-ring-023-l2",
+  "lang": "en",
+  "seed": 23,
+  "level": 2,
+  "twists": [
+    "unsaved_caller",
+    "alibi"
+  ],
+  "tolerance_minutes": 2,
+  "people": [
+    {
+      "id": "P1",
+      "name": "Venkat Nair",
+      "name_deva": "वेंकट नायर",
+      "role": "boss",
+      "aliases": [
+        "Venkat ji",
+        "Venkat N"
+      ],
+      "phone": "+91-50230-28972"
+    },
+    {
+      "id": "P2",
+      "name": "Venkat Ghosh",
+      "name_deva": "वेंकट घोष",
+      "role": "distractor",
+      "aliases": [
+        "Venkat G.",
+        "Venkat G"
+      ],
+      "phone": "+91-57455-03246"
+    },
+    {
+      "id": "P3",
+      "name": "Mahesh Shinde",
+      "name_deva": "महेश शिंदे",
+      "role": "associate",
+      "aliases": [
+        "Mahesh ji",
+        "Mahesh S"
+      ],
+      "phone": "+91-51735-11242"
+    },
+    {
+      "id": "P4",
+      "name": "Lakshmi Menon",
+      "name_deva": "लक्ष्मी मेनन",
+      "role": "mule",
+      "aliases": [
+        "Lakshmi ji",
+        "Lakshmi M"
+      ],
+      "phone": "+91-58163-55213"
+    },
+    {
+      "id": "P5",
+      "name": "Pranab Das",
+      "name_deva": "प्रणब दास",
+      "role": "witness",
+      "aliases": [
+        "Pranab ji",
+        "Pranab D"
+      ],
+      "phone": "+91-57112-58480"
+    }
+  ],
+  "places": [
+    {
+      "id": "PL1",
+      "name": "Kharadi",
+      "lat": 18.5511,
+      "lon": 73.9473
+    },
+    {
+      "id": "PL2",
+      "name": "Viman Nagar",
+      "lat": 18.5679,
+      "lon": 73.9143
+    },
+    {
+      "id": "PL3",
+      "name": "Baner",
+      "lat": 18.559,
+      "lon": 73.7868
+    }
+  ],
+  "timeline": [
+    {
+      "id": "E1",
+      "t": "2026-03-02T21:23:00+05:30",
+      "kind": "transfer",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    },
+    {
+      "id": "E2",
+      "t": "2026-03-02T21:43:00+05:30",
+      "kind": "call",
+      "actor": "P1",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E3",
+      "t": "2026-03-02T21:44:00+05:30",
+      "kind": "instruction",
+      "actor": "P1",
+      "target": "P4",
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E4",
+      "t": "2026-03-02T22:24:00+05:30",
+      "kind": "photo",
+      "actor": "P4",
+      "target": null,
+      "depends_on": [
+        "E1"
+      ]
+    },
+    {
+      "id": "E9",
+      "t": "2026-03-02T21:18:00+05:30",
+      "kind": "distractor_call",
+      "actor": "P2",
+      "target": "P4",
+      "depends_on": []
+    },
+    {
+      "id": "E8",
+      "t": "2026-03-02T22:18:00+05:30",
+      "kind": "alibi_message",
+      "actor": "P4",
+      "target": null,
+      "depends_on": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "P1 told P4 to delete the transfer record at 9:44 pm",
+      "event": "E3",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 15,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "9:44 pm",
+            "Venkat ji"
+          ]
+        },
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 5,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-50230-28972",
+            "21:43"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "claim": "P4 claimed to be at Kharadi",
+      "event": "E8",
+      "anchors": [
+        {
+          "artifact": "chat",
+          "line": 23,
+          "row": null,
+          "exif_tag": null,
+          "must_contain": [
+            "10:18 pm",
+            "Kharadi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "claim": "P4 took the payment screenshot photo near Baner",
+      "event": "E4",
+      "anchors": [
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLatitude",
+          "must_contain": [
+            "18.5591"
+          ]
+        },
+        {
+          "artifact": "photo",
+          "line": null,
+          "row": null,
+          "exif_tag": "GPSLongitude",
+          "must_contain": [
+            "73.7867"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "claim": "P2 called P4 at 9:18 pm (an unrelated call)",
+      "event": "E9",
+      "anchors": [
+        {
+          "artifact": "calls",
+          "line": null,
+          "row": 2,
+          "exif_tag": null,
+          "must_contain": [
+            "+91-57455-03246",
+            "21:18"
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "kind": "who",
+      "text": "Who told the mule to delete the transfer record?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "P1"
+    },
+    {
+      "id": "Q2",
+      "kind": "when",
+      "text": "When was the instruction given?",
+      "about": null,
+      "answer_facts": [
+        "F1"
+      ],
+      "answer": "2026-03-02T21:44:00+05:30"
+    },
+    {
+      "id": "Q3",
+      "kind": "where",
+      "text": "Where was the mule when the payment screenshot photo was taken?",
+      "about": null,
+      "answer_facts": [
+        "F3"
+      ],
+      "answer": "PL3"
+    }
+  ],
+  "distractors": [
+    "F9"
+  ],
+  "chat_members": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "chat_window": [
+    "2026-03-02T20:45:00+05:30",
+    "2026-03-02T22:45:00+05:30"
+  ],
+  "chat_length": 29,
+  "chat_anchors": [
+    {
+      "line": 15,
+      "message": {
+        "t": "2026-03-02T21:44:00+05:30",
+        "sender": "Venkat ji",
+        "text": "Lakshmi ji, as I said on the phone just now, delete the transfer record right now"
+      }
+    },
+    {
+      "line": 23,
+      "message": {
+        "t": "2026-03-02T22:18:00+05:30",
+        "sender": "Lakshmi ji",
+        "text": "I'm at Kharadi right now, will call you later."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "row": 1,
+      "t": "2026-03-02T21:00:00+05:30",
+      "direction": "outgoing",
+      "number": "+91-51735-11242",
+      "contact_name": "Mahesh ji",
+      "duration_s": 82
+    },
+    {
+      "row": 2,
+      "t": "2026-03-02T21:18:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57455-03246",
+      "contact_name": "Venkat G.",
+      "duration_s": 47
+    },
+    {
+      "row": 3,
+      "t": "2026-03-02T21:20:00+05:30",
+      "direction": "incoming",
+      "number": "+91-57112-58480",
+      "contact_name": "",
+      "duration_s": 54
+    },
+    {
+      "row": 4,
+      "t": "2026-03-02T21:34:00+05:30",
+      "direction": "missed",
+      "number": "+91-57455-03246",
+      "contact_name": "Venkat G.",
+      "duration_s": 0
+    },
+    {
+      "row": 5,
+      "t": "2026-03-02T21:43:00+05:30",
+      "direction": "incoming",
+      "number": "+91-50230-28972",
+      "contact_name": "",
+      "duration_s": 198
+    },
+    {
+      "row": 6,
+      "t": "2026-03-02T22:27:00+05:30",
+      "direction": "incoming",
+      "number": "+91-51735-11242",
+      "contact_name": "Mahesh ji",
+      "duration_s": 97
+    }
+  ],
+  "photo": {
+    "t": "2026-03-02T22:24:00+05:30",
+    "lat": 18.5591,
+    "lon": 73.7867,
+    "make": "Vivo",
+    "model": "Y22",
+    "offset": "+05:30"
+  },
+  "brief": {
+    "summary": "A UPI payment of Rs 72,000 reached the mule's account on the evening of 2 March 2026. You have the mule's chat export, call log and one photo from the same phone. Everything here is synthetic.",
+    "lab_cast": [
+      "Inspector Meera Rao",
+      "Dr. Arvind Nair",
+      "Farhan Qureshi"
+    ],
+    "device_owner": "P4",
+    "mule": "P4",
+    "suspects": [
+      {
+        "id": "P1",
+        "name": "Venkat Nair",
+        "phone": "+91-50230-28972"
+      },
+      {
+        "id": "P2",
+        "name": "Venkat Ghosh",
+        "phone": "+91-57455-03246"
+      },
+      {
+        "id": "P3",
+        "name": "Mahesh Shinde",
+        "phone": "+91-51735-11242"
+      },
+      {
+        "id": "P5",
+        "name": "Pranab Das",
+        "phone": "+91-57112-58480"
+      }
+    ],
+    "places": [
+      {
+        "id": "PL1",
+        "name": "Kharadi",
+        "lat": 18.5511,
+        "lon": 73.9473
+      },
+      {
+        "id": "PL2",
+        "name": "Viman Nagar",
+        "lat": 18.5679,
+        "lon": 73.9143
+      },
+      {
+        "id": "PL3",
+        "name": "Baner",
+        "lat": 18.559,
+        "lon": 73.7868
+      }
+    ],
+    "questions": [
+      {
+        "id": "Q1",
+        "kind": "who",
+        "text": "Who told the mule to delete the transfer record?",
+        "about": null
+      },
+      {
+        "id": "Q2",
+        "kind": "when",
+        "text": "When was the instruction given?",
+        "about": null
+      },
+      {
+        "id": "Q3",
+        "kind": "where",
+        "text": "Where was the mule when the payment screenshot photo was taken?",
+        "about": null
+      }
+    ]
+  }
+}
